@@ -14,22 +14,22 @@
     {
       id: 'f8a3b2e1-0001-4c10-9d3b-000000000001',
       deviceCode: 'IOT-ROOM-202-01',
-      room: 'P.202',
-      description: 'Thiết bị điểm danh lớp IoT - Nhóm 10',
+      room: 'Room 202',
+      description: 'Attendance device for IoT Class — Group 10',
       createdAt: '2025-01-10 08:00:00',
     },
     {
       id: 'f8a3b2e1-0001-4c10-9d3b-000000000002',
       deviceCode: 'AI-ROOM-305-01',
-      room: 'P.305',
-      description: 'Thiết bị điểm danh lớp AI - Nhóm 01',
+      room: 'Room 305',
+      description: 'Attendance device for AI Class — Group 01',
       createdAt: '2025-01-11 09:00:00',
     },
     {
       id: 'f8a3b2e1-0001-4c10-9d3b-000000000003',
       deviceCode: 'BC-ROOM-407-01',
-      room: 'P.407',
-      description: 'Thiết bị điểm danh lớp Blockchain - Nhóm 03',
+      room: 'Room 407',
+      description: 'Attendance device for Blockchain Class — Group 03',
       createdAt: '2025-01-12 10:00:00',
     },
   ])
@@ -70,17 +70,17 @@
       <v-row class="mb-4" align="center" justify="space-between">
         <v-col cols="12" md="7">
           <h1 class="text-h5 text-sm-h4 font-weight-medium mb-1">
-            Cấu hình thiết bị điểm danh
+            Device Configuration
           </h1>
           <p class="text-body-2 text-medium-emphasis">
-            Danh sách thiết bị IoT dùng cho hệ thống điểm danh. Dữ liệu chỉ là dummy để thiết kế UI,
-            chưa kết nối cơ sở dữ liệu.
+            IoT devices for the attendance system. Data is mock for UI design purposes only —
+            not connected to a database.
           </p>
         </v-col>
         <v-col cols="12" md="5" class="d-flex justify-end">
           <v-text-field
             prepend-inner-icon="mdi-magnify"
-            label="Tìm kiếm theo mã thiết bị hoặc phòng"
+            label="Search by device code or room"
             density="comfortable"
             variant="outlined"
             hide-details
@@ -129,7 +129,7 @@
                   class="text-caption"
                 >
                   <v-icon start size="16">mdi-door</v-icon>
-                  Phòng {{ device.room }}
+                  Room {{ device.room }}
                 </v-chip>
               </div>
               <p class="text-body-2 mb-2">
@@ -137,7 +137,7 @@
               </p>
               <p class="text-caption text-medium-emphasis">
                 <v-icon size="14" class="mr-1">mdi-clock-outline</v-icon>
-                Tạo lúc: {{ device.createdAt }}
+                Created at: {{ device.createdAt }}
               </p>
             </v-card-text>
 
@@ -149,7 +149,7 @@
                 class="text-none"
                 @click="openEditDialog({ device })"
               >
-                Cập nhật cấu hình
+                Edit Config
               </v-btn>
             </v-card-actions>
           </v-card>
@@ -159,13 +159,13 @@
       <v-dialog v-model="editDialogIsOpen" max-width="480">
         <v-card>
           <v-card-title class="text-subtitle-1 font-weight-medium">
-            Cập nhật cấu hình thiết bị
+            Edit Device Configuration
           </v-card-title>
           <v-card-text>
             <v-form v-if="selectedDevice">
               <v-text-field
                 v-model="selectedDevice.deviceCode"
-                label="Mã thiết bị"
+                label="Device Code"
                 variant="outlined"
                 density="comfortable"
                 hide-details
@@ -173,7 +173,7 @@
               />
               <v-text-field
                 v-model="selectedDevice.room"
-                label="Phòng"
+                label="Room"
                 variant="outlined"
                 density="comfortable"
                 hide-details
@@ -181,7 +181,7 @@
               />
               <v-textarea
                 v-model="selectedDevice.description"
-                label="Mô tả"
+                label="Description"
                 variant="outlined"
                 density="comfortable"
                 rows="3"
@@ -192,10 +192,10 @@
           </v-card-text>
           <v-card-actions class="justify-end">
             <v-btn variant="text" class="text-none" @click="closeEditDialog">
-              Hủy
+              Cancel
             </v-btn>
             <v-btn color="primary" variant="flat" class="text-none" @click="saveDevice">
-              Lưu tạm
+              Save
             </v-btn>
           </v-card-actions>
         </v-card>

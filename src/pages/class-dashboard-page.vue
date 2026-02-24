@@ -12,7 +12,7 @@
     {
       id: '1',
       studentCode: '22810001',
-      fullName: 'Nguyễn Văn A',
+      fullName: 'Alex Johnson',
       status: 'ON_TIME',
       checkInTime: '07:58',
       seatCode: 'A1',
@@ -20,7 +20,7 @@
     {
       id: '2',
       studentCode: '22810002',
-      fullName: 'Trần Thị B',
+      fullName: 'Emma Wilson',
       status: 'ON_TIME',
       checkInTime: '08:00',
       seatCode: 'A2',
@@ -28,7 +28,7 @@
     {
       id: '3',
       studentCode: '22810003',
-      fullName: 'Lê Văn C',
+      fullName: 'Chris Taylor',
       status: 'LATE',
       checkInTime: '08:12',
       seatCode: 'B3',
@@ -36,7 +36,7 @@
     {
       id: '4',
       studentCode: '22810004',
-      fullName: 'Phạm Thị D',
+      fullName: 'Diana Brown',
       status: 'ABSENT',
       checkInTime: null,
       seatCode: null,
@@ -44,7 +44,7 @@
     {
       id: '5',
       studentCode: '22810005',
-      fullName: 'Đỗ Văn E',
+      fullName: 'Eric Davis',
       status: 'ON_TIME',
       checkInTime: '07:55',
       seatCode: 'C4',
@@ -52,7 +52,7 @@
     {
       id: '6',
       studentCode: '22810006',
-      fullName: 'Hoàng Thị F',
+      fullName: 'Fiona Martinez',
       status: 'ON_TIME',
       checkInTime: '07:59',
       seatCode: 'C5',
@@ -74,22 +74,22 @@
       <v-row class="mb-4" align="center" justify="space-between">
         <v-col cols="12" md="6">
           <h1 class="text-h5 text-sm-h4 font-weight-medium mb-1">
-            Lớp: IoT - Hệ thống điểm danh học sinh
+            Class: IoT — Student Attendance System
           </h1>
           <p class="text-body-2 text-medium-emphasis">
-            Theo dõi tình trạng tham gia lớp học theo thời gian thực.
+            Track class attendance status in real-time.
           </p>
         </v-col>
         <v-col cols="12" md="6" class="d-flex flex-wrap justify-end align-center">
           <v-select
-            label="Buổi học"
+            label="Session"
             class="mr-md-3 mb-3 mb-md-0"
             density="comfortable"
             variant="outlined"
             hide-details
             style="max-width: 260px"
-            :items="['Buổi 01 - 08:00', 'Buổi 02 - 08:00', 'Buổi 03 - 08:00']"
-            model-value="Buổi 01 - 08:00"
+            :items="['Session 01 - 08:00', 'Session 02 - 08:00', 'Session 03 - 08:00']"
+            model-value="Session 01 - 08:00"
           />
           <v-btn
             color="primary"
@@ -97,7 +97,7 @@
             variant="flat"
             class="text-none"
           >
-            Xuất báo cáo Excel
+            Export Report
           </v-btn>
         </v-col>
       </v-row>

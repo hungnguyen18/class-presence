@@ -14,24 +14,24 @@
   const listClass = ref<IClassItem[]>([
     {
       id: 'class-iot-10',
-      name: 'Lớp IoT - Nhóm 10',
+      name: 'IoT Class — Group 10',
       code: 'IOT101-10',
       studentCount: 45,
-      room: 'P.202',
+      room: 'Room 202',
     },
     {
       id: 'class-ai-01',
-      name: 'Lớp AI - Nhóm 01',
+      name: 'AI Class — Group 01',
       code: 'AI201-01',
       studentCount: 50,
-      room: 'P.305',
+      room: 'Room 305',
     },
     {
       id: 'class-blockchain-03',
-      name: 'Lớp Blockchain - Nhóm 03',
+      name: 'Blockchain Class — Group 03',
       code: 'BC301-03',
       studentCount: 40,
-      room: 'P.407',
+      room: 'Room 407',
     },
   ])
 
@@ -47,9 +47,9 @@
     <v-container fluid class="pa-4 pa-sm-6">
       <v-row class="mb-4" align="center" justify="space-between">
         <v-col cols="12" md="6">
-          <h1 class="text-h5 text-sm-h4 font-weight-medium mb-1">Danh sách lớp học</h1>
+          <h1 class="text-h5 text-sm-h4 font-weight-medium mb-1">Class List</h1>
           <p class="text-body-2 text-medium-emphasis">
-            Chọn một lớp để xem dashboard thống kê điểm danh chi tiết.
+            Select a class to view detailed attendance statistics.
           </p>
         </v-col>
       </v-row>
@@ -58,10 +58,10 @@
         <v-table>
           <thead>
             <tr>
-              <th class="text-left">Mã lớp</th>
-              <th class="text-left">Tên lớp</th>
-              <th class="text-left">Phòng học</th>
-              <th class="text-left">Sĩ số</th>
+              <th class="text-left">Class Code</th>
+              <th class="text-left">Class Name</th>
+              <th class="text-left">Room</th>
+              <th class="text-left">Students</th>
             </tr>
           </thead>
           <tbody>

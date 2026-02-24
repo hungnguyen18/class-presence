@@ -42,23 +42,23 @@
         to="/dashboard"
       />
       <v-divider class="my-2" />
-      <v-list-subheader v-if="!drawerIsCollapsed">Lớp học</v-list-subheader>
+      <v-list-subheader v-if="!drawerIsCollapsed">Classes</v-list-subheader>
       <v-list-item
         prepend-icon="mdi-format-list-bulleted"
-        title="Danh sách lớp"
+        title="Class List"
         value="class-list"
         to="/classes"
       />
       <v-list-item
         prepend-icon="mdi-calendar-clock"
-        title="Lịch buổi học"
+        title="Session Schedule"
         value="sessions"
       />
       <v-divider class="my-2" />
-      <v-list-subheader v-if="!drawerIsCollapsed">Thiết bị IoT</v-list-subheader>
+      <v-list-subheader v-if="!drawerIsCollapsed">IoT Devices</v-list-subheader>
       <v-list-item
         prepend-icon="mdi-chip"
-        title="Cấu hình thiết bị"
+        title="Device Config"
         value="device-config"
         to="/devices"
       />
@@ -72,7 +72,7 @@
       icon
       variant="text"
       color="on-primary"
-      aria-label="Thu gọn sidebar"
+      aria-label="Toggle sidebar"
       @click="toggleDrawerCollapse"
     >
       <v-icon>
@@ -85,7 +85,7 @@
       icon="mdi-bell-outline"
       variant="text"
       color="on-primary"
-      aria-label="Thông báo"
+      aria-label="Notifications"
     />
     <v-btn icon="mdi-account-circle" rounded="full" />
   </v-app-bar>

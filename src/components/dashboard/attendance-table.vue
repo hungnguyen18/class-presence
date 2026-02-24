@@ -11,7 +11,7 @@ const props = defineProps<{
   <v-card elevation="1">
     <v-card-title class="d-flex align-center flex-wrap">
       <span class="text-subtitle-1 font-weight-medium">
-        Danh sách điểm danh theo thời gian thực
+        Real-time Attendance List
       </span>
       <v-spacer />
       <v-chip
@@ -29,19 +29,19 @@ const props = defineProps<{
         <thead>
           <tr>
             <th class="text-left text-caption text-medium-emphasis">
-              MSSV
+              Student ID
             </th>
             <th class="text-left text-caption text-medium-emphasis">
-              Họ và tên
+              Full Name
             </th>
             <th class="text-left text-caption text-medium-emphasis">
-              Giờ đến
+              Check-in
             </th>
             <th class="text-left text-caption text-medium-emphasis">
-              Ghế
+              Seat
             </th>
             <th class="text-left text-caption text-medium-emphasis">
-              Trạng thái
+              Status
             </th>
           </tr>
         </thead>
@@ -75,13 +75,13 @@ const props = defineProps<{
                 variant="flat"
               >
                 <span v-if="attendanceItem.status === 'ON_TIME'">
-                  Đúng giờ
+                  On Time
                 </span>
                 <span v-else-if="attendanceItem.status === 'LATE'">
-                  Đi trễ
+                  Late
                 </span>
                 <span v-else>
-                  Vắng mặt
+                  Absent
                 </span>
               </v-chip>
             </td>

@@ -29,12 +29,12 @@ function getSeatStatus({
 <template>
   <v-card elevation="1">
     <v-card-title class="text-subtitle-1 font-weight-medium">
-      Sơ đồ ghế ngồi (mock)
+      Seat Map (Mock)
     </v-card-title>
     <v-divider />
     <v-card-text>
       <p class="text-caption text-medium-emphasis mb-3">
-        Màu xanh: đã điểm danh đúng giờ, Màu cam: đi trễ, Trắng: trống.
+        Green: checked in on time. Yellow: late. White: empty.
       </p>
       <div class="seat-grid">
         <div
