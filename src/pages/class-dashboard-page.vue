@@ -70,34 +70,44 @@
 
 <template>
   <AppLayout>
-    <v-container fluid class="pa-4 pa-sm-6">
-      <v-row class="mb-4" align="center" justify="space-between">
-        <v-col cols="12" md="6">
-          <h1 class="text-h5 text-sm-h4 font-weight-medium mb-1">
-            Class: IoT — Student Attendance System
+    <v-container fluid class="pa-5 pa-sm-8">
+      <v-row class="mb-2" align="center">
+        <v-col cols="12" md="7">
+          <div class="d-flex align-center mb-2">
+            <v-btn
+              variant="text"
+              color="primary"
+              size="small"
+              class="text-none mr-2 px-0"
+              to="/classes"
+              prepend-icon="mdi-arrow-left"
+            >
+              Classes
+            </v-btn>
+          </div>
+          <h1 class="page-title">
+            IoT — Student Attendance
           </h1>
-          <p class="text-body-2 text-medium-emphasis">
-            Track class attendance status in real-time.
+          <p class="page-subtitle">
+            Track class attendance in real-time.
           </p>
         </v-col>
-        <v-col cols="12" md="6" class="d-flex flex-wrap justify-end align-center">
+        <v-col cols="12" md="5" class="d-flex flex-wrap justify-md-end align-center ga-3">
           <v-select
             label="Session"
-            class="mr-md-3 mb-3 mb-md-0"
             density="comfortable"
-            variant="outlined"
             hide-details
-            style="max-width: 260px"
-            :items="['Session 01 - 08:00', 'Session 02 - 08:00', 'Session 03 - 08:00']"
-            model-value="Session 01 - 08:00"
+            style="max-width: 240px"
+            :items="['Session 01 — 08:00', 'Session 02 — 10:00', 'Session 03 — 14:00']"
+            model-value="Session 01 — 08:00"
           />
           <v-btn
             color="primary"
             prepend-icon="mdi-download"
             variant="flat"
-            class="text-none"
+            class="text-none font-weight-medium"
           >
-            Export Report
+            Export
           </v-btn>
         </v-col>
       </v-row>
@@ -115,11 +125,10 @@
         </v-col>
 
         <v-col cols="12" lg="4">
-          <AttendanceRateCard :attendance-rate="attendanceRate" />
-          <SeatMapCard class="mt-4" :list-student-attendance="listStudentAttendance" />
+          <AttendanceRateCard :attendance-rate="attendanceRate" class="mb-4" />
+          <SeatMapCard :list-student-attendance="listStudentAttendance" />
         </v-col>
       </v-row>
     </v-container>
   </AppLayout>
 </template>
-

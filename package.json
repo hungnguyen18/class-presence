@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@mdi/font": "^7.4.47",
+    "docx": "^9.6.0",
     "vue": "^3.5.25",
     "vue-router": "^5",
     "vuetify": "^3.11.8"

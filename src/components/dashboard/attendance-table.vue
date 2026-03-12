@@ -5,44 +5,49 @@ import { getAttendanceStatusColor } from '@/utils/attendance'
 const props = defineProps<{
   listStudentAttendance: IStudentAttendance[]
 }>()
+
+function formatStatusLabel({ status }: { status: string }): string {
+  if (status === 'ON_TIME') {
+    return 'On Time'
+  }
+  if (status === 'LATE') {
+    return 'Late'
+  }
+  return 'Absent'
+}
 </script>
 
 <template>
-  <v-card elevation="1">
-    <v-card-title class="d-flex align-center flex-wrap">
-      <span class="text-subtitle-1 font-weight-medium">
-        Real-time Attendance List
-      </span>
+  <v-card class="animate-in animate-delay-3">
+    <v-card-title class="d-flex align-center flex-wrap pa-5 pb-4">
+      <div>
+        <span class="table-title">Attendance List</span>
+        <span class="d-block text-caption text-medium-emphasis mt-1">
+          Real-time check-in status
+        </span>
+      </div>
       <v-spacer />
       <v-chip
-        color="primary"
-        variant="flat"
+        color="success"
+        variant="tonal"
         size="small"
-        class="text-caption mt-2 mt-sm-0"
+        prepend-icon="mdi-access-point"
       >
-        Real-time
+        Live
       </v-chip>
     </v-card-title>
+
     <v-divider />
+
     <v-card-text class="pa-0">
-      <v-table density="comfortable">
+      <v-table density="comfortable" hover>
         <thead>
           <tr>
-            <th class="text-left text-caption text-medium-emphasis">
-              Student ID
-            </th>
-            <th class="text-left text-caption text-medium-emphasis">
-              Full Name
-            </th>
-            <th class="text-left text-caption text-medium-emphasis">
-              Check-in
-            </th>
-            <th class="text-left text-caption text-medium-emphasis">
-              Seat
-            </th>
-            <th class="text-left text-caption text-medium-emphasis">
-              Status
-            </th>
+            <th class="th-cell">Student ID</th>
+            <th class="th-cell">Full Name</th>
+            <th class="th-cell">Check-in</th>
+            <th class="th-cell">Seat</th>
+            <th class="th-cell">Status</th>
           </tr>
         </thead>
         <tbody>
@@ -50,39 +55,33 @@ const props = defineProps<{
             v-for="attendanceItem in props.listStudentAttendance"
             :key="attendanceItem.id"
           >
-            <td class="text-body-2">
+            <td class="text-body-2 font-weight-medium">
               {{ attendanceItem.studentCode }}
             </td>
             <td class="text-body-2">
               {{ attendanceItem.fullName }}
             </td>
             <td class="text-body-2">
-              {{
-                attendanceItem.checkInTime !== null
-                  ? attendanceItem.checkInTime
-                  : '--'
-              }}
+              <span v-if="attendanceItem.checkInTime !== null" class="d-flex align-center">
+                <v-icon size="14" color="medium-emphasis" class="mr-1">mdi-clock-outline</v-icon>
+                {{ attendanceItem.checkInTime }}
+              </span>
+              <span v-else class="text-disabled">—</span>
             </td>
             <td class="text-body-2">
-              {{
-                attendanceItem.seatCode !== null ? attendanceItem.seatCode : '--'
-              }}
+              <span v-if="attendanceItem.seatCode !== null">
+                {{ attendanceItem.seatCode }}
+              </span>
+              <span v-else class="text-disabled">—</span>
             </td>
             <td class="text-body-2">
               <v-chip
                 :color="getAttendanceStatusColor({ status: attendanceItem.status })"
                 size="small"
-                variant="flat"
+                variant="tonal"
+                class="font-weight-medium"
               >
-                <span v-if="attendanceItem.status === 'ON_TIME'">
-                  On Time
-                </span>
-                <span v-else-if="attendanceItem.status === 'LATE'">
-                  Late
-                </span>
-                <span v-else>
-                  Absent
-                </span>
+                {{ formatStatusLabel({ status: attendanceItem.status }) }}
               </v-chip>
             </td>
           </tr>
@@ -92,3 +91,21 @@ const props = defineProps<{
   </v-card>
 </template>
 
+<style scoped>
+.table-title {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  color: var(--color-ink);
+}
+
+.th-cell {
+  text-align: left;
+  font-family: var(--font-body) !important;
+  font-size: 0.72rem !important;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-ink-muted) !important;
+  font-weight: 600 !important;
+  border-bottom-color: var(--color-border) !important;
+}
+</style>

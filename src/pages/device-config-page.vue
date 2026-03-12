@@ -8,6 +8,7 @@
     room: string
     description: string | null
     createdAt: string
+    isOnline: boolean
   }
 
   const listDevice = ref<IDeviceConfig[]>([
@@ -17,6 +18,7 @@
       room: 'Room 202',
       description: 'Attendance device for IoT Class — Group 10',
       createdAt: '2025-01-10 08:00:00',
+      isOnline: true,
     },
     {
       id: 'f8a3b2e1-0001-4c10-9d3b-000000000002',
@@ -24,6 +26,7 @@
       room: 'Room 305',
       description: 'Attendance device for AI Class — Group 01',
       createdAt: '2025-01-11 09:00:00',
+      isOnline: true,
     },
     {
       id: 'f8a3b2e1-0001-4c10-9d3b-000000000003',
@@ -31,6 +34,7 @@
       room: 'Room 407',
       description: 'Attendance device for Blockchain Class — Group 03',
       createdAt: '2025-01-12 10:00:00',
+      isOnline: false,
     },
   ])
 
@@ -66,32 +70,28 @@
 
 <template>
   <AppLayout>
-    <v-container fluid class="pa-4 pa-sm-6">
-      <v-row class="mb-4" align="center" justify="space-between">
+    <v-container fluid class="pa-5 pa-sm-8">
+      <v-row class="mb-6" align="center" justify="space-between">
         <v-col cols="12" md="7">
-          <h1 class="text-h5 text-sm-h4 font-weight-medium mb-1">
-            Device Configuration
-          </h1>
-          <p class="text-body-2 text-medium-emphasis">
-            IoT devices for the attendance system. Data is mock for UI design purposes only —
-            not connected to a database.
+          <h1 class="page-title">Devices</h1>
+          <p class="page-subtitle">
+            Manage IoT attendance devices across classrooms.
           </p>
         </v-col>
-        <v-col cols="12" md="5" class="d-flex justify-end">
+        <v-col cols="12" md="5" class="d-flex justify-md-end">
           <v-text-field
             prepend-inner-icon="mdi-magnify"
-            label="Search by device code or room"
+            placeholder="Search devices..."
             density="comfortable"
-            variant="outlined"
             hide-details
-            style="max-width: 320px"
+            style="max-width: 300px"
           />
         </v-col>
       </v-row>
 
       <v-row>
         <v-col
-          v-for="device in listDevice"
+          v-for="(device, index) in listDevice"
           :key="device.id"
           cols="12"
           sm="6"
@@ -99,57 +99,67 @@
           class="d-flex"
         >
           <v-card
-            rounded="lg"
-            class="flex-grow-1"
-            variant="elevated"
-            elevation="2"
+            class="flex-grow-1 animate-in"
+            :class="`animate-delay-${index + 1}`"
           >
-            <v-card-item>
-              <div class="d-flex align-center">
-                <v-avatar color="primary" variant="tonal" size="40">
-                  <v-icon>mdi-chip</v-icon>
-                </v-avatar>
-                <div class="ml-4">
-                  <div class="text-body-2 text-uppercase text-medium-emphasis">
-                    {{ device.deviceCode }}
-                  </div>
-                  <div class="text-caption text-disabled">
-                    ID: {{ device.id.slice(0, 8) }}…
-                  </div>
-                </div>
-              </div>
-            </v-card-item>
-
-            <v-card-text>
-              <div class="mb-2">
-                <v-chip
+            <v-card-text class="pa-5">
+              <div class="d-flex align-center mb-4">
+                <v-avatar
                   color="primary"
                   variant="tonal"
-                  size="small"
-                  class="text-caption"
+                  size="48"
+                  rounded="lg"
                 >
-                  <v-icon start size="16">mdi-door</v-icon>
-                  Room {{ device.room }}
+                  <v-icon size="24">mdi-chip</v-icon>
+                </v-avatar>
+                <div class="ml-4 flex-grow-1">
+                  <div class="device-code">{{ device.deviceCode }}</div>
+                  <div class="text-caption text-medium-emphasis">
+                    ID: {{ device.id.slice(0, 8) }}...
+                  </div>
+                </div>
+                <v-chip
+                  :color="device.isOnline ? 'success' : 'error'"
+                  variant="tonal"
+                  size="x-small"
+                  class="font-weight-medium"
+                >
+                  {{ device.isOnline ? 'Online' : 'Offline' }}
                 </v-chip>
               </div>
-              <p class="text-body-2 mb-2">
+
+              <v-divider class="mb-4" />
+
+              <div class="d-flex align-center mb-3">
+                <v-icon size="16" color="medium-emphasis" class="mr-2">mdi-map-marker-outline</v-icon>
+                <span class="text-body-2">{{ device.room }}</span>
+              </div>
+
+              <p class="text-body-2 text-medium-emphasis mb-3">
                 {{ device.description }}
               </p>
-              <p class="text-caption text-medium-emphasis">
-                <v-icon size="14" class="mr-1">mdi-clock-outline</v-icon>
-                Created at: {{ device.createdAt }}
-              </p>
+
+              <div class="d-flex align-center">
+                <v-icon size="14" color="medium-emphasis" class="mr-1">mdi-clock-outline</v-icon>
+                <span class="text-caption text-medium-emphasis">
+                  Added {{ device.createdAt }}
+                </span>
+              </div>
             </v-card-text>
 
-            <v-card-actions class="justify-end">
+            <v-divider />
+
+            <v-card-actions class="pa-4">
+              <v-spacer />
               <v-btn
                 color="primary"
-                variant="text"
+                variant="tonal"
                 size="small"
-                class="text-none"
+                class="text-none font-weight-medium"
+                prepend-icon="mdi-pencil-outline"
                 @click="openEditDialog({ device })"
               >
-                Edit Config
+                Edit
               </v-btn>
             </v-card-actions>
           </v-card>
@@ -158,26 +168,25 @@
 
       <v-dialog v-model="editDialogIsOpen" max-width="480">
         <v-card>
-          <v-card-title class="text-subtitle-1 font-weight-medium">
-            Edit Device Configuration
+          <v-card-title class="dialog-title pa-5 pb-3">
+            Edit Device
           </v-card-title>
-          <v-card-text>
+          <v-divider />
+          <v-card-text class="pa-5">
             <v-form v-if="selectedDevice">
               <v-text-field
                 v-model="selectedDevice.deviceCode"
                 label="Device Code"
-                variant="outlined"
                 density="comfortable"
                 hide-details
-                class="mb-3"
+                class="mb-4"
               />
               <v-text-field
                 v-model="selectedDevice.room"
                 label="Room"
-                variant="outlined"
                 density="comfortable"
                 hide-details
-                class="mb-3"
+                class="mb-4"
               />
               <v-textarea
                 v-model="selectedDevice.description"
@@ -187,15 +196,26 @@
                 rows="3"
                 auto-grow
                 hide-details
+                rounded="lg"
               />
             </v-form>
           </v-card-text>
-          <v-card-actions class="justify-end">
-            <v-btn variant="text" class="text-none" @click="closeEditDialog">
+          <v-divider />
+          <v-card-actions class="pa-4 justify-end">
+            <v-btn
+              variant="text"
+              class="text-none"
+              @click="closeEditDialog"
+            >
               Cancel
             </v-btn>
-            <v-btn color="primary" variant="flat" class="text-none" @click="saveDevice">
-              Save
+            <v-btn
+              color="primary"
+              variant="flat"
+              class="text-none font-weight-medium"
+              @click="saveDevice"
+            >
+              Save Changes
             </v-btn>
           </v-card-actions>
         </v-card>
@@ -204,3 +224,18 @@
   </AppLayout>
 </template>
 
+<style scoped>
+.device-code {
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-ink);
+}
+
+.dialog-title {
+  font-family: var(--font-display) !important;
+  font-size: 1.15rem !important;
+}
+</style>

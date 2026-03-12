@@ -24,49 +24,82 @@ function getSeatStatus({
 
   return 'ON_TIME'
 }
+
+function getStudentAtSeat({ seatCode }: { seatCode: string }): string | null {
+  const studentAtSeat = props.listStudentAttendance.find(
+    (attendanceItem) => attendanceItem.seatCode === seatCode,
+  )
+
+  if (!studentAtSeat) {
+    return null
+  }
+
+  return studentAtSeat.fullName
+}
 </script>
 
 <template>
-  <v-card elevation="1">
-    <v-card-title class="text-subtitle-1 font-weight-medium">
-      Seat Map (Mock)
+  <v-card class="animate-in animate-delay-5">
+    <v-card-title class="seat-map-title pa-5 pb-3">
+      Seat Map
     </v-card-title>
     <v-divider />
-    <v-card-text>
-      <p class="text-caption text-medium-emphasis mb-3">
-        Green: checked in on time. Yellow: late. White: empty.
-      </p>
+    <v-card-text class="pa-5">
+      <div class="seat-legend mb-4">
+        <span class="seat-legend-item">
+          <span class="seat-legend-dot seat-legend-dot--on-time" />
+          On Time
+        </span>
+        <span class="seat-legend-item">
+          <span class="seat-legend-dot seat-legend-dot--late" />
+          Late
+        </span>
+        <span class="seat-legend-item">
+          <span class="seat-legend-dot seat-legend-dot--empty" />
+          Empty
+        </span>
+      </div>
+
       <div class="seat-grid">
+        <div class="seat-board-label">
+          <v-icon size="14" class="mr-1">mdi-presentation</v-icon>
+          Board
+        </div>
+
         <div
           v-for="rowCode in ['A', 'B', 'C']"
           :key="rowCode"
           class="seat-row"
         >
-          <span class="seat-row-label">
-            {{ rowCode }}
-          </span>
+          <span class="seat-row-label">{{ rowCode }}</span>
           <div class="seat-row-list">
-            <button
+            <v-tooltip
               v-for="seatIndex in 5"
               :key="`${rowCode}${seatIndex}`"
-              class="seat-item"
-              type="button"
+              location="top"
             >
-              <span
-                class="seat-indicator"
-                :class="{
-                  'seat-indicator--on-time':
-                    getSeatStatus({ seatCode: `${rowCode}${seatIndex}` }) ===
-                    'ON_TIME',
-                  'seat-indicator--late':
-                    getSeatStatus({ seatCode: `${rowCode}${seatIndex}` }) ===
-                    'LATE',
-                }"
-              />
-              <span class="seat-label">
-                {{ rowCode }}{{ seatIndex }}
+              <template #activator="{ props: tooltipProps }">
+                <button
+                  v-bind="tooltipProps"
+                  class="seat-item"
+                  type="button"
+                >
+                  <span
+                    class="seat-indicator"
+                    :class="{
+                      'seat-indicator--on-time':
+                        getSeatStatus({ seatCode: `${rowCode}${seatIndex}` }) === 'ON_TIME',
+                      'seat-indicator--late':
+                        getSeatStatus({ seatCode: `${rowCode}${seatIndex}` }) === 'LATE',
+                    }"
+                  />
+                  <span class="seat-label">{{ rowCode }}{{ seatIndex }}</span>
+                </button>
+              </template>
+              <span>
+                {{ getStudentAtSeat({ seatCode: `${rowCode}${seatIndex}` }) || 'Empty seat' }}
               </span>
-            </button>
+            </v-tooltip>
           </div>
         </div>
       </div>
@@ -75,29 +108,88 @@ function getSeatStatus({
 </template>
 
 <style scoped>
+.seat-map-title {
+  font-family: var(--font-display) !important;
+  font-size: 1.05rem !important;
+}
+
+.seat-legend {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.seat-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.72rem;
+  color: var(--color-ink-muted);
+  font-family: var(--font-body);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.seat-legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+}
+
+.seat-legend-dot--on-time {
+  background-color: var(--color-success);
+}
+
+.seat-legend-dot--late {
+  background-color: var(--color-warning);
+}
+
+.seat-legend-dot--empty {
+  background-color: #E8E4DC;
+  border: 1px solid var(--color-border);
+}
+
 .seat-grid {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
+}
+
+.seat-board-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-ink-muted);
+  padding: 6px;
+  background: linear-gradient(135deg, rgba(44, 62, 80, 0.04), rgba(44, 62, 80, 0.08));
+  border-radius: 6px;
+  margin-bottom: 6px;
+  font-family: var(--font-body);
 }
 
 .seat-row {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
 }
 
 .seat-row-label {
-  width: 16px;
-  font-size: 0.75rem;
-  font-weight: 500;
-  color: rgba(0, 0, 0, 0.54);
+  width: 18px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--color-ink-muted);
+  font-family: var(--font-body);
+  text-align: center;
 }
 
 .seat-row-list {
   display: flex;
-  gap: 6px;
+  gap: 8px;
   flex-wrap: wrap;
+  flex: 1;
 }
 
 .seat-item {
@@ -105,40 +197,49 @@ function getSeatStatus({
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 40px;
+  width: 44px;
   border: none;
   background: transparent;
   padding: 0;
   cursor: pointer;
+  transition: transform 0.15s ease;
+}
+
+.seat-item:hover {
+  transform: scale(1.12);
 }
 
 .seat-item:focus-visible .seat-indicator {
-  outline: 2px solid rgb(25, 118, 210);
+  outline: 2px solid var(--color-accent-gold);
   outline-offset: 2px;
 }
 
 .seat-indicator {
   width: 100%;
-  height: 18px;
-  border-radius: 6px;
-  border: 1px solid rgba(0, 0, 0, 0.12);
-  background-color: white;
+  height: 22px;
+  border-radius: 5px 5px 8px 8px;
+  border: 1.5px solid var(--color-border);
+  background-color: #F0EDE6;
+  transition: all 0.2s ease;
 }
 
 .seat-indicator--on-time {
-  background-color: rgb(56, 142, 60);
-  border-color: rgb(46, 125, 50);
+  background-color: var(--color-success);
+  border-color: rgba(61, 139, 94, 0.6);
+  box-shadow: 0 2px 6px rgba(61, 139, 94, 0.2);
 }
 
 .seat-indicator--late {
-  background-color: rgb(251, 192, 45);
-  border-color: rgb(245, 171, 0);
+  background-color: var(--color-warning);
+  border-color: rgba(212, 149, 58, 0.6);
+  box-shadow: 0 2px 6px rgba(212, 149, 58, 0.2);
 }
 
 .seat-label {
-  margin-top: 2px;
-  font-size: 0.7rem;
-  color: rgba(0, 0, 0, 0.6);
+  margin-top: 3px;
+  font-size: 0.65rem;
+  color: var(--color-ink-muted);
+  font-family: var(--font-body);
+  font-weight: 500;
 }
 </style>
-
