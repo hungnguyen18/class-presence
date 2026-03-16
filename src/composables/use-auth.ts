@@ -11,8 +11,11 @@ const mapUser = (user: User | null): IAuthUser | null => {
     return null
   }
 
+  const rawFullName = user.user_metadata?.full_name
   const displayName =
-    (user.user_metadata?.full_name as string) || user.email || 'User'
+    (typeof rawFullName === 'string' && rawFullName.trim().length > 0
+      ? rawFullName
+      : user.email) || 'User'
   const initials = displayName
     .split(' ')
     .slice(0, 2)
@@ -24,7 +27,10 @@ const mapUser = (user: User | null): IAuthUser | null => {
     id: user.id,
     email: user.email ?? '',
     displayName,
-    avatarUrl: (user.user_metadata?.avatar_url as string) ?? null,
+    avatarUrl:
+      typeof user.user_metadata?.avatar_url === 'string'
+        ? user.user_metadata.avatar_url
+        : null,
     initials,
   }
 }
@@ -43,9 +49,14 @@ export function useAuth() {
   const isAuthenticated = computed(() => currentUser.value !== null)
 
   const signInWithGoogle = async () => {
+    const redirectTo =
+      typeof globalThis.location === 'undefined'
+        ? undefined
+        : `${globalThis.location.origin}/dashboard`
+
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
-      options: { redirectTo: `${window.location.origin}/dashboard` },
+      options: { redirectTo },
     })
     if (error) {
       throw error
