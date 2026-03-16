@@ -1,16 +1,35 @@
 <script setup lang="ts">
   import { computed, ref } from 'vue'
   import { useDisplay } from 'vuetify'
-  import { useRoute } from 'vue-router'
+  import { useRoute, useRouter } from 'vue-router'
   import { useColorMode } from '@/composables/use-color-mode'
-
-  const drawerIsOpen = ref<boolean>(true)
-  const drawerIsCollapsed = ref<boolean>(true)
+  import { useAuth } from '@/composables/use-auth'
 
   const display = useDisplay()
   const route = useRoute()
+  const router = useRouter()
 
   const isMobile = computed(() => display.smAndDown.value)
+
+  const drawerIsOpen = ref<boolean>(!isMobile.value)
+  const drawerIsCollapsed = ref<boolean>(true)
+
+  const { currentUser, signOut } = useAuth()
+
+  const userDisplayName = computed(() =>
+    currentUser.value?.displayName ?? 'Teacher',
+  )
+
+  const userAvatarUrl = computed(() => currentUser.value?.avatarUrl ?? null)
+
+  const userInitials = computed(() => currentUser.value?.initials ?? 'U')
+
+  const handleSignOut = async () => {
+    const { error } = await signOut()
+    if (!error) {
+      router.push({ name: 'login' })
+    }
+  }
 
   const drawerWidth = computed(() =>
     isMobile.value ? 280 : drawerIsCollapsed.value ? 72 : 220,
@@ -22,6 +41,7 @@
       dashboard: 'Dashboard',
       classList: 'Classes',
       classDashboard: 'Class Details',
+      schedule: 'Schedule',
       deviceConfig: 'Devices',
     }
     return titleMap[name] || 'Dashboard'
@@ -99,6 +119,7 @@
         prepend-icon="mdi-calendar-clock"
         title="Schedule"
         value="sessions"
+        to="/schedule"
         rounded="lg"
         class="nav-item mb-1"
       />
@@ -155,7 +176,8 @@
       variant="text"
       color="primary"
       :aria-label="isDark ? 'Switch to light mode' : 'Switch to dark mode'"
-      class="theme-toggle mr-1"
+      class="theme-toggle"
+      :class="{ 'mr-1': !isMobile }"
       @click="toggleColorMode"
     >
       <v-icon class="theme-toggle-icon">
@@ -164,6 +186,7 @@
     </v-btn>
 
     <v-btn
+      v-if="!isMobile"
       icon
       variant="text"
       color="primary"
@@ -175,19 +198,49 @@
       </v-badge>
     </v-btn>
 
-    <v-btn
-      variant="text"
-      color="primary"
-      class="user-btn"
-      rounded="xl"
-    >
-      <v-avatar color="secondary" size="32" class="mr-2">
-        <span class="text-caption font-weight-bold text-white">TN</span>
-      </v-avatar>
-      <span v-if="!isMobile" class="text-body-2 font-weight-medium text-none">
-        Teacher
-      </span>
-    </v-btn>
+    <v-menu location="bottom end">
+      <template #activator="{ props: menuProps }">
+        <v-btn
+          v-bind="menuProps"
+          variant="text"
+          color="primary"
+          class="user-btn"
+          :icon="isMobile"
+          :rounded="isMobile ? undefined : 'xl'"
+        >
+          <v-avatar color="secondary" size="32" :class="{ 'mr-2': !isMobile }">
+            <v-img
+              v-if="userAvatarUrl"
+              :src="userAvatarUrl"
+              :alt="userDisplayName"
+            />
+            <span v-else class="text-caption font-weight-bold text-white">
+              {{ userInitials }}
+            </span>
+          </v-avatar>
+          <template v-if="!isMobile">
+            <span class="text-body-2 font-weight-medium text-none">
+              {{ userDisplayName }}
+            </span>
+            <v-icon size="16" class="ml-1">mdi-chevron-down</v-icon>
+          </template>
+        </v-btn>
+      </template>
+
+      <v-list density="compact" min-width="180">
+        <v-list-item disabled>
+          <v-list-item-title class="text-caption text-medium-emphasis">
+            {{ currentUser?.email }}
+          </v-list-item-title>
+        </v-list-item>
+        <v-divider class="my-1" />
+        <v-list-item
+          prepend-icon="mdi-logout"
+          title="Sign out"
+          @click="handleSignOut"
+        />
+      </v-list>
+    </v-menu>
   </v-app-bar>
 
   <v-main>

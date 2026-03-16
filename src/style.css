@@ -149,6 +149,12 @@ th, td {
   overflow: hidden;
 }
 
+/* ── Tooltip text color fix ── */
+
+.v-tooltip > .v-overlay__content {
+  color: #fff !important;
+}
+
 /* ── Chip refinement ── */
 
 .v-chip {
