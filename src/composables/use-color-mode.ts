@@ -13,7 +13,7 @@ export function useColorMode() {
   function toggleColorMode() {
     const next = isDark.value ? LIGHT_THEME : DARK_THEME
     theme.global.name.value = next
-    localStorage.setItem(STORAGE_KEY, next)
+    window.localStorage.setItem(STORAGE_KEY, next)
   }
 
   return { isDark, toggleColorMode }

@@ -1,4 +1,19 @@
-export type TAttendanceStatus = 'ON_TIME' | 'LATE' | 'ABSENT'
+export const EAttendanceStatus = {
+  ON_TIME: 'ON_TIME',
+  LATE: 'LATE',
+  ABSENT: 'ABSENT',
+} as const
+
+export type TAttendanceStatus =
+  (typeof EAttendanceStatus)[keyof typeof EAttendanceStatus]
+
+export function isAttendanceStatus(value: unknown): value is TAttendanceStatus {
+  return (
+    value === EAttendanceStatus.ON_TIME
+    || value === EAttendanceStatus.LATE
+    || value === EAttendanceStatus.ABSENT
+  )
+}
 
 export interface IStudentAttendance {
   id: string
@@ -8,4 +23,3 @@ export interface IStudentAttendance {
   checkInTime: string | null
   seatCode: string | null
 }
-

@@ -1,53 +1,20 @@
 <script setup lang="ts">
-  import { ref } from 'vue'
+  import { onMounted } from 'vue'
   import { useRouter } from 'vue-router'
   import AppLayout from '../components/layout/app-layout.vue'
+  import { useClasses } from '@/composables/use-classes'
+  import { getClassTheme } from '@/constants/class'
 
-  interface IClassItem {
-    id: string
-    name: string
-    code: string
-    studentCount: number
-    room: string
-    icon: string
-    color: string
-  }
-
-  const listClass = ref<IClassItem[]>([
-    {
-      id: 'class-iot-10',
-      name: 'IoT Class — Group 10',
-      code: 'IOT101-10',
-      studentCount: 45,
-      room: 'Room 202',
-      icon: 'mdi-access-point',
-      color: 'info',
-    },
-    {
-      id: 'class-ai-01',
-      name: 'AI Class — Group 01',
-      code: 'AI201-01',
-      studentCount: 50,
-      room: 'Room 305',
-      icon: 'mdi-robot-outline',
-      color: 'secondary',
-    },
-    {
-      id: 'class-blockchain-03',
-      name: 'Blockchain Class — Group 03',
-      code: 'BC301-03',
-      studentCount: 40,
-      room: 'Room 407',
-      icon: 'mdi-link-variant',
-      color: 'primary',
-    },
-  ])
-
+  const { listClass, isLoading, fetchClasses } = useClasses()
   const router = useRouter()
 
   function goToClassDashboard({ classId }: { classId: string }) {
     router.push({ name: 'classDashboard', params: { classId } })
   }
+
+  onMounted(() => {
+    fetchClasses()
+  })
 </script>
 
 <template>
@@ -62,7 +29,13 @@
         </v-col>
       </v-row>
 
-      <v-row>
+      <v-row v-if="isLoading">
+        <v-col v-for="n in 3" :key="n" cols="12" sm="6" md="4">
+          <v-skeleton-loader type="card" />
+        </v-col>
+      </v-row>
+
+      <v-row v-else>
         <v-col
           v-for="(classItem, index) in listClass"
           :key="classItem.id"
@@ -79,17 +52,17 @@
             <v-card-text class="pa-5">
               <div class="d-flex align-center mb-4">
                 <v-avatar
-                  :color="classItem.color"
+                  :color="getClassTheme(classItem.subjectName).color"
                   variant="tonal"
                   size="48"
                   rounded="lg"
                 >
-                  <v-icon size="24">{{ classItem.icon }}</v-icon>
+                  <v-icon size="24">{{ getClassTheme(classItem.subjectName).icon }}</v-icon>
                 </v-avatar>
                 <div class="ml-4">
-                  <div class="class-code">{{ classItem.code }}</div>
+                  <div class="class-code">{{ classItem.classCode }}</div>
                   <div class="text-body-2 font-weight-medium">
-                    {{ classItem.name }}
+                    {{ classItem.subjectName }}
                   </div>
                 </div>
               </div>
@@ -99,11 +72,11 @@
               <div class="d-flex justify-space-between">
                 <div class="class-meta">
                   <v-icon size="14" class="mr-1">mdi-map-marker-outline</v-icon>
-                  {{ classItem.room }}
+                  {{ classItem.room.name }}
                 </div>
                 <div class="class-meta">
-                  <v-icon size="14" class="mr-1">mdi-account-group-outline</v-icon>
-                  {{ classItem.studentCount }} students
+                  <v-icon size="14" class="mr-1">mdi-clock-outline</v-icon>
+                  {{ classItem.startTime.slice(0, 5) }} — {{ classItem.endTime.slice(0, 5) }}
                 </div>
               </div>
             </v-card-text>

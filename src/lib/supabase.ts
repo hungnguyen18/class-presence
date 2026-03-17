@@ -10,3 +10,16 @@ if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
 }
 
 export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+
+export async function invokeEdgeFunction<TResponse>(
+  functionName: string,
+  body: Record<string, unknown>,
+): Promise<{ data: TResponse | null; error: string | null }> {
+  const { data, error } = await supabase.functions.invoke(functionName, { body })
+
+  if (error) {
+    return { data: null, error: error.message }
+  }
+
+  return { data: data as TResponse, error: null }
+}

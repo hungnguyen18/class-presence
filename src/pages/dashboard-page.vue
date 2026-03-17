@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { computed, ref, onMounted } from 'vue'
+  import { computed, onMounted, onUnmounted } from 'vue'
   import {
     Chart as ChartJS,
     CategoryScale,
@@ -15,7 +15,25 @@
   import { Line, Doughnut, Bar } from 'vue-chartjs'
   import AppLayout from '../components/layout/app-layout.vue'
   import { useAuth } from '@/composables/use-auth'
+  import { useDashboardStats } from '@/composables/use-dashboard-stats'
+  import { useDevices } from '@/composables/use-devices'
+  import { useColorMode } from '@/composables/use-color-mode'
+  import { subscribeAttendance, subscribeDevices } from '@/composables/use-realtime'
+  import { formatLastSeen } from '@/utils/format'
   import { supabase } from '@/lib/supabase'
+  import { ref } from 'vue'
+  import { EDeviceStatus } from '@/types/database'
+  import { GREETING_HOUR_MORNING, GREETING_HOUR_AFTERNOON } from '@/constants/ui'
+  import {
+    FONT_BODY,
+    CHART_ANIMATION_DURATION,
+    CHART_TENSION,
+    CHART_POINT_RADIUS,
+    CHART_POINT_HOVER_RADIUS,
+    CHART_LEGEND_PADDING,
+    DOUGHNUT_CUTOUT,
+    COLOR_OPACITY_SUFFIX,
+  } from '@/constants/chart'
 
   ChartJS.register(
     CategoryScale,
@@ -30,14 +48,17 @@
   )
 
   const { currentUser } = useAuth()
+  const { stats, weeklyTrend, classBreakdown, overallBreakdown, isLoading, fetchDashboardStats } =
+    useDashboardStats()
+  const { listDevice, fetchDevices, patchDeviceInPlace } = useDevices()
 
   const greeting = computed(() => {
     const name = currentUser.value?.displayName.split(' ')[0] ?? 'Teacher'
     const hour = new Date().getHours()
-    if (hour < 12) {
+    if (hour < GREETING_HOUR_MORNING) {
       return `Good morning, ${name}`
     }
-    if (hour < 18) {
+    if (hour < GREETING_HOUR_AFTERNOON) {
       return `Good afternoon, ${name}`
     }
     return `Good evening, ${name}`
@@ -52,69 +73,48 @@
     supabaseStatus.value = 'checking'
     const start = performance.now()
     try {
-      const { error } = await supabase.from('_dummy_ping').select('*').limit(1)
+      await supabase.from('cp_rooms').select('id').limit(1)
       supabaseLatency.value = Math.round(performance.now() - start)
-      // Even a "relation does not exist" error means the API is reachable
-      if (error && !error.message.includes('does not exist')) {
-        supabaseStatus.value = 'connected'
-      } else {
-        supabaseStatus.value = 'connected'
-      }
+      supabaseStatus.value = 'connected'
     } catch {
       supabaseLatency.value = null
       supabaseStatus.value = 'error'
     }
   }
 
-  onMounted(() => {
-    checkSupabaseConnection()
-  })
-
-  // ── Device status (dummy) ──
-
-  interface IDashboardDevice {
-    id: string
-    deviceCode: string
-    room: string
-    isOnline: boolean
-    lastSeen: string
-  }
-
-  const listDevice = ref<IDashboardDevice[]>([
-    {
-      id: '1',
-      deviceCode: 'IOT-ROOM-202-01',
-      room: 'Room 202',
-      isOnline: true,
-      lastSeen: 'Just now',
-    },
-    {
-      id: '2',
-      deviceCode: 'AI-ROOM-305-01',
-      room: 'Room 305',
-      isOnline: true,
-      lastSeen: '2 min ago',
-    },
-    {
-      id: '3',
-      deviceCode: 'BC-ROOM-407-01',
-      room: 'Room 407',
-      isOnline: false,
-      lastSeen: '5 hours ago',
-    },
-  ])
+  // ── Device helpers ──
 
   const countOnlineDevice = computed(() =>
-    listDevice.value.filter((d) => d.isOnline).length,
+    listDevice.value.filter((d) => d.status === EDeviceStatus.ONLINE).length,
   )
+
+  // ── Realtime ──
+
+  let unsubAttendance: (() => void) | null = null
+  let unsubDevices: (() => void) | null = null
+
+  onMounted(async () => {
+    await Promise.all([fetchDashboardStats(), fetchDevices(), checkSupabaseConnection()])
+
+    unsubAttendance = subscribeAttendance(() => {
+      fetchDashboardStats()
+    }).unsubscribe
+
+    unsubDevices = subscribeDevices((payload) => {
+      if (payload.new && typeof payload.new === 'object') {
+        patchDeviceInPlace(payload.new)
+      }
+    }).unsubscribe
+  })
+
+  onUnmounted(() => {
+    unsubAttendance?.()
+    unsubDevices?.()
+  })
 
   // ── Chart configs (reactive to theme changes) ──
 
-  import { useColorMode } from '@/composables/use-color-mode'
-
   const { isDark } = useColorMode()
-
-  const FONT_BODY = "'DM Sans', system-ui, sans-serif"
 
   const chartColors = computed(() => {
     const dark = isDark.value
@@ -142,40 +142,41 @@
   // Weekly attendance trend (line)
   const weeklyAttendanceData = computed(() => {
     const c = chartColors.value
+    const trend = weeklyTrend.value
     return {
-      labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+      labels: trend.map((d) => d.label),
       datasets: [
         {
           label: 'On Time',
-          data: [38, 41, 36, 42, 39, 30],
+          data: trend.map((d) => d.onTime),
           borderColor: c.success,
-          backgroundColor: c.success + '18',
+          backgroundColor: c.success + COLOR_OPACITY_SUFFIX,
           fill: true,
-          tension: 0.35,
-          pointRadius: 4,
-          pointHoverRadius: 6,
+          tension: CHART_TENSION,
+          pointRadius: CHART_POINT_RADIUS,
+          pointHoverRadius: CHART_POINT_HOVER_RADIUS,
           pointBackgroundColor: c.success,
         },
         {
           label: 'Late',
-          data: [4, 3, 6, 2, 5, 4],
+          data: trend.map((d) => d.late),
           borderColor: c.warning,
-          backgroundColor: c.warning + '18',
+          backgroundColor: c.warning + COLOR_OPACITY_SUFFIX,
           fill: true,
-          tension: 0.35,
-          pointRadius: 4,
-          pointHoverRadius: 6,
+          tension: CHART_TENSION,
+          pointRadius: CHART_POINT_RADIUS,
+          pointHoverRadius: CHART_POINT_HOVER_RADIUS,
           pointBackgroundColor: c.warning,
         },
         {
           label: 'Absent',
-          data: [3, 1, 3, 1, 1, 6],
+          data: trend.map((d) => d.absent),
           borderColor: c.error,
-          backgroundColor: c.error + '18',
+          backgroundColor: c.error + COLOR_OPACITY_SUFFIX,
           fill: true,
-          tension: 0.35,
-          pointRadius: 4,
-          pointHoverRadius: 6,
+          tension: CHART_TENSION,
+          pointRadius: CHART_POINT_RADIUS,
+          pointHoverRadius: CHART_POINT_HOVER_RADIUS,
           pointBackgroundColor: c.error,
         },
       ],
@@ -185,7 +186,7 @@
   const weeklyAttendanceOptions = computed(() => ({
     responsive: true,
     maintainAspectRatio: false,
-    animation: { duration: 400 },
+    animation: { duration: CHART_ANIMATION_DURATION },
     plugins: {
       legend: {
         position: 'bottom' as const,
@@ -194,7 +195,7 @@
           color: chartColors.value.ink,
           usePointStyle: true,
           pointStyle: 'circle',
-          padding: 20,
+          padding: CHART_LEGEND_PADDING,
         },
       },
       tooltip: {
@@ -217,11 +218,12 @@
   // Attendance breakdown (doughnut)
   const attendanceBreakdownData = computed(() => {
     const c = chartColors.value
+    const b = overallBreakdown.value
     return {
       labels: ['On Time', 'Late', 'Absent'],
       datasets: [
         {
-          data: [226, 24, 15],
+          data: [b.onTime, b.late, b.absent],
           backgroundColor: [c.success, c.warning, c.error],
           borderWidth: 0,
           hoverOffset: 6,
@@ -230,11 +232,24 @@
     }
   })
 
+  const breakdownPercentages = computed(() => {
+    const b = overallBreakdown.value
+    const total = b.onTime + b.late + b.absent
+    if (total === 0) {
+      return { onTime: 0, late: 0, absent: 0 }
+    }
+    return {
+      onTime: Math.round((b.onTime / total) * 100),
+      late: Math.round((b.late / total) * 100),
+      absent: Math.round((b.absent / total) * 100),
+    }
+  })
+
   const attendanceBreakdownOptions = computed(() => ({
     responsive: true,
     maintainAspectRatio: false,
-    animation: { duration: 400 },
-    cutout: '68%',
+    animation: { duration: CHART_ANIMATION_DURATION },
+    cutout: DOUGHNUT_CUTOUT,
     plugins: {
       legend: {
         position: 'bottom' as const,
@@ -243,7 +258,7 @@
           color: chartColors.value.ink,
           usePointStyle: true,
           pointStyle: 'circle',
-          padding: 20,
+          padding: CHART_LEGEND_PADDING,
         },
       },
       tooltip: {
@@ -256,24 +271,25 @@
   // Per-class attendance (bar)
   const classAttendanceData = computed(() => {
     const c = chartColors.value
+    const breakdown = classBreakdown.value
     return {
-      labels: ['IoT — G10', 'AI — G01', 'BC — G03'],
+      labels: breakdown.map((b) => b.label),
       datasets: [
         {
           label: 'On Time',
-          data: [40, 44, 36],
+          data: breakdown.map((b) => b.onTime),
           backgroundColor: c.success,
           borderRadius: 4,
         },
         {
           label: 'Late',
-          data: [3, 4, 2],
+          data: breakdown.map((b) => b.late),
           backgroundColor: c.gold,
           borderRadius: 4,
         },
         {
           label: 'Absent',
-          data: [2, 2, 2],
+          data: breakdown.map((b) => b.absent),
           backgroundColor: c.error,
           borderRadius: 4,
         },
@@ -284,7 +300,7 @@
   const classAttendanceOptions = computed(() => ({
     responsive: true,
     maintainAspectRatio: false,
-    animation: { duration: 400 },
+    animation: { duration: CHART_ANIMATION_DURATION },
     plugins: {
       legend: {
         position: 'bottom' as const,
@@ -293,7 +309,7 @@
           color: chartColors.value.ink,
           usePointStyle: true,
           pointStyle: 'circle',
-          padding: 20,
+          padding: CHART_LEGEND_PADDING,
         },
       },
       tooltip: {
@@ -340,7 +356,8 @@
               </v-avatar>
               <div class="d-flex flex-column stat-content">
                 <span class="text-caption text-medium-emphasis dash-label">Classes</span>
-                <span class="dash-value">3</span>
+                <v-skeleton-loader v-if="isLoading" type="text" width="40" />
+                <span v-else class="dash-value">{{ stats.totalClass }}</span>
               </div>
             </v-card-text>
           </v-card>
@@ -354,7 +371,8 @@
               </v-avatar>
               <div class="d-flex flex-column stat-content">
                 <span class="text-caption text-medium-emphasis dash-label">Today</span>
-                <span class="dash-value text-success">5</span>
+                <v-skeleton-loader v-if="isLoading" type="text" width="40" />
+                <span v-else class="dash-value text-success">{{ stats.todaySessionCount }}</span>
               </div>
             </v-card-text>
           </v-card>
@@ -368,7 +386,8 @@
               </v-avatar>
               <div class="d-flex flex-column stat-content">
                 <span class="text-caption text-medium-emphasis dash-label">Students</span>
-                <span class="dash-value">135</span>
+                <v-skeleton-loader v-if="isLoading" type="text" width="40" />
+                <span v-else class="dash-value">{{ stats.totalStudent }}</span>
               </div>
             </v-card-text>
           </v-card>
@@ -382,7 +401,8 @@
               </v-avatar>
               <div class="d-flex flex-column">
                 <span class="text-caption text-medium-emphasis dash-label">Devices</span>
-                <span class="dash-value">3</span>
+                <v-skeleton-loader v-if="isLoading" type="text" width="40" />
+                <span v-else class="dash-value">{{ stats.totalDevice }}</span>
               </div>
             </v-card-text>
           </v-card>
@@ -417,15 +437,15 @@
               </div>
               <div class="d-flex justify-space-around mt-4">
                 <div class="text-center">
-                  <div class="text-h6 font-weight-bold text-success">85%</div>
+                  <div class="text-h6 font-weight-bold text-success">{{ breakdownPercentages.onTime }}%</div>
                   <div class="text-caption text-medium-emphasis">On Time</div>
                 </div>
                 <div class="text-center">
-                  <div class="text-h6 font-weight-bold" style="color: var(--color-warning)">9%</div>
+                  <div class="text-h6 font-weight-bold" style="color: var(--color-warning)">{{ breakdownPercentages.late }}%</div>
                   <div class="text-caption text-medium-emphasis">Late</div>
                 </div>
                 <div class="text-center">
-                  <div class="text-h6 font-weight-bold text-error">6%</div>
+                  <div class="text-h6 font-weight-bold text-error">{{ breakdownPercentages.absent }}%</div>
                   <div class="text-caption text-medium-emphasis">Absent</div>
                 </div>
               </div>
@@ -575,22 +595,22 @@
                     </v-list-item-title>
                     <v-list-item-subtitle class="text-caption">
                       <v-icon size="12" class="mr-1">mdi-map-marker-outline</v-icon>
-                      {{ device.room }}
-                      <span class="mx-2">·</span>
-                      {{ device.lastSeen }}
+                      {{ device.room.name }}
+                      <span class="mx-2">&middot;</span>
+                      {{ formatLastSeen(device.lastSeen) }}
                     </v-list-item-subtitle>
 
                     <template #append>
                       <div class="d-flex align-center">
                         <span
                           class="status-dot mr-2"
-                          :class="device.isOnline ? 'status-dot--online' : 'status-dot--offline'"
+                          :class="device.status === EDeviceStatus.ONLINE ? 'status-dot--online' : 'status-dot--offline'"
                         />
                         <span
                           class="text-caption font-weight-medium"
-                          :class="device.isOnline ? 'text-success' : 'text-error'"
+                          :class="device.status === EDeviceStatus.ONLINE ? 'text-success' : 'text-error'"
                         >
-                          {{ device.isOnline ? 'Online' : 'Offline' }}
+                          {{ device.status === EDeviceStatus.ONLINE ? 'Online' : 'Offline' }}
                         </span>
                       </div>
                     </template>

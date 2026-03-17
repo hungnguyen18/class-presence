@@ -1,19 +1,14 @@
 <script setup lang="ts">
 import type { IStudentAttendance } from '@/types/attendance'
 import { getAttendanceStatusColor } from '@/utils/attendance'
+import { ATTENDANCE_STATUS_LABEL_MAP } from '@/constants/attendance'
 
 const props = defineProps<{
   listStudentAttendance: IStudentAttendance[]
 }>()
 
 function formatStatusLabel({ status }: { status: string }): string {
-  if (status === 'ON_TIME') {
-    return 'On Time'
-  }
-  if (status === 'LATE') {
-    return 'Late'
-  }
-  return 'Absent'
+  return ATTENDANCE_STATUS_LABEL_MAP[status] ?? 'Absent'
 }
 </script>
 

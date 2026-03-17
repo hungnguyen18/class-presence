@@ -1,25 +1,26 @@
 <script setup lang="ts">
   import { computed } from 'vue'
+  import { ATTENDANCE_RATE_GOOD, ATTENDANCE_RATE_WARNING } from '@/constants/attendance'
 
   const props = defineProps<{
     attendanceRate: number
   }>()
 
   const rateColor = computed(() => {
-    if (props.attendanceRate >= 80) {
+    if (props.attendanceRate >= ATTENDANCE_RATE_GOOD) {
       return 'success'
     }
-    if (props.attendanceRate >= 60) {
+    if (props.attendanceRate >= ATTENDANCE_RATE_WARNING) {
       return 'warning'
     }
     return 'error'
   })
 
   const rateStatus = computed(() => {
-    if (props.attendanceRate >= 80) {
+    if (props.attendanceRate >= ATTENDANCE_RATE_GOOD) {
       return 'Good standing'
     }
-    if (props.attendanceRate >= 60) {
+    if (props.attendanceRate >= ATTENDANCE_RATE_WARNING) {
       return 'Needs attention'
     }
     return 'At risk'
@@ -58,11 +59,11 @@
 
       <div class="d-flex justify-space-between text-caption text-medium-emphasis">
         <span>Late arrivals adjusted</span>
-        <span>Target: 80%</span>
+        <span>Target: {{ ATTENDANCE_RATE_GOOD }}%</span>
       </div>
 
       <v-alert
-        v-if="props.attendanceRate < 80"
+        v-if="props.attendanceRate < ATTENDANCE_RATE_GOOD"
         type="warning"
         variant="tonal"
         density="compact"
@@ -70,7 +71,7 @@
         icon="mdi-alert-circle-outline"
       >
         <span class="text-caption">
-          Below 80% threshold for exam eligibility.
+          Below {{ ATTENDANCE_RATE_GOOD }}% threshold for exam eligibility.
         </span>
       </v-alert>
     </v-card-text>

@@ -39,7 +39,8 @@ graph LR
 - **Google OAuth** — Supabase Auth with per-route guards; all routes protected by default
 - **Real-time attendance monitoring** — line chart (weekly trend), doughnut (on-time/late/absent distribution), bar chart (cross-class comparison), activity timeline
 - **Class attendance detail** — student table with status badges, interactive seat map (3×5 grid, color-coded), attendance rate with 80% threshold warning
-- **Weekly schedule** — time grid 07:00–17:00 Mon–Sat, week/day toggle, current-time highlight
+- **Weekly schedule** — time grid 07:00–17:00 Mon–Sat, week/day toggle, current-time highlight, click to see class details (subject, room, students, device status)
+- **Room lookup** — check which room has an active class right now, what subject is being taught, and device status for that room
 - **Device management** — online/offline status cards, edit device info, send remote commands (power on/off, start/stop scan, restart)
 - **Theme toggle** — dark/light mode persisted in localStorage
 

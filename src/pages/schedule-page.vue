@@ -1,115 +1,12 @@
 <script setup lang="ts">
-  import { computed, ref } from 'vue'
+  import { computed, ref, onMounted } from 'vue'
   import { useDisplay } from 'vuetify'
   import AppLayout from '../components/layout/app-layout.vue'
+  import { useSchedule } from '@/composables/use-schedule'
+  import type { IScheduleSession } from '@/composables/use-schedule'
+  import { LIST_DAY, LIST_DAY_SHORT, LIST_TIME_SLOT, TIME_SLOT_HEIGHT_PX, SESSION_GAP_PX } from '@/constants/schedule'
 
-  interface IScheduleSession {
-    id: string
-    className: string
-    classCode: string
-    room: string
-    startTime: string
-    endTime: string
-    day: number
-    icon: string
-    color: string
-    studentCount: number
-  }
-
-  const LIST_DAY = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'] as const
-  const LIST_DAY_SHORT = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'] as const
-
-  const LIST_TIME_SLOT = [
-    '07:00', '08:00', '09:00', '10:00', '11:00',
-    '12:00', '13:00', '14:00', '15:00', '16:00', '17:00',
-  ] as const
-
-  const listSession = ref<IScheduleSession[]>([
-    {
-      id: 's1',
-      className: 'IoT Class — Group 10',
-      classCode: 'IOT101-10',
-      room: 'Room 202',
-      startTime: '08:00',
-      endTime: '10:00',
-      day: 1,
-      icon: 'mdi-access-point',
-      color: 'info',
-      studentCount: 45,
-    },
-    {
-      id: 's2',
-      className: 'AI Class — Group 01',
-      classCode: 'AI201-01',
-      room: 'Room 305',
-      startTime: '10:00',
-      endTime: '12:00',
-      day: 1,
-      icon: 'mdi-robot-outline',
-      color: 'secondary',
-      studentCount: 50,
-    },
-    {
-      id: 's3',
-      className: 'Blockchain Class — Group 03',
-      classCode: 'BC301-03',
-      room: 'Room 407',
-      startTime: '14:00',
-      endTime: '16:00',
-      day: 2,
-      icon: 'mdi-link-variant',
-      color: 'primary',
-      studentCount: 40,
-    },
-    {
-      id: 's4',
-      className: 'IoT Class — Group 10',
-      classCode: 'IOT101-10',
-      room: 'Room 202',
-      startTime: '08:00',
-      endTime: '10:00',
-      day: 3,
-      icon: 'mdi-access-point',
-      color: 'info',
-      studentCount: 45,
-    },
-    {
-      id: 's5',
-      className: 'AI Class — Group 01',
-      classCode: 'AI201-01',
-      room: 'Room 305',
-      startTime: '13:00',
-      endTime: '15:00',
-      day: 4,
-      icon: 'mdi-robot-outline',
-      color: 'secondary',
-      studentCount: 50,
-    },
-    {
-      id: 's6',
-      className: 'Blockchain Class — Group 03',
-      classCode: 'BC301-03',
-      room: 'Room 407',
-      startTime: '09:00',
-      endTime: '11:00',
-      day: 5,
-      icon: 'mdi-link-variant',
-      color: 'primary',
-      studentCount: 40,
-    },
-    {
-      id: 's7',
-      className: 'IoT Class — Group 10',
-      classCode: 'IOT101-10',
-      room: 'Room 202',
-      startTime: '14:00',
-      endTime: '16:00',
-      day: 5,
-      icon: 'mdi-access-point',
-      color: 'info',
-      studentCount: 45,
-    },
-  ])
+  const { listSession, isLoading, fetchSchedule } = useSchedule()
 
   const currentDayOfWeek = computed(() => {
     const jsDay = new Date().getDay()
@@ -137,12 +34,12 @@
 
   const getSessionTop = (session: IScheduleSession) => {
     const startIndex = getTimeSlotIndex(session.startTime)
-    return startIndex * 72
+    return startIndex * TIME_SLOT_HEIGHT_PX
   }
 
   const getSessionHeight = (session: IScheduleSession) => {
     const duration = getSessionDuration(session)
-    return duration * 72 - 4
+    return duration * TIME_SLOT_HEIGHT_PX - SESSION_GAP_PX
   }
 
   const todaySessionCount = computed(() =>
@@ -162,6 +59,11 @@
     return total
   })
 
+  const uniqueCourseCount = computed(() => {
+    const codes = new Set(listSession.value.map((s) => s.classCode))
+    return codes.size
+  })
+
   const listVisibleDay = computed(() => {
     if (viewMode.value === 'day') {
       return [selectedDay.value]
@@ -175,6 +77,10 @@
     const slotHour = parseInt(timeSlot.split(':')[0] ?? '0', 10)
     return hour === slotHour && currentDayOfWeek.value <= 6
   }
+
+  onMounted(() => {
+    fetchSchedule()
+  })
 </script>
 
 <template>
@@ -269,7 +175,7 @@
               </v-avatar>
               <div class="d-flex flex-column">
                 <span class="text-caption text-medium-emphasis stat-label">Courses</span>
-                <span class="stat-value">3</span>
+                <span class="stat-value">{{ uniqueCourseCount }}</span>
               </div>
             </v-card-text>
           </v-card>
@@ -278,7 +184,10 @@
 
       <!-- Timetable grid -->
       <v-card class="animate-in animate-delay-3">
-        <v-card-text class="pa-0">
+        <v-card-text v-if="isLoading" class="pa-8 text-center">
+          <v-progress-circular indeterminate color="primary" />
+        </v-card-text>
+        <v-card-text v-else class="pa-0">
           <div class="timetable-wrapper">
             <div class="timetable" :class="{ 'timetable--day-view': viewMode === 'day' }">
               <!-- Header row -->

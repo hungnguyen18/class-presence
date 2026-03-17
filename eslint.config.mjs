@@ -1,4 +1,5 @@
 import js from '@eslint/js'
+import globals from 'globals'
 import vue from 'eslint-plugin-vue'
 import tsPlugin from '@typescript-eslint/eslint-plugin'
 import tsParser from '@typescript-eslint/parser'
@@ -8,6 +9,14 @@ export default [
   js.configs.recommended,
   // Vue 3 recommended flat config for .vue files
   ...vue.configs['flat/recommended'],
+  {
+    files: ['src/**/*.{ts,tsx,vue}'],
+    languageOptions: {
+      globals: {
+        ...globals.browser,
+      },
+    },
+  },
   // Use TypeScript parser inside <script lang="ts"> blocks
   {
     files: ['src/**/*.vue'],
@@ -43,4 +52,3 @@ export default [
   // Disable ESLint stylistic rules that might conflict with Prettier
   eslintConfigPrettier,
 ]
-

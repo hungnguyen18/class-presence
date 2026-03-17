@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import type { IStudentAttendance } from '@/types/attendance'
+import { EAttendanceStatus } from '@/types/attendance'
+import { SEAT_ROWS, SEAT_COLUMNS } from '@/constants/ui'
 
 const props = defineProps<{
   listStudentAttendance: IStudentAttendance[]
@@ -18,11 +20,11 @@ function getSeatStatus({
     return 'EMPTY'
   }
 
-  if (studentAtSeat.status === 'LATE') {
-    return 'LATE'
+  if (studentAtSeat.status === EAttendanceStatus.LATE) {
+    return EAttendanceStatus.LATE
   }
 
-  return 'ON_TIME'
+  return EAttendanceStatus.ON_TIME
 }
 
 function getStudentAtSeat({ seatCode }: { seatCode: string }): string | null {
@@ -67,14 +69,14 @@ function getStudentAtSeat({ seatCode }: { seatCode: string }): string | null {
         </div>
 
         <div
-          v-for="rowCode in ['A', 'B', 'C']"
+          v-for="rowCode in SEAT_ROWS"
           :key="rowCode"
           class="seat-row"
         >
           <span class="seat-row-label">{{ rowCode }}</span>
           <div class="seat-row-list">
             <v-tooltip
-              v-for="seatIndex in 5"
+              v-for="seatIndex in SEAT_COLUMNS"
               :key="`${rowCode}${seatIndex}`"
               location="top"
             >
@@ -88,9 +90,9 @@ function getStudentAtSeat({ seatCode }: { seatCode: string }): string | null {
                     class="seat-indicator"
                     :class="{
                       'seat-indicator--on-time':
-                        getSeatStatus({ seatCode: `${rowCode}${seatIndex}` }) === 'ON_TIME',
+                        getSeatStatus({ seatCode: `${rowCode}${seatIndex}` }) === EAttendanceStatus.ON_TIME,
                       'seat-indicator--late':
-                        getSeatStatus({ seatCode: `${rowCode}${seatIndex}` }) === 'LATE',
+                        getSeatStatus({ seatCode: `${rowCode}${seatIndex}` }) === EAttendanceStatus.LATE,
                     }"
                   />
                   <span class="seat-label">{{ rowCode }}{{ seatIndex }}</span>

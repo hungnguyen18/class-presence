@@ -1,4 +1,6 @@
 import type { IStudentAttendance, TAttendanceStatus } from '../types/attendance'
+import { EAttendanceStatus } from '@/types/attendance'
+import { LATE_WEIGHT, ATTENDANCE_STATUS_COLOR_MAP } from '@/constants/attendance'
 
 export interface IAttendanceStats {
   totalStudent: number
@@ -23,11 +25,11 @@ export function calculateAttendanceStats({
       continue
     }
 
-    if (attendanceItem.status === 'ON_TIME') {
+    if (attendanceItem.status === EAttendanceStatus.ON_TIME) {
       totalOnTime += 1
-    } else if (attendanceItem.status === 'LATE') {
+    } else if (attendanceItem.status === EAttendanceStatus.LATE) {
       totalLate += 1
-    } else if (attendanceItem.status === 'ABSENT') {
+    } else if (attendanceItem.status === EAttendanceStatus.ABSENT) {
       totalAbsent += 1
     }
   }
@@ -49,8 +51,7 @@ export function calculateAttendanceRate({
     return 0
   }
 
-  const totalPresentLike =
-    stats.totalOnTime + stats.totalLate * 0.5 + stats.totalAbsent * 0
+  const totalPresentLike = stats.totalOnTime + stats.totalLate * LATE_WEIGHT
 
   return Math.round((totalPresentLike / stats.totalStudent) * 100)
 }
@@ -60,14 +61,5 @@ export function getAttendanceStatusColor({
 }: {
   status: TAttendanceStatus
 }): string {
-  if (status === 'ON_TIME') {
-    return 'success'
-  }
-
-  if (status === 'LATE') {
-    return 'warning'
-  }
-
-  return 'error'
+  return ATTENDANCE_STATUS_COLOR_MAP[status] ?? 'error'
 }
-

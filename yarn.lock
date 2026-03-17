@@ -1482,6 +1482,7 @@ __metadata:
     "@vitejs/plugin-vue": "npm:^6.0.2"
     "@vue/tsconfig": "npm:^0.8.1"
     chart.js: "npm:^4.5.1"
+    dayjs: "npm:^1.11.20"
     docx: "npm:^9.6.0"
     eslint: "npm:^9"
     eslint-config-prettier: "npm:^10.1.8"
@@ -1569,6 +1570,13 @@ __metadata:
   version: 3.2.3
   resolution: "csstype@npm:3.2.3"
   checksum: 10c0/cd29c51e70fa822f1cecd8641a1445bed7063697469d35633b516e60fe8c1bde04b08f6c5b6022136bb669b64c63d4173af54864510fbb4ee23281801841a3ce
+  languageName: node
+  linkType: hard
+
+"dayjs@npm:^1.11.20":
+  version: 1.11.20
+  resolution: "dayjs@npm:1.11.20"
+  checksum: 10c0/8af525e2aa100c8db9923d706c42b2b2d30579faf89456619413a5c10916efc92c2b166e193c27c02eb3174b30aa440ee1e7b72b0a2876b3da651d204db848a0
   languageName: node
   linkType: hard
 
