@@ -69,7 +69,7 @@ async function fetchSchedule() {
     for (let d = 0; d < dayAssignment.length; d += 1) {
       sessions.push({
         id: `${cls.id}-${d}`,
-        className: `${cls.subjectName} — ${cls.classCode}`,
+        className: cls.subjectName,
         classCode: cls.classCode,
         room: cls.room.name,
         startTime,

@@ -29,7 +29,7 @@
   const getSessionDuration = (session: IScheduleSession) => {
     const startIndex = getTimeSlotIndex(session.startTime)
     const endIndex = getTimeSlotIndex(session.endTime)
-    return endIndex - startIndex
+    return Math.max(endIndex - startIndex, 1)
   }
 
   const getSessionTop = (session: IScheduleSession) => {
@@ -257,11 +257,11 @@
                         {{ session.startTime }} — {{ session.endTime }}
                       </div>
                       <div class="session-name">{{ session.className }}</div>
+                      <div class="session-code">{{ session.classCode }}</div>
                       <div class="session-meta">
                         <v-icon size="11">mdi-map-marker-outline</v-icon>
                         {{ session.room }}
-                      </div>
-                      <div class="session-meta">
+                        <span class="mx-1">&middot;</span>
                         <v-icon size="11">mdi-account-group-outline</v-icon>
                         {{ session.studentCount }}
                       </div>
@@ -483,6 +483,17 @@
   font-size: 0.78rem;
   font-weight: 600;
   line-height: 1.3;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.session-code {
+  font-family: var(--font-body);
+  font-size: 0.6rem;
+  font-weight: 500;
+  opacity: 0.55;
+  letter-spacing: 0.02em;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;

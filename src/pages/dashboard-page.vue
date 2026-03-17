@@ -14,14 +14,15 @@
   } from 'chart.js'
   import { Line, Doughnut, Bar } from 'vue-chartjs'
   import AppLayout from '../components/layout/app-layout.vue'
+  import CurrentClassCard from '@/components/dashboard/current-class-card.vue'
+  import TodayScheduleBar from '@/components/dashboard/today-schedule-bar.vue'
   import { useAuth } from '@/composables/use-auth'
   import { useDashboardStats } from '@/composables/use-dashboard-stats'
   import { useDevices } from '@/composables/use-devices'
   import { useColorMode } from '@/composables/use-color-mode'
+  import { useTodaySchedule } from '@/composables/use-today-schedule'
   import { subscribeAttendance, subscribeDevices } from '@/composables/use-realtime'
   import { formatLastSeen } from '@/utils/format'
-  import { supabase } from '@/lib/supabase'
-  import { ref } from 'vue'
   import { EDeviceStatus } from '@/types/database'
   import { GREETING_HOUR_MORNING, GREETING_HOUR_AFTERNOON } from '@/constants/ui'
   import {
@@ -51,6 +52,15 @@
   const { stats, weeklyTrend, classBreakdown, overallBreakdown, isLoading, fetchDashboardStats } =
     useDashboardStats()
   const { listDevice, fetchDevices, patchDeviceInPlace } = useDevices()
+  const {
+    currentClass,
+    nextClass,
+    listTodaySession,
+    todayCheckedInTotal,
+    todayStudentTotal,
+    isLoading: isTodayLoading,
+    fetchTodaySchedule,
+  } = useTodaySchedule()
 
   const greeting = computed(() => {
     const name = currentUser.value?.displayName.split(' ')[0] ?? 'Teacher'
@@ -64,29 +74,21 @@
     return `Good evening, ${name}`
   })
 
-  // ── Supabase connection status ──
-
-  const supabaseStatus = ref<'checking' | 'connected' | 'error'>('checking')
-  const supabaseLatency = ref<number | null>(null)
-
-  async function checkSupabaseConnection() {
-    supabaseStatus.value = 'checking'
-    const start = performance.now()
-    try {
-      await supabase.from('cp_rooms').select('id').limit(1)
-      supabaseLatency.value = Math.round(performance.now() - start)
-      supabaseStatus.value = 'connected'
-    } catch {
-      supabaseLatency.value = null
-      supabaseStatus.value = 'error'
-    }
-  }
-
-  // ── Device helpers ──
+  // ── Stat cards ──
 
   const countOnlineDevice = computed(() =>
     listDevice.value.filter((d) => d.status === EDeviceStatus.ONLINE).length,
   )
+
+  const todayAttendanceRate = computed(() => {
+    const total = todayStudentTotal.value
+    if (total === 0) {
+      return 0
+    }
+    return Math.round((todayCheckedInTotal.value / total) * 100)
+  })
+
+  const todayClassCount = computed(() => listTodaySession.value.length)
 
   // ── Realtime ──
 
@@ -94,10 +96,11 @@
   let unsubDevices: (() => void) | null = null
 
   onMounted(async () => {
-    await Promise.all([fetchDashboardStats(), fetchDevices(), checkSupabaseConnection()])
+    await Promise.all([fetchDashboardStats(), fetchDevices(), fetchTodaySchedule()])
 
     unsubAttendance = subscribeAttendance(() => {
       fetchDashboardStats()
+      fetchTodaySchedule()
     }).unsubscribe
 
     unsubDevices = subscribeDevices((payload) => {
@@ -112,7 +115,7 @@
     unsubDevices?.()
   })
 
-  // ── Chart configs (reactive to theme changes) ──
+  // ── Chart configs ──
 
   const { isDark } = useColorMode()
 
@@ -335,29 +338,51 @@
 <template>
   <AppLayout>
     <v-container fluid class="pa-5 pa-sm-8">
-      <v-row class="mb-6">
+
+      <!-- Greeting -->
+      <v-row class="mb-4">
         <v-col cols="12">
-          <h1 class="page-title">
-            {{ greeting }}
-          </h1>
-          <p class="page-subtitle">
-            Here's your attendance overview for today.
-          </p>
+          <h1 class="page-title">{{ greeting }}</h1>
+          <p class="page-subtitle">Here's your class overview for today.</p>
+        </v-col>
+      </v-row>
+
+      <!-- Hero: Current / Next Class -->
+      <v-row class="mb-4">
+        <v-col cols="12">
+          <CurrentClassCard
+            :current-class="currentClass"
+            :next-class="nextClass"
+            :list-today-session="listTodaySession"
+            :today-checked-in-total="todayCheckedInTotal"
+            :today-student-total="todayStudentTotal"
+            :is-loading="isTodayLoading"
+          />
+        </v-col>
+      </v-row>
+
+      <!-- Today's Schedule -->
+      <v-row class="mb-4">
+        <v-col cols="12">
+          <TodayScheduleBar
+            :list-today-session="listTodaySession"
+            :is-loading="isTodayLoading"
+          />
         </v-col>
       </v-row>
 
       <!-- Stat cards -->
-      <v-row class="mb-6" dense>
+      <v-row class="mb-4" dense>
         <v-col cols="6" md="3" class="d-flex">
           <v-card class="stat-card stat-card--total animate-in animate-delay-1 flex-grow-1">
-            <v-card-text class="d-flex align-center pa-4 pa-sm-4">
-              <v-avatar size="44" rounded="lg" color="primary" variant="tonal" class="mr-3 mr-sm-4 stat-avatar">
-                <v-icon size="22">mdi-book-open-variant</v-icon>
+            <v-card-text class="d-flex align-center pa-4">
+              <v-avatar size="44" rounded="lg" color="primary" variant="tonal" class="mr-3 stat-avatar">
+                <v-icon size="22">mdi-calendar-today</v-icon>
               </v-avatar>
               <div class="d-flex flex-column stat-content">
-                <span class="text-caption text-medium-emphasis dash-label">Classes</span>
-                <v-skeleton-loader v-if="isLoading" type="text" width="40" />
-                <span v-else class="dash-value">{{ stats.totalClass }}</span>
+                <span class="dash-label">Today's Classes</span>
+                <v-skeleton-loader v-if="isTodayLoading" type="text" width="40" />
+                <span v-else class="dash-value">{{ todayClassCount }}</span>
               </div>
             </v-card-text>
           </v-card>
@@ -365,14 +390,14 @@
 
         <v-col cols="6" md="3" class="d-flex">
           <v-card class="stat-card stat-card--success animate-in animate-delay-2 flex-grow-1">
-            <v-card-text class="d-flex align-center pa-4 pa-sm-4">
-              <v-avatar size="44" rounded="lg" color="success" variant="tonal" class="mr-3 mr-sm-4 stat-avatar">
-                <v-icon size="22">mdi-calendar-check</v-icon>
+            <v-card-text class="d-flex align-center pa-4">
+              <v-avatar size="44" rounded="lg" color="success" variant="tonal" class="mr-3 stat-avatar">
+                <v-icon size="22">mdi-account-check</v-icon>
               </v-avatar>
               <div class="d-flex flex-column stat-content">
-                <span class="text-caption text-medium-emphasis dash-label">Today</span>
-                <v-skeleton-loader v-if="isLoading" type="text" width="40" />
-                <span v-else class="dash-value text-success">{{ stats.todaySessionCount }}</span>
+                <span class="dash-label">Checked In</span>
+                <v-skeleton-loader v-if="isTodayLoading" type="text" width="40" />
+                <span v-else class="dash-value text-success">{{ todayCheckedInTotal }}</span>
               </div>
             </v-card-text>
           </v-card>
@@ -380,14 +405,14 @@
 
         <v-col cols="6" md="3" class="d-flex">
           <v-card class="stat-card stat-card--warning animate-in animate-delay-3 flex-grow-1">
-            <v-card-text class="d-flex align-center pa-4 pa-sm-4">
-              <v-avatar size="44" rounded="lg" color="info" variant="tonal" class="mr-3 mr-sm-4 stat-avatar">
-                <v-icon size="22">mdi-account-group</v-icon>
+            <v-card-text class="d-flex align-center pa-4">
+              <v-avatar size="44" rounded="lg" color="info" variant="tonal" class="mr-3 stat-avatar">
+                <v-icon size="22">mdi-chart-line</v-icon>
               </v-avatar>
               <div class="d-flex flex-column stat-content">
-                <span class="text-caption text-medium-emphasis dash-label">Students</span>
-                <v-skeleton-loader v-if="isLoading" type="text" width="40" />
-                <span v-else class="dash-value">{{ stats.totalStudent }}</span>
+                <span class="dash-label">Attendance Rate</span>
+                <v-skeleton-loader v-if="isTodayLoading" type="text" width="40" />
+                <span v-else class="dash-value">{{ todayAttendanceRate }}%</span>
               </div>
             </v-card-text>
           </v-card>
@@ -395,14 +420,14 @@
 
         <v-col cols="6" md="3" class="d-flex">
           <v-card class="stat-card stat-card--total animate-in animate-delay-4 flex-grow-1">
-            <v-card-text class="d-flex align-center pa-4 pa-sm-4">
-              <v-avatar size="44" rounded="lg" color="secondary" variant="tonal" class="mr-3 mr-sm-4 stat-avatar">
+            <v-card-text class="d-flex align-center pa-4">
+              <v-avatar size="44" rounded="lg" color="secondary" variant="tonal" class="mr-3 stat-avatar">
                 <v-icon size="22">mdi-chip</v-icon>
               </v-avatar>
-              <div class="d-flex flex-column">
-                <span class="text-caption text-medium-emphasis dash-label">Devices</span>
+              <div class="d-flex flex-column stat-content">
+                <span class="dash-label">Devices Online</span>
                 <v-skeleton-loader v-if="isLoading" type="text" width="40" />
-                <span v-else class="dash-value">{{ stats.totalDevice }}</span>
+                <span v-else class="dash-value">{{ countOnlineDevice }}/{{ stats.totalDevice }}</span>
               </div>
             </v-card-text>
           </v-card>
@@ -410,7 +435,7 @@
       </v-row>
 
       <!-- Charts row 1: Weekly trend + Breakdown donut -->
-      <v-row class="mb-6">
+      <v-row class="mb-4">
         <v-col cols="12" md="8">
           <v-card class="animate-in animate-delay-3">
             <v-card-title class="card-heading pa-5 pb-3">
@@ -454,9 +479,9 @@
         </v-col>
       </v-row>
 
-      <!-- Charts row 2: Per-class bar + Activity timeline -->
-      <v-row class="mb-6">
-        <v-col cols="12" md="7">
+      <!-- Charts row 2: Per-class bar + Device status (compact) -->
+      <v-row>
+        <v-col cols="12" md="8">
           <v-card class="animate-in animate-delay-5">
             <v-card-title class="card-heading pa-5 pb-3">
               Attendance by Class
@@ -470,123 +495,22 @@
           </v-card>
         </v-col>
 
-        <v-col cols="12" md="5">
-          <v-card class="animate-in animate-delay-5">
-            <v-card-title class="card-heading pa-5 pb-3">
-              Recent Activity
-            </v-card-title>
-            <v-divider />
-            <v-card-text class="pa-5">
-              <v-timeline density="compact" side="end" class="activity-timeline">
-                <v-timeline-item dot-color="success" size="x-small">
-                  <div class="text-body-2">Session completed — AI Class</div>
-                  <div class="text-caption text-medium-emphasis">10 minutes ago</div>
-                </v-timeline-item>
-
-                <v-timeline-item dot-color="info" size="x-small">
-                  <div class="text-body-2">Report exported — IoT Class</div>
-                  <div class="text-caption text-medium-emphasis">1 hour ago</div>
-                </v-timeline-item>
-
-                <v-timeline-item dot-color="warning" size="x-small">
-                  <div class="text-body-2">Late check-in — Chris Taylor</div>
-                  <div class="text-caption text-medium-emphasis">2 hours ago</div>
-                </v-timeline-item>
-
-                <v-timeline-item dot-color="success" size="x-small">
-                  <div class="text-body-2">Session completed — Blockchain</div>
-                  <div class="text-caption text-medium-emphasis">3 hours ago</div>
-                </v-timeline-item>
-
-                <v-timeline-item dot-color="error" size="x-small">
-                  <div class="text-body-2">Device offline — Room 407</div>
-                  <div class="text-caption text-medium-emphasis">5 hours ago</div>
-                </v-timeline-item>
-              </v-timeline>
-            </v-card-text>
-          </v-card>
-        </v-col>
-      </v-row>
-
-      <!-- Row 3: System status -->
-      <v-row>
-        <v-col cols="12" md="5">
-          <v-card class="animate-in animate-delay-5">
-            <v-card-title class="card-heading pa-5 pb-3 d-flex align-center">
-              System Status
-            </v-card-title>
-            <v-divider />
-            <v-card-text class="pa-5">
-              <!-- Supabase status -->
-              <div class="status-item d-flex align-center justify-space-between mb-4">
-                <div class="d-flex align-center">
-                  <v-avatar size="36" rounded="lg" color="primary" variant="tonal" class="mr-3">
-                    <v-icon size="18">mdi-database-outline</v-icon>
-                  </v-avatar>
-                  <div>
-                    <div class="text-body-2 font-weight-medium">Supabase</div>
-                    <div class="text-caption text-medium-emphasis">
-                      {{ supabaseStatus === 'connected' && supabaseLatency ? `${supabaseLatency}ms` : 'Database' }}
-                    </div>
-                  </div>
-                </div>
-                <v-chip
-                  :color="supabaseStatus === 'connected' ? 'success' : supabaseStatus === 'error' ? 'error' : 'warning'"
-                  variant="tonal"
-                  size="small"
-                  class="font-weight-medium"
-                >
-                  <v-icon start size="10" class="mr-1">
-                    {{ supabaseStatus === 'connected' ? 'mdi-check-circle' : supabaseStatus === 'error' ? 'mdi-close-circle' : 'mdi-loading mdi-spin' }}
-                  </v-icon>
-                  {{ supabaseStatus === 'connected' ? 'Connected' : supabaseStatus === 'error' ? 'Error' : 'Checking' }}
-                </v-chip>
-              </div>
-
-              <!-- Auth status -->
-              <div class="status-item d-flex align-center justify-space-between">
-                <div class="d-flex align-center">
-                  <v-avatar size="36" rounded="lg" color="secondary" variant="tonal" class="mr-3">
-                    <v-icon size="18">mdi-shield-check-outline</v-icon>
-                  </v-avatar>
-                  <div>
-                    <div class="text-body-2 font-weight-medium">Auth</div>
-                    <div class="text-caption text-medium-emphasis">Google OAuth</div>
-                  </div>
-                </div>
-                <v-chip
-                  color="success"
-                  variant="tonal"
-                  size="small"
-                  class="font-weight-medium"
-                >
-                  <v-icon start size="10" class="mr-1">mdi-check-circle</v-icon>
-                  Active
-                </v-chip>
-              </div>
-            </v-card-text>
-          </v-card>
-        </v-col>
-
-        <v-col cols="12" md="7">
+        <v-col cols="12" md="4">
           <v-card class="animate-in animate-delay-5">
             <v-card-title class="card-heading pa-5 pb-3 d-flex align-center justify-space-between">
-              <span>Device Status</span>
-              <v-chip variant="tonal" size="small" color="info" class="font-weight-medium">
+              <span>Devices</span>
+              <v-chip variant="tonal" size="small" :color="countOnlineDevice > 0 ? 'success' : 'error'" class="font-weight-medium">
                 {{ countOnlineDevice }}/{{ listDevice.length }} online
               </v-chip>
             </v-card-title>
             <v-divider />
             <v-card-text class="pa-0">
               <v-list lines="two" class="pa-0">
-                <template
-                  v-for="(device, index) in listDevice"
-                  :key="device.id"
-                >
+                <template v-for="(device, index) in listDevice" :key="device.id">
                   <v-list-item class="px-5 py-3">
                     <template #prepend>
-                      <v-avatar size="40" rounded="lg" color="primary" variant="tonal">
-                        <v-icon size="20">mdi-chip</v-icon>
+                      <v-avatar size="36" rounded="lg" color="primary" variant="tonal">
+                        <v-icon size="18">mdi-chip</v-icon>
                       </v-avatar>
                     </template>
 
@@ -596,7 +520,7 @@
                     <v-list-item-subtitle class="text-caption">
                       <v-icon size="12" class="mr-1">mdi-map-marker-outline</v-icon>
                       {{ device.room.name }}
-                      <span class="mx-2">&middot;</span>
+                      <span class="mx-1">&middot;</span>
                       {{ formatLastSeen(device.lastSeen) }}
                     </v-list-item-subtitle>
 
@@ -622,6 +546,7 @@
           </v-card>
         </v-col>
       </v-row>
+
     </v-container>
   </AppLayout>
 </template>
@@ -631,6 +556,7 @@
   font-size: 0.72rem;
   text-transform: uppercase;
   letter-spacing: 0.04em;
+  color: var(--color-ink-muted);
   margin-bottom: 2px;
 }
 
@@ -693,14 +619,6 @@
   .chart-container--bar {
     height: 220px;
   }
-}
-
-.activity-timeline {
-  padding-top: 0;
-}
-
-.activity-timeline :deep(.v-timeline-item__body) {
-  padding-top: 0 !important;
 }
 
 .status-dot {
