@@ -15,8 +15,7 @@ export const EDeviceCommand = {
   UPDATE_FW: 'UPDATE_FW',
 } as const
 
-export type TDeviceCommand =
-  (typeof EDeviceCommand)[keyof typeof EDeviceCommand]
+export type TDeviceCommand = (typeof EDeviceCommand)[keyof typeof EDeviceCommand]
 
 export const ECommandStatus = {
   PENDING: 'PENDING',
@@ -25,8 +24,7 @@ export const ECommandStatus = {
   FAILED: 'FAILED',
 } as const
 
-export type TCommandStatus =
-  (typeof ECommandStatus)[keyof typeof ECommandStatus]
+export type TCommandStatus = (typeof ECommandStatus)[keyof typeof ECommandStatus]
 
 export interface IRoom {
   id: string

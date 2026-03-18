@@ -23,9 +23,7 @@
       <v-row class="mb-6" align="center">
         <v-col cols="12" md="6">
           <h1 class="page-title">Classes</h1>
-          <p class="page-subtitle">
-            Select a class to view attendance details.
-          </p>
+          <p class="page-subtitle">Select a class to view attendance details.</p>
         </v-col>
       </v-row>
 
@@ -57,7 +55,9 @@
                   size="48"
                   rounded="lg"
                 >
-                  <v-icon size="24">{{ getClassTheme(classItem.subjectName).icon }}</v-icon>
+                  <v-icon size="24">{{
+                    getClassTheme(classItem.subjectName).icon
+                  }}</v-icon>
                 </v-avatar>
                 <div class="ml-4">
                   <div class="class-code">{{ classItem.classCode }}</div>
@@ -76,7 +76,8 @@
                 </div>
                 <div class="class-meta">
                   <v-icon size="14" class="mr-1">mdi-clock-outline</v-icon>
-                  {{ classItem.startTime.slice(0, 5) }} — {{ classItem.endTime.slice(0, 5) }}
+                  {{ classItem.startTime.slice(0, 5) }} —
+                  {{ classItem.endTime.slice(0, 5) }}
                 </div>
               </div>
             </v-card-text>
@@ -101,25 +102,25 @@
 </template>
 
 <style scoped>
-.class-code {
-  font-size: 0.68rem;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--color-ink-muted);
-  font-family: var(--font-body);
-  font-weight: 600;
-  margin-bottom: 2px;
-}
+  .class-code {
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-ink-muted);
+    font-family: var(--font-body);
+    font-weight: 600;
+    margin-bottom: 2px;
+  }
 
-.class-meta {
-  display: flex;
-  align-items: center;
-  font-size: 0.8rem;
-  color: var(--color-ink-muted);
-  font-family: var(--font-body);
-}
+  .class-meta {
+    display: flex;
+    align-items: center;
+    font-size: 0.8rem;
+    color: var(--color-ink-muted);
+    font-family: var(--font-body);
+  }
 
-.card-interactive {
-  cursor: pointer;
-}
+  .card-interactive {
+    cursor: pointer;
+  }
 </style>

@@ -16,9 +16,7 @@
 
   const { currentUser, signOut } = useAuth()
 
-  const userDisplayName = computed(() =>
-    currentUser.value?.displayName ?? 'Teacher',
-  )
+  const userDisplayName = computed(() => currentUser.value?.displayName ?? 'Teacher')
 
   const userAvatarUrl = computed(() => currentUser.value?.avatarUrl ?? null)
 
@@ -72,18 +70,14 @@
     color="primary-darken-1"
     class="nav-drawer"
   >
-    <div class="nav-brand pa-4 d-flex align-center" :class="{ 'justify-center': drawerIsCollapsed && !isMobile }">
-      <v-avatar
-        color="secondary"
-        size="36"
-        class="nav-brand-icon"
-      >
+    <div
+      class="nav-brand pa-4 d-flex align-center"
+      :class="{ 'justify-center': drawerIsCollapsed && !isMobile }"
+    >
+      <v-avatar color="secondary" size="36" class="nav-brand-icon">
         <v-icon color="white" size="20">mdi-school</v-icon>
       </v-avatar>
-      <span
-        v-if="!drawerIsCollapsed || isMobile"
-        class="nav-brand-text ml-3"
-      >
+      <span v-if="!drawerIsCollapsed || isMobile" class="nav-brand-text ml-3">
         Class Presence
       </span>
     </div>
@@ -100,10 +94,7 @@
         class="nav-item mb-1"
       />
 
-      <v-list-subheader
-        v-if="!drawerIsCollapsed || isMobile"
-        class="nav-subheader"
-      >
+      <v-list-subheader v-if="!drawerIsCollapsed || isMobile" class="nav-subheader">
         Classes
       </v-list-subheader>
 
@@ -124,10 +115,7 @@
         class="nav-item mb-1"
       />
 
-      <v-list-subheader
-        v-if="!drawerIsCollapsed || isMobile"
-        class="nav-subheader"
-      >
+      <v-list-subheader v-if="!drawerIsCollapsed || isMobile" class="nav-subheader">
         System
       </v-list-subheader>
 
@@ -142,16 +130,8 @@
     </v-list>
   </v-navigation-drawer>
 
-  <v-app-bar
-    color="surface"
-    flat
-    class="app-bar-refined"
-  >
-    <v-app-bar-nav-icon
-      v-if="isMobile"
-      color="primary"
-      @click="toggleDrawer"
-    />
+  <v-app-bar color="surface" flat class="app-bar-refined">
+    <v-app-bar-nav-icon v-if="isMobile" color="primary" @click="toggleDrawer" />
     <v-btn
       v-else
       icon
@@ -209,11 +189,7 @@
           :rounded="isMobile ? undefined : 'xl'"
         >
           <v-avatar color="secondary" size="32" :class="{ 'mr-2': !isMobile }">
-            <v-img
-              v-if="userAvatarUrl"
-              :src="userAvatarUrl"
-              :alt="userDisplayName"
-            />
+            <v-img v-if="userAvatarUrl" :src="userAvatarUrl" :alt="userDisplayName" />
             <span v-else class="text-caption font-weight-bold text-white">
               {{ userInitials }}
             </span>
@@ -234,11 +210,7 @@
           </v-list-item-title>
         </v-list-item>
         <v-divider class="my-1" />
-        <v-list-item
-          prepend-icon="mdi-logout"
-          title="Sign out"
-          @click="handleSignOut"
-        />
+        <v-list-item prepend-icon="mdi-logout" title="Sign out" @click="handleSignOut" />
       </v-list>
     </v-menu>
   </v-app-bar>
@@ -249,73 +221,73 @@
 </template>
 
 <style scoped>
-.nav-drawer {
-  border-right: none !important;
-}
+  .nav-drawer {
+    border-right: none !important;
+  }
 
-.nav-brand {
-  min-height: 64px;
-}
+  .nav-brand {
+    min-height: 64px;
+  }
 
-.nav-brand-icon {
-  flex-shrink: 0;
-}
+  .nav-brand-icon {
+    flex-shrink: 0;
+  }
 
-.nav-brand-text {
-  font-family: var(--font-display);
-  font-size: 1.1rem;
-  color: white;
-  white-space: nowrap;
-  letter-spacing: -0.01em;
-}
+  .nav-brand-text {
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    color: white;
+    white-space: nowrap;
+    letter-spacing: -0.01em;
+  }
 
-.nav-item {
-  color: rgba(255, 255, 255, 0.7) !important;
-  transition: all 0.15s ease;
-}
+  .nav-item {
+    color: rgba(255, 255, 255, 0.7) !important;
+    transition: all 0.15s ease;
+  }
 
-.nav-item:hover {
-  color: white !important;
-  background-color: rgba(255, 255, 255, 0.06) !important;
-}
+  .nav-item:hover {
+    color: white !important;
+    background-color: rgba(255, 255, 255, 0.06) !important;
+  }
 
-.nav-item.v-list-item--active {
-  color: white !important;
-  background-color: rgba(212, 168, 83, 0.18) !important;
-}
+  .nav-item.v-list-item--active {
+    color: white !important;
+    background-color: rgba(212, 168, 83, 0.18) !important;
+  }
 
-.nav-item.v-list-item--active .v-icon {
-  color: var(--color-accent-gold) !important;
-}
+  .nav-item.v-list-item--active .v-icon {
+    color: var(--color-accent-gold) !important;
+  }
 
-.nav-subheader {
-  color: rgba(255, 255, 255, 0.35) !important;
-  font-size: 0.68rem !important;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  font-family: var(--font-body);
-  padding-top: 12px !important;
-}
+  .nav-subheader {
+    color: rgba(255, 255, 255, 0.35) !important;
+    font-size: 0.68rem !important;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-family: var(--font-body);
+    padding-top: 12px !important;
+  }
 
-.app-bar-refined {
-  border-bottom: 1px solid var(--color-border) !important;
-}
+  .app-bar-refined {
+    border-bottom: 1px solid var(--color-border) !important;
+  }
 
-.app-bar-title {
-  font-family: var(--font-display) !important;
-  font-size: 1.2rem !important;
-  color: var(--color-ink);
-}
+  .app-bar-title {
+    font-family: var(--font-display) !important;
+    font-size: 1.2rem !important;
+    color: var(--color-ink);
+  }
 
-.user-btn {
-  text-transform: none !important;
-}
+  .user-btn {
+    text-transform: none !important;
+  }
 
-.theme-toggle-icon {
-  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
-}
+  .theme-toggle-icon {
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+  }
 
-.theme-toggle:hover .theme-toggle-icon {
-  transform: rotate(20deg);
-}
+  .theme-toggle:hover .theme-toggle-icon {
+    transform: rotate(20deg);
+  }
 </style>

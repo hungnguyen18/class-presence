@@ -35,7 +35,10 @@ const listStudentAttendance = computed<IStudentAttendance[]>(() =>
     studentCode: log.student.mssv,
     fullName: log.student.fullName,
     status: log.status,
-    checkInTime: log.status === EAttendanceStatus.ABSENT ? null : log.checkinTime?.slice(11, 16) ?? null,
+    checkInTime:
+      log.status === EAttendanceStatus.ABSENT
+        ? null
+        : (log.checkinTime?.slice(11, 16) ?? null),
     seatCode: log.seatNumber,
   })),
 )

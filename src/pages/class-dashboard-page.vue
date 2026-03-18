@@ -23,9 +23,7 @@
 
   const { listClass, fetchClasses } = useClasses()
 
-  const currentClass = computed(() =>
-    listClass.value.find((c) => c.id === classId.value),
-  )
+  const currentClass = computed(() => listClass.value.find((c) => c.id === classId.value))
 
   const pageTitle = computed(() => {
     if (currentClass.value) {
@@ -69,9 +67,7 @@
           <h1 class="page-title">
             {{ pageTitle }}
           </h1>
-          <p class="page-subtitle">
-            Track class attendance in real-time.
-          </p>
+          <p class="page-subtitle">Track class attendance in real-time.</p>
         </v-col>
         <v-col cols="12" md="5" class="d-flex flex-wrap justify-md-end align-center ga-3">
           <v-btn

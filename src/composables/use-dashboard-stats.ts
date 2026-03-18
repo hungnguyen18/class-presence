@@ -39,14 +39,15 @@ const isLoading = ref(false)
 async function fetchDashboardStats() {
   isLoading.value = true
 
-  const [classResult, studentResult, deviceResult, attendanceResult, classesResult] =
-    await Promise.all([
-      supabase.from('cp_classes').select('id', { count: 'exact', head: true }),
-      supabase.from('cp_students').select('id', { count: 'exact', head: true }),
-      supabase.from('cp_devices').select('id', { count: 'exact', head: true }),
-      supabase.from('cp_attendance_logs').select('status, class_id, checkin_time'),
-      supabase.from('cp_classes').select('id, class_code, subject_name'),
-    ])
+  try {
+    const [classResult, studentResult, deviceResult, attendanceResult, classesResult] =
+      await Promise.all([
+        supabase.from('cp_classes').select('id', { count: 'exact', head: true }),
+        supabase.from('cp_students').select('id', { count: 'exact', head: true }),
+        supabase.from('cp_devices').select('id', { count: 'exact', head: true }),
+        supabase.from('cp_attendance_logs').select('status, class_id, checkin_time'),
+        supabase.from('cp_classes').select('id, class_code, subject_name'),
+      ])
 
   stats.value = {
     totalClass: classResult.count ?? 0,
@@ -143,7 +144,11 @@ async function fetchDashboardStats() {
   }
 
   classBreakdown.value = Object.values(classMap)
-  isLoading.value = false
+  } catch (err) {
+    console.error('Failed to fetch dashboard stats:', err)
+  } finally {
+    isLoading.value = false
+  }
 }
 
 export function useDashboardStats() {

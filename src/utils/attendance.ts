@@ -42,11 +42,7 @@ export function calculateAttendanceStats({
   }
 }
 
-export function calculateAttendanceRate({
-  stats,
-}: {
-  stats: IAttendanceStats
-}): number {
+export function calculateAttendanceRate({ stats }: { stats: IAttendanceStats }): number {
   if (stats.totalStudent === 0) {
     return 0
   }

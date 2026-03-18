@@ -37,7 +37,9 @@
     if (!props.currentClass || props.currentClass.studentCount === 0) {
       return 0
     }
-    return Math.round((props.currentClass.checkedInCount / props.currentClass.studentCount) * 100)
+    return Math.round(
+      (props.currentClass.checkedInCount / props.currentClass.studentCount) * 100,
+    )
   })
 
   const minutesUntilNext = computed(() => {
@@ -49,7 +51,9 @@
     return start.diff(now, 'minute')
   })
 
-  const completedCount = computed(() => props.listTodaySession.filter((s) => s.isPast).length)
+  const completedCount = computed(
+    () => props.listTodaySession.filter((s) => s.isPast).length,
+  )
 
   function navigateToClass(classId: string) {
     router.push({ name: 'classDashboard', params: { classId } })
@@ -93,8 +97,12 @@
         <!-- Check-in progress -->
         <div class="mb-1 d-flex align-center justify-space-between">
           <span class="progress-label">
-            <span class="progress-count text-success">{{ currentClass.checkedInCount }}</span>
-            <span class="progress-total"> / {{ currentClass.studentCount }} checked in</span>
+            <span class="progress-count text-success">{{
+              currentClass.checkedInCount
+            }}</span>
+            <span class="progress-total">
+              / {{ currentClass.studentCount }} checked in</span
+            >
           </span>
           <span class="progress-pct text-success">{{ progressPercent }}%</span>
         </div>
@@ -144,7 +152,8 @@
 
         <div class="no-class-note mb-4">
           <v-icon size="14" class="mr-1">mdi-timer-sand</v-icon>
-          Starts in {{ minutesUntilNext }} min · {{ nextClass.studentCount }} students enrolled
+          Starts in {{ minutesUntilNext }} min · {{ nextClass.studentCount }} students
+          enrolled
         </div>
 
         <v-btn
@@ -194,134 +203,141 @@
 </template>
 
 <style scoped>
-.current-class-card {
-  position: relative;
-  overflow: hidden;
-}
+  .current-class-card {
+    position: relative;
+    overflow: hidden;
+  }
 
-.card-accent {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-}
+  .card-accent {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+  }
 
-.card-accent--live {
-  background: var(--color-success);
-  box-shadow: 0 0 12px var(--color-success-soft);
-}
+  .card-accent--live {
+    background: var(--color-success);
+    box-shadow: 0 0 12px var(--color-success-soft);
+  }
 
-.card-accent--next {
-  background: var(--color-primary);
-}
+  .card-accent--next {
+    background: var(--color-primary);
+  }
 
-.card-accent--done {
-  background: var(--color-success-soft);
-}
+  .card-accent--done {
+    background: var(--color-success-soft);
+  }
 
-.card-accent--empty {
-  background: var(--color-border);
-}
+  .card-accent--empty {
+    background: var(--color-border);
+  }
 
-.live-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  background: rgba(77, 184, 124, 0.12);
-  color: var(--color-success);
-  font-size: 0.68rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  padding: 2px 8px;
-  border-radius: 20px;
-  border: 1px solid rgba(77, 184, 124, 0.25);
-}
+  .live-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: rgba(77, 184, 124, 0.12);
+    color: var(--color-success);
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    padding: 2px 8px;
+    border-radius: 20px;
+    border: 1px solid rgba(77, 184, 124, 0.25);
+  }
 
-.live-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--color-success);
-  animation: pulse 1.5s infinite;
-}
+  .live-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--color-success);
+    animation: pulse 1.5s infinite;
+  }
 
-@keyframes pulse {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.5; transform: scale(0.8); }
-}
+  @keyframes pulse {
+    0%,
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.5;
+      transform: scale(0.8);
+    }
+  }
 
-.next-badge {
-  display: inline-flex;
-  align-items: center;
-  background: rgba(var(--v-theme-primary), 0.1);
-  color: rgb(var(--v-theme-primary));
-  font-size: 0.68rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  padding: 2px 8px;
-  border-radius: 20px;
-  border: 1px solid rgba(var(--v-theme-primary), 0.2);
-}
+  .next-badge {
+    display: inline-flex;
+    align-items: center;
+    background: rgba(var(--v-theme-primary), 0.1);
+    color: rgb(var(--v-theme-primary));
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    padding: 2px 8px;
+    border-radius: 20px;
+    border: 1px solid rgba(var(--v-theme-primary), 0.2);
+  }
 
-.class-subject {
-  font-family: var(--font-display);
-  font-size: 1.15rem;
-  font-weight: 600;
-  line-height: 1.2;
-}
+  .class-subject {
+    font-family: var(--font-display);
+    font-size: 1.15rem;
+    font-weight: 600;
+    line-height: 1.2;
+  }
 
-.class-icon {
-  font-size: 1.5rem;
-  flex-shrink: 0;
-}
+  .class-icon {
+    font-size: 1.5rem;
+    flex-shrink: 0;
+  }
 
-.class-meta {
-  font-size: 0.78rem;
-  color: var(--color-ink-muted);
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-}
+  .class-meta {
+    font-size: 0.78rem;
+    color: var(--color-ink-muted);
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+  }
 
-.no-class-note {
-  font-size: 0.78rem;
-  color: var(--color-ink-muted);
-  display: flex;
-  align-items: center;
-}
+  .no-class-note {
+    font-size: 0.78rem;
+    color: var(--color-ink-muted);
+    display: flex;
+    align-items: center;
+  }
 
-.progress-label {
-  font-size: 0.82rem;
-}
+  .progress-label {
+    font-size: 0.82rem;
+  }
 
-.progress-count {
-  font-family: var(--font-display);
-  font-size: 1.1rem;
-  font-weight: 600;
-}
+  .progress-count {
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    font-weight: 600;
+  }
 
-.progress-total {
-  color: var(--color-ink-muted);
-  font-size: 0.82rem;
-}
+  .progress-total {
+    color: var(--color-ink-muted);
+    font-size: 0.82rem;
+  }
 
-.progress-pct {
-  font-size: 0.78rem;
-  font-weight: 600;
-}
+  .progress-pct {
+    font-size: 0.78rem;
+    font-weight: 600;
+  }
 
-.done-title {
-  font-family: var(--font-display);
-  font-size: 1.05rem;
-  font-weight: 600;
-  margin-bottom: 2px;
-}
+  .done-title {
+    font-family: var(--font-display);
+    font-size: 1.05rem;
+    font-weight: 600;
+    margin-bottom: 2px;
+  }
 
-.done-meta {
-  font-size: 0.82rem;
-  color: var(--color-ink-muted);
-  display: flex;
-  align-items: center;
-}
+  .done-meta {
+    font-size: 0.82rem;
+    color: var(--color-ink-muted);
+    display: flex;
+    align-items: center;
+  }
 </style>

@@ -4,7 +4,13 @@
   import AppLayout from '../components/layout/app-layout.vue'
   import { useSchedule } from '@/composables/use-schedule'
   import type { IScheduleSession } from '@/composables/use-schedule'
-  import { LIST_DAY, LIST_DAY_SHORT, LIST_TIME_SLOT, TIME_SLOT_HEIGHT_PX, SESSION_GAP_PX } from '@/constants/schedule'
+  import {
+    LIST_DAY,
+    LIST_DAY_SHORT,
+    LIST_TIME_SLOT,
+    TIME_SLOT_HEIGHT_PX,
+    SESSION_GAP_PX,
+  } from '@/constants/schedule'
 
   const { listSession, isLoading, fetchSchedule } = useSchedule()
 
@@ -42,8 +48,8 @@
     return duration * TIME_SLOT_HEIGHT_PX - SESSION_GAP_PX
   }
 
-  const todaySessionCount = computed(() =>
-    listSession.value.filter((s) => s.day === currentDayOfWeek.value).length,
+  const todaySessionCount = computed(
+    () => listSession.value.filter((s) => s.day === currentDayOfWeek.value).length,
   )
 
   const weekSessionCount = computed(() => listSession.value.length)
@@ -89,9 +95,7 @@
       <v-row class="mb-6" align="center">
         <v-col cols="12" md="6">
           <h1 class="page-title">Schedule</h1>
-          <p class="page-subtitle">
-            Weekly timetable and upcoming sessions.
-          </p>
+          <p class="page-subtitle">Weekly timetable and upcoming sessions.</p>
         </v-col>
         <v-col cols="12" md="6" class="d-flex justify-md-end align-center ga-3">
           <v-btn-toggle
@@ -126,9 +130,17 @@
       <!-- Stats row -->
       <v-row class="mb-6" dense>
         <v-col cols="6" md="3" class="d-flex">
-          <v-card class="stat-card stat-card--total animate-in animate-delay-1 flex-grow-1">
+          <v-card
+            class="stat-card stat-card--total animate-in animate-delay-1 flex-grow-1"
+          >
             <v-card-text class="d-flex align-center pa-4">
-              <v-avatar size="44" rounded="lg" color="primary" variant="tonal" class="mr-3 mr-sm-4 stat-avatar">
+              <v-avatar
+                size="44"
+                rounded="lg"
+                color="primary"
+                variant="tonal"
+                class="mr-3 mr-sm-4 stat-avatar"
+              >
                 <v-icon size="22">mdi-calendar-today</v-icon>
               </v-avatar>
               <div class="d-flex flex-column">
@@ -140,13 +152,23 @@
         </v-col>
 
         <v-col cols="6" md="3" class="d-flex">
-          <v-card class="stat-card stat-card--success animate-in animate-delay-2 flex-grow-1">
+          <v-card
+            class="stat-card stat-card--success animate-in animate-delay-2 flex-grow-1"
+          >
             <v-card-text class="d-flex align-center pa-4">
-              <v-avatar size="44" rounded="lg" color="success" variant="tonal" class="mr-3 mr-sm-4 stat-avatar">
+              <v-avatar
+                size="44"
+                rounded="lg"
+                color="success"
+                variant="tonal"
+                class="mr-3 mr-sm-4 stat-avatar"
+              >
                 <v-icon size="22">mdi-calendar-week</v-icon>
               </v-avatar>
               <div class="d-flex flex-column">
-                <span class="text-caption text-medium-emphasis stat-label">This Week</span>
+                <span class="text-caption text-medium-emphasis stat-label"
+                  >This Week</span
+                >
                 <span class="stat-value text-success">{{ weekSessionCount }}</span>
               </div>
             </v-card-text>
@@ -154,9 +176,17 @@
         </v-col>
 
         <v-col cols="6" md="3" class="d-flex">
-          <v-card class="stat-card stat-card--warning animate-in animate-delay-3 flex-grow-1">
+          <v-card
+            class="stat-card stat-card--warning animate-in animate-delay-3 flex-grow-1"
+          >
             <v-card-text class="d-flex align-center pa-4">
-              <v-avatar size="44" rounded="lg" color="secondary" variant="tonal" class="mr-3 mr-sm-4 stat-avatar">
+              <v-avatar
+                size="44"
+                rounded="lg"
+                color="secondary"
+                variant="tonal"
+                class="mr-3 mr-sm-4 stat-avatar"
+              >
                 <v-icon size="22">mdi-clock-outline</v-icon>
               </v-avatar>
               <div class="d-flex flex-column">
@@ -168,9 +198,17 @@
         </v-col>
 
         <v-col cols="6" md="3" class="d-flex">
-          <v-card class="stat-card stat-card--total animate-in animate-delay-4 flex-grow-1">
+          <v-card
+            class="stat-card stat-card--total animate-in animate-delay-4 flex-grow-1"
+          >
             <v-card-text class="d-flex align-center pa-4">
-              <v-avatar size="44" rounded="lg" color="info" variant="tonal" class="mr-3 mr-sm-4 stat-avatar">
+              <v-avatar
+                size="44"
+                rounded="lg"
+                color="info"
+                variant="tonal"
+                class="mr-3 mr-sm-4 stat-avatar"
+              >
                 <v-icon size="22">mdi-book-open-variant</v-icon>
               </v-avatar>
               <div class="d-flex flex-column">
@@ -199,8 +237,12 @@
                   class="timetable-day-col timetable-day-header"
                   :class="{ 'timetable-day-header--today': day === currentDayOfWeek }"
                 >
-                  <span class="day-label-short d-sm-none">{{ LIST_DAY_SHORT[day - 1] }}</span>
-                  <span class="day-label-full d-none d-sm-inline">{{ LIST_DAY[day - 1] }}</span>
+                  <span class="day-label-short d-sm-none">{{
+                    LIST_DAY_SHORT[day - 1]
+                  }}</span>
+                  <span class="day-label-full d-none d-sm-inline">{{
+                    LIST_DAY[day - 1]
+                  }}</span>
                   <v-chip
                     v-if="day === currentDayOfWeek"
                     size="x-small"
@@ -239,7 +281,10 @@
                     v-for="slot in LIST_TIME_SLOT"
                     :key="slot"
                     class="timetable-grid-line"
-                    :class="{ 'timetable-grid-line--current': isCurrentTimeSlot(slot) && day === currentDayOfWeek }"
+                    :class="{
+                      'timetable-grid-line--current':
+                        isCurrentTimeSlot(slot) && day === currentDayOfWeek,
+                    }"
                   />
 
                   <!-- Session blocks -->
@@ -278,233 +323,233 @@
 </template>
 
 <style scoped>
-.stat-label {
-  font-size: 0.72rem;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  margin-bottom: 2px;
-}
-
-.stat-value {
-  font-family: var(--font-display);
-  font-size: 1.15rem;
-  line-height: 1.3;
-}
-
-@media (max-width: 600px) {
-  .stat-avatar {
-    width: 36px !important;
-    height: 36px !important;
-    min-width: 36px !important;
-  }
-
-  .stat-avatar .v-icon {
-    font-size: 18px !important;
-  }
-
   .stat-label {
-    font-size: 0.62rem;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 2px;
   }
 
   .stat-value {
-    font-size: 1rem;
+    font-family: var(--font-display);
+    font-size: 1.15rem;
+    line-height: 1.3;
   }
-}
 
-/* ── Timetable Layout ── */
+  @media (max-width: 600px) {
+    .stat-avatar {
+      width: 36px !important;
+      height: 36px !important;
+      min-width: 36px !important;
+    }
 
-.timetable-wrapper {
-  overflow-x: auto;
-}
+    .stat-avatar .v-icon {
+      font-size: 18px !important;
+    }
 
-.timetable {
-  display: grid;
-  grid-template-rows: auto 1fr;
-  min-width: 720px;
-}
+    .stat-label {
+      font-size: 0.62rem;
+    }
 
-.timetable-header {
-  display: grid;
-  grid-template-columns: 64px repeat(6, 1fr);
-  border-bottom: 2px solid var(--color-border);
-}
+    .stat-value {
+      font-size: 1rem;
+    }
+  }
 
-.timetable--day-view .timetable-header {
-  grid-template-columns: 64px 1fr;
-}
+  /* ── Timetable Layout ── */
 
-.timetable-body {
-  display: grid;
-  grid-template-columns: 64px repeat(6, 1fr);
-  position: relative;
-}
+  .timetable-wrapper {
+    overflow-x: auto;
+  }
 
-.timetable--day-view .timetable-body {
-  grid-template-columns: 64px 1fr;
-}
+  .timetable {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    min-width: 720px;
+  }
 
-.timetable-corner {
-  border-right: 1px solid var(--color-border);
-}
+  .timetable-header {
+    display: grid;
+    grid-template-columns: 64px repeat(6, 1fr);
+    border-bottom: 2px solid var(--color-border);
+  }
 
-/* ── Day Header ── */
+  .timetable--day-view .timetable-header {
+    grid-template-columns: 64px 1fr;
+  }
 
-.timetable-day-header {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 14px 8px;
-  font-family: var(--font-body);
-  font-size: 0.82rem;
-  font-weight: 600;
-  color: var(--color-ink-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  border-right: 1px solid var(--color-border);
-}
+  .timetable-body {
+    display: grid;
+    grid-template-columns: 64px repeat(6, 1fr);
+    position: relative;
+  }
 
-.timetable-day-header:last-child {
-  border-right: none;
-}
+  .timetable--day-view .timetable-body {
+    grid-template-columns: 64px 1fr;
+  }
 
-.timetable-day-header--today {
-  color: var(--color-ink);
-  background-color: var(--color-accent-gold-soft);
-}
+  .timetable-corner {
+    border-right: 1px solid var(--color-border);
+  }
 
-/* ── Time Column ── */
+  /* ── Day Header ── */
 
-.timetable-time-col {
-  border-right: 1px solid var(--color-border);
-}
+  .timetable-day-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 14px 8px;
+    font-family: var(--font-body);
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--color-ink-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    border-right: 1px solid var(--color-border);
+  }
 
-.timetable-time-slot {
-  height: 72px;
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
-  padding-top: 4px;
-}
+  .timetable-day-header:last-child {
+    border-right: none;
+  }
 
-.timetable-time-slot--current {
-  background-color: var(--color-accent-gold-soft);
-}
+  .timetable-day-header--today {
+    color: var(--color-ink);
+    background-color: var(--color-accent-gold-soft);
+  }
 
-.time-label {
-  font-family: var(--font-body);
-  font-size: 0.7rem;
-  font-weight: 600;
-  color: var(--color-ink-muted);
-  letter-spacing: 0.02em;
-}
+  /* ── Time Column ── */
 
-/* ── Day Column ── */
+  .timetable-time-col {
+    border-right: 1px solid var(--color-border);
+  }
 
-.timetable-day-col {
-  position: relative;
-  border-right: 1px solid var(--color-border);
-}
+  .timetable-time-slot {
+    height: 72px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding-top: 4px;
+  }
 
-.timetable-day-col:last-child {
-  border-right: none;
-}
+  .timetable-time-slot--current {
+    background-color: var(--color-accent-gold-soft);
+  }
 
-.timetable-day-col--today {
-  background-color: var(--color-accent-gold-soft);
-}
+  .time-label {
+    font-family: var(--font-body);
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--color-ink-muted);
+    letter-spacing: 0.02em;
+  }
 
-.timetable-grid-line {
-  height: 72px;
-  border-bottom: 1px solid var(--color-border);
-}
+  /* ── Day Column ── */
 
-.timetable-grid-line:last-child {
-  border-bottom: none;
-}
+  .timetable-day-col {
+    position: relative;
+    border-right: 1px solid var(--color-border);
+  }
 
-.timetable-grid-line--current {
-  background-color: rgba(212, 168, 83, 0.06);
-}
+  .timetable-day-col:last-child {
+    border-right: none;
+  }
 
-/* ── Session Block ── */
+  .timetable-day-col--today {
+    background-color: var(--color-accent-gold-soft);
+  }
 
-.session-block {
-  position: absolute;
-  left: 3px;
-  right: 3px;
-  z-index: 1;
-}
+  .timetable-grid-line {
+    height: 72px;
+    border-bottom: 1px solid var(--color-border);
+  }
 
-.session-card {
-  height: 100%;
-  border-radius: 8px;
-  padding: 8px 10px;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  overflow: hidden;
-  border-left: 3px solid transparent;
-  cursor: pointer;
-}
+  .timetable-grid-line:last-child {
+    border-bottom: none;
+  }
 
-.session-card:hover {
-  filter: brightness(0.95);
-}
+  .timetable-grid-line--current {
+    background-color: rgba(212, 168, 83, 0.06);
+  }
 
-.session-card--info {
-  background-color: rgba(74, 127, 165, 0.12);
-  border-left-color: var(--color-ink-muted);
-  color: var(--color-ink);
-}
+  /* ── Session Block ── */
 
-.session-card--secondary {
-  background-color: var(--color-accent-gold-soft);
-  border-left-color: var(--color-accent-gold);
-  color: var(--color-ink);
-}
+  .session-block {
+    position: absolute;
+    left: 3px;
+    right: 3px;
+    z-index: 1;
+  }
 
-.session-card--primary {
-  background-color: rgba(44, 62, 80, 0.08);
-  border-left-color: var(--color-ink);
-  color: var(--color-ink);
-}
+  .session-card {
+    height: 100%;
+    border-radius: 8px;
+    padding: 8px 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    overflow: hidden;
+    border-left: 3px solid transparent;
+    cursor: pointer;
+  }
 
-.session-time {
-  font-family: var(--font-body);
-  font-size: 0.65rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.03em;
-  opacity: 0.7;
-}
+  .session-card:hover {
+    filter: brightness(0.95);
+  }
 
-.session-name {
-  font-family: var(--font-body);
-  font-size: 0.78rem;
-  font-weight: 600;
-  line-height: 1.3;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
+  .session-card--info {
+    background-color: rgba(74, 127, 165, 0.12);
+    border-left-color: var(--color-ink-muted);
+    color: var(--color-ink);
+  }
 
-.session-code {
-  font-family: var(--font-body);
-  font-size: 0.6rem;
-  font-weight: 500;
-  opacity: 0.55;
-  letter-spacing: 0.02em;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
+  .session-card--secondary {
+    background-color: var(--color-accent-gold-soft);
+    border-left-color: var(--color-accent-gold);
+    color: var(--color-ink);
+  }
 
-.session-meta {
-  display: flex;
-  align-items: center;
-  gap: 3px;
-  font-family: var(--font-body);
-  font-size: 0.68rem;
-  opacity: 0.65;
-}
+  .session-card--primary {
+    background-color: rgba(44, 62, 80, 0.08);
+    border-left-color: var(--color-ink);
+    color: var(--color-ink);
+  }
+
+  .session-time {
+    font-family: var(--font-body);
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    opacity: 0.7;
+  }
+
+  .session-name {
+    font-family: var(--font-body);
+    font-size: 0.78rem;
+    font-weight: 600;
+    line-height: 1.3;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .session-code {
+    font-family: var(--font-body);
+    font-size: 0.6rem;
+    font-weight: 500;
+    opacity: 0.55;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .session-meta {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    font-family: var(--font-body);
+    font-size: 0.68rem;
+    opacity: 0.65;
+  }
 </style>

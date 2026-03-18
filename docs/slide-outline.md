@@ -15,6 +15,7 @@ Tổng: **20 slides**.
 Dùng phong cách **Prezi / spatial storytelling**: mỗi phần lớn là một "khung hình tổng quan" (overview), sau đó zoom vào từng chi tiết bên trong. Khi xong chi tiết thì zoom ra lại tổng quan trước khi chuyển sang phần tiếp.
 
 **Quy tắc hình ảnh:**
+
 - KHÔNG dùng flowchart ký hiệu chuẩn (hình thoi, hình oval). Thay vào đó dùng **khối hình chữ nhật bo tròn** (building blocks) xếp theo chuỗi bước, nối nhau bằng mũi tên.
 - Mỗi bước là 1 khối có icon + tiêu đề ngắn + 1 dòng mô tả. Tô màu nền khác nhau theo trạng thái.
 - Sơ đồ luồng dùng dạng **timeline ngang** (trái → phải) hoặc **bậc thang** (trên → dưới, lệch phải dần).
@@ -43,12 +44,14 @@ Dùng phong cách **Prezi / spatial storytelling**: mỗi phần lớn là một
 **Bố cục: 2 cột. Trái = vấn đề (icon ❌ đỏ), Phải = hệ quả (icon ⚠️ vàng).**
 
 Trái — Vấn đề:
+
 - Điểm danh bằng gọi tên: mất ~5 phút mỗi lớp 40 người
 - Sinh viên điểm danh hộ bạn vắng
 - Giảng viên không biết ai đến trễ, ai vắng cho đến khi kiểm tra lại
 - Dữ liệu ghi giấy, khó thống kê cuối kỳ
 
 Phải — Hệ quả:
+
 - Lãng phí thời gian giảng dạy
 - Tỷ lệ gian lận cao
 - Không có cảnh báo sớm cho sinh viên sắp thiếu điều kiện dự thi
@@ -61,12 +64,12 @@ Phải — Hệ quả:
 
 Giải pháp: Sinh viên quẹt thẻ RFID → thiết bị tự ghi nhận → gửi lên cloud → giảng viên xem trên web ngay lập tức.
 
-| Phương pháp | Chi phí | Tốc độ | Chống gian lận | Xem tức thì |
-|-------------|---------|--------|----------------|-------------|
-| Gọi tên | Thấp | Chậm (~5 phút) | Kém | Không |
-| QR Code | Thấp | Nhanh | Kém (dễ chia sẻ mã) | Có |
-| Nhận diện khuôn mặt | Cao | Nhanh | Tốt | Có |
-| **RFID (đề xuất)** | **Thấp (~20k/thẻ)** | **<2 giây** | **Tốt (thẻ vật lý)** | **Có** |
+| Phương pháp         | Chi phí             | Tốc độ         | Chống gian lận       | Xem tức thì |
+| ------------------- | ------------------- | -------------- | -------------------- | ----------- |
+| Gọi tên             | Thấp                | Chậm (~5 phút) | Kém                  | Không       |
+| QR Code             | Thấp                | Nhanh          | Kém (dễ chia sẻ mã)  | Có          |
+| Nhận diện khuôn mặt | Cao                 | Nhanh          | Tốt                  | Có          |
+| **RFID (đề xuất)**  | **Thấp (~20k/thẻ)** | **<2 giây**    | **Tốt (thẻ vật lý)** | **Có**      |
 
 ---
 
@@ -119,6 +122,7 @@ Ghi chú nhỏ: "Trạng thái lệnh: Đang chờ → Đã gửi → Đã thự
 **Chiếm toàn bộ slide. Screenshot sơ đồ mạch từ Proteus, phóng to vừa đủ. Dùng callout (hộp nhỏ có mũi tên chỉ vào) đánh nhãn từng linh kiện trên hình.**
 
 Các callout:
+
 - U1: Raspberry Pi 3 (bộ xử lý chính)
 - LCD1: Màn hình LCD
 - VT1: Đầu đọc thẻ RFID
@@ -138,11 +142,13 @@ Các callout:
 Trung tâm: **Raspberry Pi 3**
 
 Nhóm đầu vào (xanh lá, phía trái):
+
 - Nút SCAN ── GPIO4
 - Nút COUNT ── GPIO17
 - Đầu đọc RFID ── UART
 
 Nhóm đầu ra (xanh dương, phía phải):
+
 - Màn hình LCD ── I2C
 - Đèn xanh ── GPIO19
 - Đèn đỏ ── GPIO18
@@ -159,12 +165,12 @@ Bước 1: 🔘 **Nhấn nút SCAN** — Kích hoạt chế độ quét thẻ
 Bước 2: 📺 **Màn hình hiện "SCAN CARD"** — Chờ sinh viên đưa thẻ
 Bước 3: 💳 **Đọc mã thẻ** — Đầu đọc nhận mã từ thẻ RFID
 Bước 4: 🔍 **Kiểm tra mã thẻ** — So sánh với danh sách 3 thẻ đã đăng ký
-  ↙ Rẽ trái (nền đỏ nhạt):                    ↘ Rẽ phải (nền xanh nhạt):
-  ❌ Màn hình "invalid card"                    ✅ Màn hình "CHECK DONE"
-  🔴 Đèn đỏ sáng                               🟢 Đèn xanh sáng
-  🔊 Loa kêu dài                                🔊 Loa kêu ngắn
-                                                🚪 Cửa mở 3 giây
-                                                📤 Gửi mã thẻ qua serial lên cloud
+↙ Rẽ trái (nền đỏ nhạt): ↘ Rẽ phải (nền xanh nhạt):
+❌ Màn hình "invalid card" ✅ Màn hình "CHECK DONE"
+🔴 Đèn đỏ sáng 🟢 Đèn xanh sáng
+🔊 Loa kêu dài 🔊 Loa kêu ngắn
+🚪 Cửa mở 3 giây
+📤 Gửi mã thẻ qua serial lên cloud
 
 **Nhánh phụ (hộp nhỏ bên dưới):**
 Nút COUNT: Nhấn bất kỳ lúc nào → màn hình hiện số người đã check-in
@@ -177,10 +183,10 @@ Nút COUNT: Nhấn bất kỳ lúc nào → màn hình hiện số người đã
 
 Khối trái: **Thiết bị tại phòng** (Proteus) — nối qua dây serial (9600 baud)
 Khối giữa: **Chương trình trung gian** (Python) — 4 việc:
-  ① Nhận check-in → gửi lên cloud
-  ② Nhận tín hiệu "còn sống" → báo cloud thiết bị đang hoạt động
-  ③ Kiểm tra cloud mỗi 2s → nếu có lệnh mới → chuyển cho thiết bị
-  ④ Mất mạng → lưu tạm → có mạng lại thì gửi hết
+① Nhận check-in → gửi lên cloud
+② Nhận tín hiệu "còn sống" → báo cloud thiết bị đang hoạt động
+③ Kiểm tra cloud mỗi 2s → nếu có lệnh mới → chuyển cho thiết bị
+④ Mất mạng → lưu tạm → có mạng lại thì gửi hết
 Khối phải: **Cloud** (Supabase) — nối qua internet (HTTPS)
 Hộp dưới (đường đứt nét): **Hàng đợi khi mất mạng**
 
@@ -193,12 +199,15 @@ Hộp dưới (đường đứt nét): **Hàng đợi khi mất mạng**
 **Hình ảnh dạng các hộp nối nhau bằng đường có mũi tên. Mỗi hộp = 1 bảng, tô nền màu khác nhau theo nhóm. Ghi tên bảng in đậm + 2–3 thông tin chính. Đường nối ghi quan hệ (1 phòng có nhiều lớp, 1 lớp có nhiều sinh viên...).**
 
 Nhóm xanh lá (quản lý):
+
 - **PHÒNG HỌC** (tên, sức chứa) ──1:N──► **LỚP HỌC** (mã lớp, môn, giờ học) ──1:N──► **SINH VIÊN** (MSSV, họ tên, ghế)
 
 Nhóm xanh dương (thiết bị):
+
 - **PHÒNG HỌC** ──1:1──► **THIẾT BỊ** (mã, online/offline) ──1:N──► **LỆNH ĐIỀU KHIỂN** (bật/tắt, trạng thái)
 
 Nhóm cam (điểm danh):
+
 - **ĐIỂM DANH** (giờ check-in, đúng giờ/trễ/vắng) ← liên kết từ SINH VIÊN + LỚP + THIẾT BỊ
 - **PHIÊN CHECK IN/OUT** (giờ vào, giờ ra) ← liên kết từ SINH VIÊN + LỚP + THIẾT BỊ
 
@@ -211,11 +220,13 @@ Tổng 7 bảng.
 **Hình ảnh: 2 nhân vật (icon người) ở bên trái, 1 hộp "Cơ sở dữ liệu" có icon ổ khóa ở bên phải. Mỗi nhân vật có mũi tên vào CSDL, ghi rõ được phép làm gì. Dùng màu xanh cho "được phép" và đỏ cho "không được phép".**
 
 Nhân vật 1 — **Giảng viên** (qua web):
+
 - ✅ Xem tất cả dữ liệu
 - ✅ Gửi lệnh cho thiết bị
 - ❌ Không thể sửa điểm danh
 
 Nhân vật 2 — **Chương trình trung gian** (bridge, có khóa bí mật):
+
 - ✅ Ghi điểm danh
 - ✅ Cập nhật trạng thái thiết bị
 
@@ -315,6 +326,7 @@ Ghi chú: "Dưới 1 giây từ quẹt thẻ → web cập nhật"
 **Web (7 tính năng) | Thiết bị (7 tính năng)**
 
 Web:
+
 1. Đăng nhập Google
 2. Dashboard với 3 loại biểu đồ
 3. Chi tiết điểm danh + sơ đồ ghế ngồi
@@ -324,6 +336,7 @@ Web:
 7. Chế độ sáng/tối
 
 Thiết bị:
+
 1. Check-in bằng thẻ RFID
 2. Đèn xanh/đỏ + loa báo
 3. Check-in và check-out (tính giờ tham gia)
@@ -334,12 +347,12 @@ Thiết bị:
 
 **Bảng CLO:**
 
-| CLO | Yêu cầu | Đồ án đáp ứng |
-|-----|---------|----------------|
-| CLO1 | Kiến trúc, giao thức IoT | 4 tầng IoT, serial + internet |
-| CLO3 | Thiết kế sơ đồ khối | Kiến trúc, mạch, kết nối, CSDL, tuần tự |
-| CLO5 | Làm việc nhóm, thuyết trình | 3 thành viên, demo trực tiếp |
-| CLO6 | Phần cứng + phần mềm IoT | Mạch Proteus + web + bridge + cloud |
+| CLO  | Yêu cầu                     | Đồ án đáp ứng                           |
+| ---- | --------------------------- | --------------------------------------- |
+| CLO1 | Kiến trúc, giao thức IoT    | 4 tầng IoT, serial + internet           |
+| CLO3 | Thiết kế sơ đồ khối         | Kiến trúc, mạch, kết nối, CSDL, tuần tự |
+| CLO5 | Làm việc nhóm, thuyết trình | 3 thành viên, demo trực tiếp            |
+| CLO6 | Phần cứng + phần mềm IoT    | Mạch Proteus + web + bridge + cloud     |
 
 ---
 
@@ -358,6 +371,7 @@ Thiết bị:
 Phương án dự phòng: video đã quay sẵn.
 
 **Hỏi đáp:**
+
 - **"Sao không dùng MQTT?"** → HTTPS đơn giản hơn cho 1 thiết bị. MQTT phù hợp khi có hàng trăm thiết bị.
 - **"Bảo mật thẻ?"** → Demo dùng mã đơn giản. Thực tế dùng thẻ MIFARE có mã hóa.
 - **"Mất mạng?"** → Thiết bị lưu tạm, tự gửi lại khi có mạng.

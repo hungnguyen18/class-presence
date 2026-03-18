@@ -36,9 +36,7 @@ async function fetchSchedule() {
   }
 
   // Count students per class
-  const { data: studentCounts } = await supabase
-    .from('cp_students')
-    .select('class_id')
+  const { data: studentCounts } = await supabase.from('cp_students').select('class_id')
 
   const countMap: Record<string, number> = {}
   for (let i = 0; i < (studentCounts ?? []).length; i += 1) {
@@ -65,7 +63,7 @@ async function fetchSchedule() {
 
     // Distribute classes across week days (simple round-robin for demo)
     // Each class gets 2 sessions per week
-    const dayAssignment = [(i * 2) % DAY_COUNT + 1, (i * 2 + 2) % DAY_COUNT + 1]
+    const dayAssignment = [((i * 2) % DAY_COUNT) + 1, ((i * 2 + 2) % DAY_COUNT) + 1]
     for (let d = 0; d < dayAssignment.length; d += 1) {
       sessions.push({
         id: `${cls.id}-${d}`,

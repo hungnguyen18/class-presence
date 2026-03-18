@@ -3,40 +3,40 @@
 :root {
   --font-display: 'DM Serif Display', Georgia, serif;
   --font-body: 'DM Sans', system-ui, sans-serif;
-  --color-canvas: #F7F5F0;
-  --color-surface: #FFFFFF;
-  --color-border: #E0DCD4;
-  --color-ink: #2C3E50;
-  --color-ink-muted: #6B7C8D;
-  --color-accent-gold: #D4A853;
+  --color-canvas: #f7f5f0;
+  --color-surface: #ffffff;
+  --color-border: #e0dcd4;
+  --color-ink: #2c3e50;
+  --color-ink-muted: #6b7c8d;
+  --color-accent-gold: #d4a853;
   --color-accent-gold-soft: rgba(212, 168, 83, 0.12);
-  --color-success: #3D8B5E;
-  --color-success-soft: rgba(61, 139, 94, 0.10);
-  --color-warning: #D4953A;
-  --color-warning-soft: rgba(212, 149, 58, 0.10);
-  --color-error: #C0544F;
-  --color-error-soft: rgba(192, 84, 79, 0.10);
+  --color-success: #3d8b5e;
+  --color-success-soft: rgba(61, 139, 94, 0.1);
+  --color-warning: #d4953a;
+  --color-warning-soft: rgba(212, 149, 58, 0.1);
+  --color-error: #c0544f;
+  --color-error-soft: rgba(192, 84, 79, 0.1);
   --shadow-card: 0 1px 3px rgba(44, 62, 80, 0.06), 0 1px 2px rgba(44, 62, 80, 0.04);
-  --shadow-card-hover: 0 4px 12px rgba(44, 62, 80, 0.10), 0 2px 4px rgba(44, 62, 80, 0.06);
+  --shadow-card-hover: 0 4px 12px rgba(44, 62, 80, 0.1), 0 2px 4px rgba(44, 62, 80, 0.06);
   --transition-smooth: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* ── Dark mode CSS variable overrides ── */
 
 .v-theme--scholarly-dark {
-  --color-canvas: #13181F;
-  --color-surface: #1B2230;
+  --color-canvas: #13181f;
+  --color-surface: #1b2230;
   --color-border: rgba(255, 255, 255, 0.09);
-  --color-ink: #D8D2C7;
-  --color-ink-muted: #8A9BB0;
-  --color-accent-gold: #D4A853;
-  --color-accent-gold-soft: rgba(212, 168, 83, 0.10);
-  --color-success: #4DB87C;
-  --color-success-soft: rgba(77, 184, 124, 0.10);
-  --color-warning: #E0A845;
-  --color-warning-soft: rgba(224, 168, 69, 0.10);
-  --color-error: #E06B66;
-  --color-error-soft: rgba(224, 107, 102, 0.10);
+  --color-ink: #d8d2c7;
+  --color-ink-muted: #8a9bb0;
+  --color-accent-gold: #d4a853;
+  --color-accent-gold-soft: rgba(212, 168, 83, 0.1);
+  --color-success: #4db87c;
+  --color-success-soft: rgba(77, 184, 124, 0.1);
+  --color-warning: #e0a845;
+  --color-warning-soft: rgba(224, 168, 69, 0.1);
+  --color-error: #e06b66;
+  --color-error-soft: rgba(224, 107, 102, 0.1);
   --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.2);
   --shadow-card-hover: 0 4px 16px rgba(0, 0, 0, 0.4), 0 2px 6px rgba(0, 0, 0, 0.25);
 }
@@ -76,8 +76,12 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-h1, h2, h3,
-.text-h4, .text-h5, .text-h6,
+h1,
+h2,
+h3,
+.text-h4,
+.text-h5,
+.text-h6,
 .v-card-title {
   font-family: var(--font-display) !important;
   letter-spacing: -0.01em !important;
@@ -93,7 +97,8 @@ h1, h2, h3,
 .v-btn__content,
 .v-chip__content,
 .v-data-table,
-th, td {
+th,
+td {
   font-family: var(--font-body) !important;
 }
 
@@ -102,7 +107,9 @@ th, td {
 .v-card {
   box-shadow: var(--shadow-card) !important;
   border-color: var(--color-border) !important;
-  transition: box-shadow var(--transition-smooth), transform var(--transition-smooth) !important;
+  transition:
+    box-shadow var(--transition-smooth),
+    transform var(--transition-smooth) !important;
 }
 
 .v-card--hover:hover,
@@ -235,11 +242,21 @@ th, td {
   animation: fadeSlideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1) both;
 }
 
-.animate-delay-1 { animation-delay: 0.05s; }
-.animate-delay-2 { animation-delay: 0.10s; }
-.animate-delay-3 { animation-delay: 0.15s; }
-.animate-delay-4 { animation-delay: 0.20s; }
-.animate-delay-5 { animation-delay: 0.25s; }
+.animate-delay-1 {
+  animation-delay: 0.05s;
+}
+.animate-delay-2 {
+  animation-delay: 0.1s;
+}
+.animate-delay-3 {
+  animation-delay: 0.15s;
+}
+.animate-delay-4 {
+  animation-delay: 0.2s;
+}
+.animate-delay-5 {
+  animation-delay: 0.25s;
+}
 
 /* ── Scrollbar styling ── */
 

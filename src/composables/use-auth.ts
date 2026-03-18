@@ -50,9 +50,7 @@ export function useAuth() {
 
   const signInWithGoogle = async () => {
     const redirectTo =
-      typeof window === 'undefined'
-        ? undefined
-        : `${window.location.origin}/dashboard`
+      typeof window === 'undefined' ? undefined : `${window.location.origin}/dashboard`
 
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',

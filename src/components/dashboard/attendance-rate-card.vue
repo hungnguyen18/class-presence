@@ -29,15 +29,11 @@
 
 <template>
   <v-card class="animate-in animate-delay-4">
-    <v-card-title class="rate-title pa-5 pb-3">
-      Attendance Rate
-    </v-card-title>
+    <v-card-title class="rate-title pa-5 pb-3"> Attendance Rate </v-card-title>
     <v-divider />
     <v-card-text class="pa-5">
       <div class="d-flex align-center mb-4">
-        <div class="rate-number mr-3">
-          {{ props.attendanceRate }}%
-        </div>
+        <div class="rate-number mr-3">{{ props.attendanceRate }}%</div>
         <v-chip
           :color="rateColor"
           variant="tonal"
@@ -79,15 +75,15 @@
 </template>
 
 <style scoped>
-.rate-title {
-  font-family: var(--font-display) !important;
-  font-size: 1.05rem !important;
-}
+  .rate-title {
+    font-family: var(--font-display) !important;
+    font-size: 1.05rem !important;
+  }
 
-.rate-number {
-  font-family: var(--font-display);
-  font-size: 2.2rem;
-  line-height: 1;
-  color: var(--color-ink);
-}
+  .rate-number {
+    font-family: var(--font-display);
+    font-size: 2.2rem;
+    line-height: 1;
+    color: var(--color-ink);
+  }
 </style>

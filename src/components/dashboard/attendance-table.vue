@@ -1,15 +1,15 @@
 <script setup lang="ts">
-import type { IStudentAttendance } from '@/types/attendance'
-import { getAttendanceStatusColor } from '@/utils/attendance'
-import { ATTENDANCE_STATUS_LABEL_MAP } from '@/constants/attendance'
+  import type { IStudentAttendance } from '@/types/attendance'
+  import { getAttendanceStatusColor } from '@/utils/attendance'
+  import { ATTENDANCE_STATUS_LABEL_MAP } from '@/constants/attendance'
 
-const props = defineProps<{
-  listStudentAttendance: IStudentAttendance[]
-}>()
+  const props = defineProps<{
+    listStudentAttendance: IStudentAttendance[]
+  }>()
 
-function formatStatusLabel({ status }: { status: string }): string {
-  return ATTENDANCE_STATUS_LABEL_MAP[status] ?? 'Absent'
-}
+  function formatStatusLabel({ status }: { status: string }): string {
+    return ATTENDANCE_STATUS_LABEL_MAP[status] ?? 'Absent'
+  }
 </script>
 
 <template>
@@ -57,8 +57,13 @@ function formatStatusLabel({ status }: { status: string }): string {
               {{ attendanceItem.fullName }}
             </td>
             <td class="text-body-2">
-              <span v-if="attendanceItem.checkInTime !== null" class="d-flex align-center">
-                <v-icon size="14" color="medium-emphasis" class="mr-1">mdi-clock-outline</v-icon>
+              <span
+                v-if="attendanceItem.checkInTime !== null"
+                class="d-flex align-center"
+              >
+                <v-icon size="14" color="medium-emphasis" class="mr-1"
+                  >mdi-clock-outline</v-icon
+                >
                 {{ attendanceItem.checkInTime }}
               </span>
               <span v-else class="text-disabled">—</span>
@@ -87,20 +92,20 @@ function formatStatusLabel({ status }: { status: string }): string {
 </template>
 
 <style scoped>
-.table-title {
-  font-family: var(--font-display);
-  font-size: 1.15rem;
-  color: var(--color-ink);
-}
+  .table-title {
+    font-family: var(--font-display);
+    font-size: 1.15rem;
+    color: var(--color-ink);
+  }
 
-.th-cell {
-  text-align: left;
-  font-family: var(--font-body) !important;
-  font-size: 0.72rem !important;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--color-ink-muted) !important;
-  font-weight: 600 !important;
-  border-bottom-color: var(--color-border) !important;
-}
+  .th-cell {
+    text-align: left;
+    font-family: var(--font-body) !important;
+    font-size: 0.72rem !important;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-ink-muted) !important;
+    font-weight: 600 !important;
+    border-bottom-color: var(--color-border) !important;
+  }
 </style>

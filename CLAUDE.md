@@ -19,6 +19,7 @@ yarn format       # Prettier format
 ## Environment Setup
 
 Copy `.env.example` to `.env` and fill in Supabase credentials:
+
 - `VITE_SUPABASE_URL` — Supabase project URL
 - `VITE_SUPABASE_ANON_KEY` — Supabase anonymous/public key
 
@@ -34,15 +35,15 @@ Copy `.env.example` to `.env` and fill in Supabase credentials:
 
 ### Routing
 
-| Path | Page | Purpose |
-|------|------|---------|
-| `/login` | `login-page.vue` | Google OAuth login (public) |
-| `/` | redirect → `/dashboard` | |
-| `/dashboard` | `dashboard-page.vue` | Main overview |
-| `/classes` | `class-list-page.vue` | List all classes |
+| Path                | Page                       | Purpose                      |
+| ------------------- | -------------------------- | ---------------------------- |
+| `/login`            | `login-page.vue`           | Google OAuth login (public)  |
+| `/`                 | redirect → `/dashboard`    |                              |
+| `/dashboard`        | `dashboard-page.vue`       | Main overview                |
+| `/classes`          | `class-list-page.vue`      | List all classes             |
 | `/classes/:classId` | `class-dashboard-page.vue` | Class detail with attendance |
-| `/schedule` | `schedule-page.vue` | Class schedule |
-| `/devices` | `device-config-page.vue` | IoT device management |
+| `/schedule`         | `schedule-page.vue`        | Class schedule               |
+| `/devices`          | `device-config-page.vue`   | IoT device management        |
 
 ### Database (Supabase — project "Checkin system", ap-northeast-1)
 

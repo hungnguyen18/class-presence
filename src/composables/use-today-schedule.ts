@@ -33,7 +33,10 @@ async function fetchTodaySchedule() {
   const now = dayjs()
 
   const [classResult, studentResult, attendanceResult] = await Promise.all([
-    supabase.from('cp_classes').select('*, cp_rooms(*)').order('start_time', { ascending: true }),
+    supabase
+      .from('cp_classes')
+      .select('*, cp_rooms(*)')
+      .order('start_time', { ascending: true }),
     supabase.from('cp_students').select('class_id'),
     supabase
       .from('cp_attendance_logs')

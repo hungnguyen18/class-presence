@@ -4,14 +4,13 @@ export const EAttendanceStatus = {
   ABSENT: 'ABSENT',
 } as const
 
-export type TAttendanceStatus =
-  (typeof EAttendanceStatus)[keyof typeof EAttendanceStatus]
+export type TAttendanceStatus = (typeof EAttendanceStatus)[keyof typeof EAttendanceStatus]
 
 export function isAttendanceStatus(value: unknown): value is TAttendanceStatus {
   return (
-    value === EAttendanceStatus.ON_TIME
-    || value === EAttendanceStatus.LATE
-    || value === EAttendanceStatus.ABSENT
+    value === EAttendanceStatus.ON_TIME ||
+    value === EAttendanceStatus.LATE ||
+    value === EAttendanceStatus.ABSENT
   )
 }
 

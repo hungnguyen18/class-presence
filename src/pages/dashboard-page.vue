@@ -49,8 +49,14 @@
   )
 
   const { currentUser } = useAuth()
-  const { stats, weeklyTrend, classBreakdown, overallBreakdown, isLoading, fetchDashboardStats } =
-    useDashboardStats()
+  const {
+    stats,
+    weeklyTrend,
+    classBreakdown,
+    overallBreakdown,
+    isLoading,
+    fetchDashboardStats,
+  } = useDashboardStats()
   const { listDevice, fetchDevices, patchDeviceInPlace } = useDevices()
   const {
     currentClass,
@@ -76,8 +82,8 @@
 
   // ── Stat cards ──
 
-  const countOnlineDevice = computed(() =>
-    listDevice.value.filter((d) => d.status === EDeviceStatus.ONLINE).length,
+  const countOnlineDevice = computed(
+    () => listDevice.value.filter((d) => d.status === EDeviceStatus.ONLINE).length,
   )
 
   const todayAttendanceRate = computed(() => {
@@ -338,7 +344,6 @@
 <template>
   <AppLayout>
     <v-container fluid class="pa-5 pa-sm-8">
-
       <!-- Greeting -->
       <v-row class="mb-4">
         <v-col cols="12">
@@ -374,9 +379,17 @@
       <!-- Stat cards -->
       <v-row class="mb-4" dense>
         <v-col cols="6" md="3" class="d-flex">
-          <v-card class="stat-card stat-card--total animate-in animate-delay-1 flex-grow-1">
+          <v-card
+            class="stat-card stat-card--total animate-in animate-delay-1 flex-grow-1"
+          >
             <v-card-text class="d-flex align-center pa-4">
-              <v-avatar size="44" rounded="lg" color="primary" variant="tonal" class="mr-3 stat-avatar">
+              <v-avatar
+                size="44"
+                rounded="lg"
+                color="primary"
+                variant="tonal"
+                class="mr-3 stat-avatar"
+              >
                 <v-icon size="22">mdi-calendar-today</v-icon>
               </v-avatar>
               <div class="d-flex flex-column stat-content">
@@ -389,24 +402,42 @@
         </v-col>
 
         <v-col cols="6" md="3" class="d-flex">
-          <v-card class="stat-card stat-card--success animate-in animate-delay-2 flex-grow-1">
+          <v-card
+            class="stat-card stat-card--success animate-in animate-delay-2 flex-grow-1"
+          >
             <v-card-text class="d-flex align-center pa-4">
-              <v-avatar size="44" rounded="lg" color="success" variant="tonal" class="mr-3 stat-avatar">
+              <v-avatar
+                size="44"
+                rounded="lg"
+                color="success"
+                variant="tonal"
+                class="mr-3 stat-avatar"
+              >
                 <v-icon size="22">mdi-account-check</v-icon>
               </v-avatar>
               <div class="d-flex flex-column stat-content">
                 <span class="dash-label">Checked In</span>
                 <v-skeleton-loader v-if="isTodayLoading" type="text" width="40" />
-                <span v-else class="dash-value text-success">{{ todayCheckedInTotal }}</span>
+                <span v-else class="dash-value text-success">{{
+                  todayCheckedInTotal
+                }}</span>
               </div>
             </v-card-text>
           </v-card>
         </v-col>
 
         <v-col cols="6" md="3" class="d-flex">
-          <v-card class="stat-card stat-card--warning animate-in animate-delay-3 flex-grow-1">
+          <v-card
+            class="stat-card stat-card--warning animate-in animate-delay-3 flex-grow-1"
+          >
             <v-card-text class="d-flex align-center pa-4">
-              <v-avatar size="44" rounded="lg" color="info" variant="tonal" class="mr-3 stat-avatar">
+              <v-avatar
+                size="44"
+                rounded="lg"
+                color="info"
+                variant="tonal"
+                class="mr-3 stat-avatar"
+              >
                 <v-icon size="22">mdi-chart-line</v-icon>
               </v-avatar>
               <div class="d-flex flex-column stat-content">
@@ -419,15 +450,25 @@
         </v-col>
 
         <v-col cols="6" md="3" class="d-flex">
-          <v-card class="stat-card stat-card--total animate-in animate-delay-4 flex-grow-1">
+          <v-card
+            class="stat-card stat-card--total animate-in animate-delay-4 flex-grow-1"
+          >
             <v-card-text class="d-flex align-center pa-4">
-              <v-avatar size="44" rounded="lg" color="secondary" variant="tonal" class="mr-3 stat-avatar">
+              <v-avatar
+                size="44"
+                rounded="lg"
+                color="secondary"
+                variant="tonal"
+                class="mr-3 stat-avatar"
+              >
                 <v-icon size="22">mdi-chip</v-icon>
               </v-avatar>
               <div class="d-flex flex-column stat-content">
                 <span class="dash-label">Devices Online</span>
                 <v-skeleton-loader v-if="isLoading" type="text" width="40" />
-                <span v-else class="dash-value">{{ countOnlineDevice }}/{{ stats.totalDevice }}</span>
+                <span v-else class="dash-value"
+                  >{{ countOnlineDevice }}/{{ stats.totalDevice }}</span
+                >
               </div>
             </v-card-text>
           </v-card>
@@ -458,19 +499,31 @@
             <v-divider />
             <v-card-text class="pa-5">
               <div class="chart-container chart-container--doughnut">
-                <Doughnut :data="attendanceBreakdownData" :options="attendanceBreakdownOptions" />
+                <Doughnut
+                  :data="attendanceBreakdownData"
+                  :options="attendanceBreakdownOptions"
+                />
               </div>
               <div class="d-flex justify-space-around mt-4">
                 <div class="text-center">
-                  <div class="text-h6 font-weight-bold text-success">{{ breakdownPercentages.onTime }}%</div>
+                  <div class="text-h6 font-weight-bold text-success">
+                    {{ breakdownPercentages.onTime }}%
+                  </div>
                   <div class="text-caption text-medium-emphasis">On Time</div>
                 </div>
                 <div class="text-center">
-                  <div class="text-h6 font-weight-bold" style="color: var(--color-warning)">{{ breakdownPercentages.late }}%</div>
+                  <div
+                    class="text-h6 font-weight-bold"
+                    style="color: var(--color-warning)"
+                  >
+                    {{ breakdownPercentages.late }}%
+                  </div>
                   <div class="text-caption text-medium-emphasis">Late</div>
                 </div>
                 <div class="text-center">
-                  <div class="text-h6 font-weight-bold text-error">{{ breakdownPercentages.absent }}%</div>
+                  <div class="text-h6 font-weight-bold text-error">
+                    {{ breakdownPercentages.absent }}%
+                  </div>
                   <div class="text-caption text-medium-emphasis">Absent</div>
                 </div>
               </div>
@@ -497,9 +550,16 @@
 
         <v-col cols="12" md="4">
           <v-card class="animate-in animate-delay-5">
-            <v-card-title class="card-heading pa-5 pb-3 d-flex align-center justify-space-between">
+            <v-card-title
+              class="card-heading pa-5 pb-3 d-flex align-center justify-space-between"
+            >
               <span>Devices</span>
-              <v-chip variant="tonal" size="small" :color="countOnlineDevice > 0 ? 'success' : 'error'" class="font-weight-medium">
+              <v-chip
+                variant="tonal"
+                size="small"
+                :color="countOnlineDevice > 0 ? 'success' : 'error'"
+                class="font-weight-medium"
+              >
                 {{ countOnlineDevice }}/{{ listDevice.length }} online
               </v-chip>
             </v-card-title>
@@ -528,13 +588,23 @@
                       <div class="d-flex align-center">
                         <span
                           class="status-dot mr-2"
-                          :class="device.status === EDeviceStatus.ONLINE ? 'status-dot--online' : 'status-dot--offline'"
+                          :class="
+                            device.status === EDeviceStatus.ONLINE
+                              ? 'status-dot--online'
+                              : 'status-dot--offline'
+                          "
                         />
                         <span
                           class="text-caption font-weight-medium"
-                          :class="device.status === EDeviceStatus.ONLINE ? 'text-success' : 'text-error'"
+                          :class="
+                            device.status === EDeviceStatus.ONLINE
+                              ? 'text-success'
+                              : 'text-error'
+                          "
                         >
-                          {{ device.status === EDeviceStatus.ONLINE ? 'Online' : 'Offline' }}
+                          {{
+                            device.status === EDeviceStatus.ONLINE ? 'Online' : 'Offline'
+                          }}
                         </span>
                       </div>
                     </template>
@@ -546,101 +616,100 @@
           </v-card>
         </v-col>
       </v-row>
-
     </v-container>
   </AppLayout>
 </template>
 
 <style scoped>
-.dash-label {
-  font-size: 0.72rem;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  color: var(--color-ink-muted);
-  margin-bottom: 2px;
-}
-
-.dash-value {
-  font-family: var(--font-display);
-  font-size: 1.75rem;
-  line-height: 1.1;
-}
-
-.card-heading {
-  font-family: var(--font-display) !important;
-  font-size: 1.05rem !important;
-}
-
-.chart-container {
-  position: relative;
-  width: 100%;
-  min-width: 0;
-}
-
-.chart-container--line {
-  height: 280px;
-}
-
-.chart-container--doughnut {
-  height: 220px;
-}
-
-.chart-container--bar {
-  height: 280px;
-}
-
-@media (max-width: 600px) {
-  .stat-avatar {
-    width: 36px !important;
-    height: 36px !important;
-    min-width: 36px !important;
-  }
-
-  .stat-avatar .v-icon {
-    font-size: 18px !important;
-  }
-
   .dash-label {
-    font-size: 0.62rem;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--color-ink-muted);
+    margin-bottom: 2px;
   }
 
   .dash-value {
-    font-size: 1.35rem;
+    font-family: var(--font-display);
+    font-size: 1.75rem;
+    line-height: 1.1;
+  }
+
+  .card-heading {
+    font-family: var(--font-display) !important;
+    font-size: 1.05rem !important;
+  }
+
+  .chart-container {
+    position: relative;
+    width: 100%;
+    min-width: 0;
   }
 
   .chart-container--line {
-    height: 220px;
+    height: 280px;
   }
 
   .chart-container--doughnut {
-    height: 200px;
+    height: 220px;
   }
 
   .chart-container--bar {
-    height: 220px;
+    height: 280px;
   }
-}
 
-.status-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  flex-shrink: 0;
-}
+  @media (max-width: 600px) {
+    .stat-avatar {
+      width: 36px !important;
+      height: 36px !important;
+      min-width: 36px !important;
+    }
 
-.status-dot--online {
-  background-color: var(--color-success);
-  box-shadow: 0 0 6px var(--color-success-soft);
-}
+    .stat-avatar .v-icon {
+      font-size: 18px !important;
+    }
 
-.status-dot--offline {
-  background-color: var(--color-error);
-}
+    .dash-label {
+      font-size: 0.62rem;
+    }
 
-.device-list-code {
-  font-family: var(--font-body) !important;
-  font-size: 0.78rem !important;
-  font-weight: 600;
-  letter-spacing: 0.03em;
-}
+    .dash-value {
+      font-size: 1.35rem;
+    }
+
+    .chart-container--line {
+      height: 220px;
+    }
+
+    .chart-container--doughnut {
+      height: 200px;
+    }
+
+    .chart-container--bar {
+      height: 220px;
+    }
+  }
+
+  .status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .status-dot--online {
+    background-color: var(--color-success);
+    box-shadow: 0 0 6px var(--color-success-soft);
+  }
+
+  .status-dot--offline {
+    background-color: var(--color-error);
+  }
+
+  .device-list-code {
+    font-family: var(--font-body) !important;
+    font-size: 0.78rem !important;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+  }
 </style>

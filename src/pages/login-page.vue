@@ -68,37 +68,37 @@
 </template>
 
 <style scoped>
-.login-root {
-  min-height: 100vh;
-  min-height: 100dvh;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-}
-
-.theme-toggle {
-  position: absolute;
-  top: 16px;
-  right: 16px;
-  z-index: 1;
-}
-
-.login-title {
-  font-family: var(--font-display);
-  font-size: 1.75rem;
-  color: var(--color-ink);
-  margin-bottom: 4px;
-}
-
-.login-heading {
-  font-family: var(--font-display);
-  font-size: 1.25rem;
-  color: var(--color-ink);
-}
-
-@media (max-width: 600px) {
-  .login-title {
-    font-size: 1.5rem;
+  .login-root {
+    min-height: 100vh;
+    min-height: 100dvh;
+    position: relative;
+    display: flex;
+    flex-direction: column;
   }
-}
+
+  .theme-toggle {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    z-index: 1;
+  }
+
+  .login-title {
+    font-family: var(--font-display);
+    font-size: 1.75rem;
+    color: var(--color-ink);
+    margin-bottom: 4px;
+  }
+
+  .login-heading {
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    color: var(--color-ink);
+  }
+
+  @media (max-width: 600px) {
+    .login-title {
+      font-size: 1.5rem;
+    }
+  }
 </style>

@@ -46,7 +46,8 @@ function patchDeviceInPlace(updatedFields: Record<string, unknown>) {
   }
 
   const existing = listDevice.value[index]!
-  const statusChanged = camelFields.status !== undefined && camelFields.status !== existing.status
+  const statusChanged =
+    camelFields.status !== undefined && camelFields.status !== existing.status
 
   if (!statusChanged) {
     // Silently update lastSeen without replacing the object ref
