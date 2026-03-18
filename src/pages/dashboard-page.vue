@@ -579,7 +579,7 @@
                     </v-list-item-title>
                     <v-list-item-subtitle class="text-caption">
                       <v-icon size="12" class="mr-1">mdi-map-marker-outline</v-icon>
-                      {{ device.room.name }}
+                      {{ device.room?.name ?? '' }}
                       <span class="mx-1">&middot;</span>
                       {{ formatLastSeen(device.lastSeen) }}
                     </v-list-item-subtitle>

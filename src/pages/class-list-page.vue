@@ -33,6 +33,13 @@
         </v-col>
       </v-row>
 
+      <v-row v-else-if="listClass.length === 0">
+        <v-col cols="12" class="text-center py-16">
+          <v-icon size="64" color="medium-emphasis">mdi-book-open-variant</v-icon>
+          <p class="mt-4 text-medium-emphasis">No classes found.</p>
+        </v-col>
+      </v-row>
+
       <v-row v-else>
         <v-col
           v-for="(classItem, index) in listClass"
@@ -72,7 +79,7 @@
               <div class="d-flex justify-space-between">
                 <div class="class-meta">
                   <v-icon size="14" class="mr-1">mdi-map-marker-outline</v-icon>
-                  {{ classItem.room.name }}
+                  {{ classItem.room?.name ?? '' }}
                 </div>
                 <div class="class-meta">
                   <v-icon size="14" class="mr-1">mdi-clock-outline</v-icon>

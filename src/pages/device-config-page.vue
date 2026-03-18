@@ -40,7 +40,7 @@
     return listDevice.value.filter(
       (d) =>
         d.deviceCode.toLowerCase().includes(q) ||
-        d.room.name.toLowerCase().includes(q) ||
+        (d.room?.name ?? '').toLowerCase().includes(q) ||
         (d.description ?? '').toLowerCase().includes(q),
     )
   })
@@ -297,7 +297,9 @@
                   >
                   <div>
                     <div class="device-card__info-label">Room</div>
-                    <div class="device-card__info-value">{{ device.room.name }}</div>
+                    <div class="device-card__info-value">
+                      {{ device.room?.name ?? '' }}
+                    </div>
                   </div>
                 </div>
                 <div class="device-card__info-item">

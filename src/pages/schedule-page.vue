@@ -29,8 +29,17 @@
       .filter((s) => s.day === day)
       .sort((a, b) => a.startTime.localeCompare(b.startTime))
 
-  const getTimeSlotIndex = (time: string) =>
-    LIST_TIME_SLOT.indexOf(time as (typeof LIST_TIME_SLOT)[number])
+  const getTimeSlotIndex = (time: string) => {
+    const hour = parseInt(time.split(':')[0] ?? '0', 10)
+    const minute = parseInt(time.split(':')[1] ?? '0', 10)
+    const firstHour = parseInt(LIST_TIME_SLOT[0]!.split(':')[0]!, 10)
+    const lastHour = parseInt(
+      LIST_TIME_SLOT[LIST_TIME_SLOT.length - 1]!.split(':')[0]!,
+      10,
+    )
+    const index = hour - firstHour + minute / 60
+    return Math.max(0, Math.min(index, lastHour - firstHour))
+  }
 
   const getSessionDuration = (session: IScheduleSession) => {
     const startIndex = getTimeSlotIndex(session.startTime)

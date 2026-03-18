@@ -41,6 +41,7 @@
       classDashboard: 'Class Details',
       schedule: 'Schedule',
       deviceConfig: 'Devices',
+      godMode: 'God Mode',
     }
     return titleMap[name] || 'Dashboard'
   })
@@ -163,19 +164,6 @@
       <v-icon class="theme-toggle-icon">
         {{ isDark ? 'mdi-weather-sunny' : 'mdi-weather-night' }}
       </v-icon>
-    </v-btn>
-
-    <v-btn
-      v-if="!isMobile"
-      icon
-      variant="text"
-      color="primary"
-      aria-label="Notifications"
-      class="mr-1"
-    >
-      <v-badge color="secondary" dot overlap>
-        <v-icon>mdi-bell-outline</v-icon>
-      </v-badge>
     </v-btn>
 
     <v-menu location="bottom end">

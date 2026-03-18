@@ -92,7 +92,7 @@ async function fetchTodaySchedule() {
       id: cls.id,
       className: cls.subjectName,
       classCode: cls.classCode,
-      room: cls.room.name,
+      room: cls.room?.name ?? '',
       startTime,
       endTime,
       icon: theme.icon,

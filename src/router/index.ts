@@ -44,6 +44,11 @@ const listRoute: RouteRecordRaw[] = [
     name: 'deviceConfig',
     component: DeviceConfigPage,
   },
+  {
+    path: '/godmode',
+    name: 'godMode',
+    component: () => import('../pages/god-mode-page.vue'),
+  },
 ]
 
 export const router = createRouter({

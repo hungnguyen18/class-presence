@@ -32,8 +32,8 @@ async function fetchAttendance(classId: string) {
 const listStudentAttendance = computed<IStudentAttendance[]>(() =>
   listAttendanceLog.value.map((log) => ({
     id: log.id,
-    studentCode: log.student.mssv,
-    fullName: log.student.fullName,
+    studentCode: log.student?.mssv ?? '',
+    fullName: log.student?.fullName ?? 'Unknown',
     status: log.status,
     checkInTime:
       log.status === EAttendanceStatus.ABSENT

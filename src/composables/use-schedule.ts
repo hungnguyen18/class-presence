@@ -61,15 +61,18 @@ async function fetchSchedule() {
     const startTime = cls.startTime.slice(0, 5)
     const endTime = cls.endTime.slice(0, 5)
 
-    // Distribute classes across week days (simple round-robin for demo)
-    // Each class gets 2 sessions per week
-    const dayAssignment = [((i * 2) % DAY_COUNT) + 1, ((i * 2 + 2) % DAY_COUNT) + 1]
+    // Distribute classes across week days using ID hash for consistent assignment
+    // Each class gets 2 sessions per week (Mon–Sat), spaced ~3 days apart
+    const idHash = cls.id.split('').reduce((acc, ch) => acc + ch.charCodeAt(0), 0)
+    const day1 = (idHash % DAY_COUNT) + 1
+    const day2 = ((idHash + Math.ceil(DAY_COUNT / 2)) % DAY_COUNT) + 1
+    const dayAssignment = day1 === day2 ? [day1, (day1 % DAY_COUNT) + 1] : [day1, day2]
     for (let d = 0; d < dayAssignment.length; d += 1) {
       sessions.push({
         id: `${cls.id}-${d}`,
         className: cls.subjectName,
         classCode: cls.classCode,
-        room: cls.room.name,
+        room: cls.room?.name ?? '',
         startTime,
         endTime,
         day: dayAssignment[d]!,

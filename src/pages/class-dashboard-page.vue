@@ -69,16 +69,7 @@
           </h1>
           <p class="page-subtitle">Track class attendance in real-time.</p>
         </v-col>
-        <v-col cols="12" md="5" class="d-flex flex-wrap justify-md-end align-center ga-3">
-          <v-btn
-            color="primary"
-            prepend-icon="mdi-download"
-            variant="flat"
-            class="text-none font-weight-medium"
-          >
-            Export
-          </v-btn>
-        </v-col>
+        <v-col cols="12" md="5" />
       </v-row>
 
       <v-row v-if="isLoading" class="mb-4">

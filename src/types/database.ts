@@ -94,9 +94,9 @@ export interface IDeviceCommand {
   createdAt: string
 }
 
-// Joined types for UI
-export type IClassWithRoom = IClass & { room: IRoom }
-export type IDeviceWithRoom = IDevice & { room: IRoom }
+// Joined types for UI — room/student can be null when join returns no match
+export type IClassWithRoom = IClass & { room: IRoom | null }
+export type IDeviceWithRoom = IDevice & { room: IRoom | null }
 export type IAttendanceLogWithStudent = IAttendanceLog & {
-  student: Pick<IStudent, 'mssv' | 'fullName'>
+  student: Pick<IStudent, 'mssv' | 'fullName'> | null
 }
