@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { computed, onMounted, onUnmounted } from 'vue'
+  import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
   import {
     Chart as ChartJS,
     CategoryScale,
@@ -17,6 +17,7 @@
   import CurrentClassCard from '@/components/dashboard/current-class-card.vue'
   import TodayScheduleBar from '@/components/dashboard/today-schedule-bar.vue'
   import { useAuth } from '@/composables/use-auth'
+  import { useClasses } from '@/composables/use-classes'
   import { useDashboardStats } from '@/composables/use-dashboard-stats'
   import { useDevices } from '@/composables/use-devices'
   import { useColorMode } from '@/composables/use-color-mode'
@@ -49,6 +50,18 @@
   )
 
   const { currentUser } = useAuth()
+  const { listClass, fetchClasses } = useClasses()
+
+  const selectedClassId = ref<string | null>(null)
+
+  const listClassOption = computed(() => [
+    { title: 'All Classes', value: null },
+    ...listClass.value.map((c) => ({
+      title: `${c.classCode} — ${c.subjectName}`,
+      value: c.id,
+    })),
+  ])
+
   const {
     stats,
     weeklyTrend,
@@ -101,11 +114,15 @@
   let unsubAttendance: (() => void) | null = null
   let unsubDevices: (() => void) | null = null
 
+  watch(selectedClassId, () => {
+    fetchDashboardStats(selectedClassId.value)
+  })
+
   onMounted(async () => {
-    await Promise.all([fetchDashboardStats(), fetchDevices(), fetchTodaySchedule()])
+    await Promise.all([fetchDashboardStats(), fetchDevices(), fetchTodaySchedule(), fetchClasses()])
 
     unsubAttendance = subscribeAttendance(() => {
-      fetchDashboardStats()
+      fetchDashboardStats(selectedClassId.value)
       fetchTodaySchedule()
     }).unsubscribe
 
@@ -372,6 +389,23 @@
           <TodayScheduleBar
             :list-today-session="listTodaySession"
             :is-loading="isTodayLoading"
+          />
+        </v-col>
+      </v-row>
+
+      <!-- Class filter -->
+      <v-row class="mb-4">
+        <v-col cols="12" sm="6" md="4">
+          <v-select
+            v-model="selectedClassId"
+            :items="listClassOption"
+            item-title="title"
+            item-value="value"
+            label="Filter by Class"
+            variant="outlined"
+            density="comfortable"
+            hide-details
+            prepend-inner-icon="mdi-filter-outline"
           />
         </v-col>
       </v-row>

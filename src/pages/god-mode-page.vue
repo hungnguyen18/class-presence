@@ -18,11 +18,12 @@
     counts?: TDbCounts
   }
 
-  const mssvInput = ref('1111\n2222\n3333\n4444')
+  const mssvInput = ref('1111\n2222\n3333\n4444\n5555\n6666\n7777\n8888\n9999\n1010\n1020\n1030\n1040\n1050\n1060\n1070\n1080\n1090\n2010\n2020')
   const clampedHour = Math.max(7, Math.min(new Date().getHours(), 15))
   const demoStartTime = ref(`${String(clampedHour).padStart(2, '0')}:00`)
   const demoEndTime = ref(`${String(clampedHour + 2).padStart(2, '0')}:00`)
   const isClearing = ref(false)
+  const isClearingIot301 = ref(false)
   const isSeeding = ref(false)
   const isLoadingCounts = ref(false)
   const showClearDialog = ref(false)
@@ -38,7 +39,7 @@
       .filter((s) => s.length > 0),
   )
 
-  const isWorking = computed(() => isClearing.value || isSeeding.value)
+  const isWorking = computed(() => isClearing.value || isSeeding.value || isClearingIot301.value)
 
   const listCountItem = computed(() => {
     if (!dbCounts.value) {
@@ -111,6 +112,26 @@
     }
 
     isClearing.value = false
+    await fetchDbCounts()
+  }
+
+  const handleClearIot301 = async () => {
+    isClearingIot301.value = true
+    statusMessage.value = ''
+
+    const { data, error } = await invokeEdgeFunction<TSeedResponse>('admin-seed', {
+      action: 'clear-iot301',
+    })
+
+    if (error || !data?.success) {
+      statusMessage.value = error ?? data?.message ?? 'Failed to clear IOT301 logs'
+      statusType.value = 'error'
+    } else {
+      statusMessage.value = data.message
+      statusType.value = 'success'
+    }
+
+    isClearingIot301.value = false
     await fetchDbCounts()
   }
 
@@ -277,6 +298,17 @@
               @click="showClearDialog = true"
             >
               Clear All Data
+            </v-btn>
+            <v-btn
+              color="warning"
+              variant="tonal"
+              prepend-icon="mdi-clipboard-remove"
+              class="text-none font-weight-medium"
+              :loading="isClearingIot301"
+              :disabled="isWorking"
+              @click="handleClearIot301"
+            >
+              Clear IOT301 Logs
             </v-btn>
             <v-btn
               color="success"

@@ -71,7 +71,7 @@
           <div class="seat-row-list">
             <v-tooltip
               v-for="seatIndex in SEAT_COLUMNS"
-              :key="`${rowCode}${seatIndex}`"
+              :key="`${rowCode}${String(seatIndex).padStart(2, '0')}`"
               location="top"
             >
               <template #activator="{ props: tooltipProps }">
@@ -80,10 +80,10 @@
                     class="seat-indicator"
                     :class="{
                       'seat-indicator--on-time':
-                        getSeatStatus({ seatCode: `${rowCode}${seatIndex}` }) ===
+                        getSeatStatus({ seatCode: `${rowCode}${String(seatIndex).padStart(2, '0')}` }) ===
                         EAttendanceStatus.ON_TIME,
                       'seat-indicator--late':
-                        getSeatStatus({ seatCode: `${rowCode}${seatIndex}` }) ===
+                        getSeatStatus({ seatCode: `${rowCode}${String(seatIndex).padStart(2, '0')}` }) ===
                         EAttendanceStatus.LATE,
                     }"
                   />
@@ -92,7 +92,7 @@
               </template>
               <span>
                 {{
-                  getStudentAtSeat({ seatCode: `${rowCode}${seatIndex}` }) || 'Empty seat'
+                  getStudentAtSeat({ seatCode: `${rowCode}${String(seatIndex).padStart(2, '0')}` }) || 'Empty seat'
                 }}
               </span>
             </v-tooltip>

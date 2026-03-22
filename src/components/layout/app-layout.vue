@@ -4,6 +4,7 @@
   import { useRoute, useRouter } from 'vue-router'
   import { useColorMode } from '@/composables/use-color-mode'
   import { useAuth } from '@/composables/use-auth'
+  import { useNotifications } from '@/composables/use-notifications'
 
   const display = useDisplay()
   const route = useRoute()
@@ -15,6 +16,15 @@
   const drawerIsCollapsed = ref<boolean>(true)
 
   const { currentUser, signOut } = useAuth()
+  const {
+    listNotification,
+    unreadCount,
+    markAllRead,
+    clearAll,
+    formatTimeAgo,
+  } = useNotifications()
+
+  const notifMenuOpen = ref(false)
 
   const userDisplayName = computed(() => currentUser.value?.displayName ?? 'Teacher')
 
@@ -152,6 +162,125 @@
 
     <v-spacer />
 
+    <!-- Notification bell -->
+    <v-menu
+      v-model="notifMenuOpen"
+      :close-on-content-click="false"
+      location="bottom end"
+      max-width="380"
+    >
+      <template #activator="{ props: menuProps }">
+        <v-btn
+          v-bind="menuProps"
+          icon
+          variant="text"
+          class="mr-1"
+          aria-label="Notifications"
+        >
+          <v-badge
+            :content="unreadCount"
+            :model-value="unreadCount > 0"
+            color="error"
+            floating
+            :offset-x="-2"
+            :offset-y="-2"
+          >
+            <v-icon>{{
+              unreadCount > 0 ? 'mdi-bell-ring-outline' : 'mdi-bell-outline'
+            }}</v-icon>
+          </v-badge>
+        </v-btn>
+      </template>
+
+      <v-card class="notif-dropdown" min-width="340">
+        <div class="notif-header">
+          <span class="notif-header__title">Notifications</span>
+          <v-chip
+            v-if="unreadCount > 0"
+            size="x-small"
+            color="error"
+            variant="flat"
+            class="font-weight-bold"
+          >
+            {{ unreadCount }} new
+          </v-chip>
+        </div>
+
+        <v-divider />
+
+        <div
+          v-if="listNotification.length === 0"
+          class="notif-empty"
+        >
+          <v-icon size="32" color="medium-emphasis" class="mb-2">mdi-bell-check-outline</v-icon>
+          <div>No notifications yet</div>
+        </div>
+
+        <v-list
+          v-else
+          class="notif-list pa-0"
+          lines="two"
+        >
+          <v-list-item
+            v-for="n in listNotification"
+            :key="n.id"
+            class="notif-item"
+            :class="{ 'notif-item--unread': !n.isRead }"
+          >
+            <template #prepend>
+              <v-avatar
+                size="34"
+                rounded="lg"
+                :color="n.color"
+                variant="tonal"
+              >
+                <v-icon size="17">{{ n.icon }}</v-icon>
+              </v-avatar>
+            </template>
+
+            <v-list-item-title class="notif-item__title">
+              {{ n.title }}
+            </v-list-item-title>
+            <v-list-item-subtitle class="notif-item__message">
+              {{ n.message }}
+            </v-list-item-subtitle>
+
+            <template #append>
+              <span class="notif-item__time">{{ formatTimeAgo(n.timestamp) }}</span>
+            </template>
+          </v-list-item>
+        </v-list>
+
+        <v-divider v-if="listNotification.length > 0" />
+
+        <div
+          v-if="listNotification.length > 0"
+          class="notif-actions"
+        >
+          <v-btn
+            variant="text"
+            size="small"
+            class="text-none"
+            prepend-icon="mdi-check-all"
+            @click="markAllRead"
+          >
+            Mark all read
+          </v-btn>
+          <v-spacer />
+          <v-btn
+            variant="text"
+            size="small"
+            color="error"
+            class="text-none"
+            prepend-icon="mdi-notification-clear-all"
+            @click="clearAll"
+          >
+            Clear
+          </v-btn>
+        </div>
+      </v-card>
+    </v-menu>
+
     <v-btn
       icon
       variant="text"
@@ -269,6 +398,66 @@
 
   .user-btn {
     text-transform: none !important;
+  }
+
+  /* ── Notification dropdown ── */
+
+  .notif-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 16px;
+  }
+
+  .notif-header__title {
+    font-family: var(--font-display);
+    font-size: 1rem;
+    font-weight: 600;
+  }
+
+  .notif-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 32px 16px;
+    color: var(--color-ink-muted);
+    font-size: 0.82rem;
+  }
+
+  .notif-list {
+    max-height: 340px;
+    overflow-y: auto;
+  }
+
+  .notif-item {
+    border-bottom: 1px solid var(--color-border);
+    transition: background-color 0.2s;
+  }
+
+  .notif-item--unread {
+    background-color: rgba(212, 168, 83, 0.06);
+  }
+
+  .notif-item__title {
+    font-size: 0.78rem !important;
+    font-weight: 600 !important;
+  }
+
+  .notif-item__message {
+    font-size: 0.72rem !important;
+  }
+
+  .notif-item__time {
+    font-size: 0.62rem;
+    color: var(--color-ink-muted);
+    white-space: nowrap;
+  }
+
+  .notif-actions {
+    display: flex;
+    align-items: center;
+    padding: 8px 12px;
   }
 
   .theme-toggle-icon {

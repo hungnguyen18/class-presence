@@ -29,6 +29,47 @@
       .filter((s) => s.day === day)
       .sort((a, b) => a.startTime.localeCompare(b.startTime))
 
+  // Detect overlapping sessions and assign column index + total columns
+  type TSessionLayout = IScheduleSession & { colIndex: number; colTotal: number }
+
+  const getSessionsWithLayout = (day: number): TSessionLayout[] => {
+    const sessions = getSessionsForDay(day)
+    if (sessions.length === 0) {
+      return []
+    }
+
+    // Find overlap groups
+    const groups: IScheduleSession[][] = []
+    let currentGroup: IScheduleSession[] = [sessions[0]!]
+    let groupEnd = sessions[0]!.endTime
+
+    for (let i = 1; i < sessions.length; i += 1) {
+      const s = sessions[i]!
+      if (s.startTime < groupEnd) {
+        currentGroup.push(s)
+        if (s.endTime > groupEnd) {
+          groupEnd = s.endTime
+        }
+      } else {
+        groups.push(currentGroup)
+        currentGroup = [s]
+        groupEnd = s.endTime
+      }
+    }
+    groups.push(currentGroup)
+
+    // Assign column positions within each group
+    const result: TSessionLayout[] = []
+    for (let g = 0; g < groups.length; g += 1) {
+      const group = groups[g]!
+      const total = group.length
+      for (let c = 0; c < group.length; c += 1) {
+        result.push({ ...group[c]!, colIndex: c, colTotal: total })
+      }
+    }
+    return result
+  }
+
   const getTimeSlotIndex = (time: string) => {
     const hour = parseInt(time.split(':')[0] ?? '0', 10)
     const minute = parseInt(time.split(':')[1] ?? '0', 10)
@@ -83,7 +124,7 @@
     if (viewMode.value === 'day') {
       return [selectedDay.value]
     }
-    return [1, 2, 3, 4, 5, 6]
+    return [1, 2, 3, 4, 5, 6, 7]
   })
 
   const isCurrentTimeSlot = (timeSlot: string) => {
@@ -297,30 +338,102 @@
                   />
 
                   <!-- Session blocks -->
-                  <div
-                    v-for="session in getSessionsForDay(day)"
+                  <v-menu
+                    v-for="session in getSessionsWithLayout(day)"
                     :key="session.id"
-                    class="session-block"
-                    :style="{
-                      top: `${getSessionTop(session)}px`,
-                      height: `${getSessionHeight(session)}px`,
-                    }"
+                    location="end"
+                    open-on-hover
+                    :close-on-content-click="false"
+                    :open-delay="200"
+                    :close-delay="100"
                   >
-                    <div class="session-card" :class="`session-card--${session.color}`">
-                      <div class="session-time">
-                        {{ session.startTime }} — {{ session.endTime }}
+                    <template #activator="{ props: menuProps }">
+                      <div
+                        v-bind="menuProps"
+                        class="session-block"
+                        :style="{
+                          top: `${getSessionTop(session)}px`,
+                          height: `${getSessionHeight(session)}px`,
+                          left: `${(session.colIndex / session.colTotal) * 100}%`,
+                          width: `${100 / session.colTotal}%`,
+                          paddingLeft: session.colIndex > 0 ? '2px' : '3px',
+                          paddingRight:
+                            session.colIndex < session.colTotal - 1 ? '2px' : '3px',
+                        }"
+                      >
+                        <div
+                          class="session-card"
+                          :class="`session-card--${session.color}`"
+                        >
+                          <div class="session-time">
+                            {{ session.startTime }} — {{ session.endTime }}
+                          </div>
+                          <div class="session-name">{{ session.className }}</div>
+                          <div class="session-code">{{ session.classCode }}</div>
+                          <div class="session-meta">
+                            <v-icon size="11">mdi-map-marker-outline</v-icon>
+                            {{ session.room }}
+                            <span class="mx-1">&middot;</span>
+                            <v-icon size="11">mdi-account-group-outline</v-icon>
+                            {{ session.studentCount }}
+                          </div>
+                        </div>
                       </div>
-                      <div class="session-name">{{ session.className }}</div>
-                      <div class="session-code">{{ session.classCode }}</div>
-                      <div class="session-meta">
-                        <v-icon size="11">mdi-map-marker-outline</v-icon>
-                        {{ session.room }}
-                        <span class="mx-1">&middot;</span>
-                        <v-icon size="11">mdi-account-group-outline</v-icon>
-                        {{ session.studentCount }}
-                      </div>
-                    </div>
-                  </div>
+                    </template>
+
+                    <v-card class="session-tooltip" min-width="240" max-width="300">
+                      <v-card-text class="pa-4">
+                        <div class="d-flex align-center ga-3 mb-3">
+                          <v-avatar
+                            size="36"
+                            rounded="lg"
+                            :color="session.color"
+                            variant="tonal"
+                          >
+                            <v-icon size="18">{{ session.icon }}</v-icon>
+                          </v-avatar>
+                          <div>
+                            <div class="session-tooltip__name">
+                              {{ session.className }}
+                            </div>
+                            <div class="session-tooltip__code">{{ session.classCode }}</div>
+                          </div>
+                        </div>
+
+                        <div class="d-flex flex-column ga-2">
+                          <div class="session-tooltip__row">
+                            <v-icon size="14" color="medium-emphasis"
+                              >mdi-clock-outline</v-icon
+                            >
+                            <span
+                              >{{ session.startTime }} — {{ session.endTime }}
+                              <span class="text-medium-emphasis"
+                                >({{ getSessionDuration(session) }}h)</span
+                              ></span
+                            >
+                          </div>
+                          <div class="session-tooltip__row">
+                            <v-icon size="14" color="medium-emphasis"
+                              >mdi-map-marker-outline</v-icon
+                            >
+                            <span>{{ session.room }}</span>
+                          </div>
+                          <div class="session-tooltip__row">
+                            <v-icon size="14" color="medium-emphasis"
+                              >mdi-account-group-outline</v-icon
+                            >
+                            <span>{{ session.studentCount }} students</span>
+                          </div>
+                          <div class="session-tooltip__row">
+                            <v-icon size="14" color="medium-emphasis"
+                              >mdi-calendar</v-icon
+                            >
+                            <span>{{ LIST_DAY[day - 1] }}</span>
+                          </div>
+                        </div>
+                      </v-card-text>
+                    </v-card>
+                  </v-menu>
                 </div>
               </div>
             </div>
@@ -379,7 +492,7 @@
 
   .timetable-header {
     display: grid;
-    grid-template-columns: 64px repeat(6, 1fr);
+    grid-template-columns: 64px repeat(7, 1fr);
     border-bottom: 2px solid var(--color-border);
   }
 
@@ -389,7 +502,7 @@
 
   .timetable-body {
     display: grid;
-    grid-template-columns: 64px repeat(6, 1fr);
+    grid-template-columns: 64px repeat(7, 1fr);
     position: relative;
   }
 
@@ -484,9 +597,8 @@
 
   .session-block {
     position: absolute;
-    left: 3px;
-    right: 3px;
     z-index: 1;
+    box-sizing: border-box;
   }
 
   .session-card {
@@ -560,5 +672,31 @@
     font-family: var(--font-body);
     font-size: 0.68rem;
     opacity: 0.65;
+  }
+
+  /* ── Session Tooltip ── */
+
+  .session-tooltip__name {
+    font-family: var(--font-body);
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--color-ink);
+    line-height: 1.3;
+  }
+
+  .session-tooltip__code {
+    font-family: var(--font-body);
+    font-size: 0.7rem;
+    color: var(--color-ink-muted);
+    letter-spacing: 0.02em;
+  }
+
+  .session-tooltip__row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-body);
+    font-size: 0.8rem;
+    color: var(--color-ink);
   }
 </style>

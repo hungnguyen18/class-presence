@@ -6,7 +6,7 @@ const CORS_HEADERS = {
 }
 
 type TSeedRequest = {
-  action: 'clear' | 'seed' | 'counts'
+  action: 'clear' | 'seed' | 'counts' | 'clear-iot301'
   listMssv?: string[]
   startTime?: string
   endTime?: string
@@ -67,6 +67,8 @@ Deno.serve(async (req: Request) => {
       return await handleClear(supabase)
     case 'seed':
       return await handleSeed(supabase, body.listMssv ?? [], body.startTime, body.endTime)
+    case 'clear-iot301':
+      return await handleClearIot301(supabase)
     default:
       return jsonResponse(
         { success: false, message: `Unknown action: ${body.action}` },
@@ -134,6 +136,46 @@ async function handleClear(supabase: ReturnType<typeof createClient>) {
   }
 
   return jsonResponse({ success: true, message: 'All data cleared' })
+}
+
+// ─── CLEAR IOT301 LOGS ───
+
+async function handleClearIot301(supabase: ReturnType<typeof createClient>) {
+  const { data: iotClass } = await supabase
+    .from('cp_classes')
+    .select('id')
+    .eq('class_code', 'IOT301')
+    .single()
+
+  if (!iotClass) {
+    return jsonResponse({ success: false, message: 'IOT301 class not found' }, 404)
+  }
+
+  const { error: logError } = await supabase
+    .from('cp_attendance_logs')
+    .delete()
+    .eq('class_id', iotClass.id)
+
+  if (logError) {
+    return jsonResponse(
+      { success: false, message: `Failed to clear logs: ${logError.message}` },
+      500,
+    )
+  }
+
+  const { error: sessionError } = await supabase
+    .from('cp_attendance_sessions')
+    .delete()
+    .eq('class_id', iotClass.id)
+
+  if (sessionError) {
+    return jsonResponse(
+      { success: false, message: `Failed to clear sessions: ${sessionError.message}` },
+      500,
+    )
+  }
+
+  return jsonResponse({ success: true, message: 'IOT301 attendance logs cleared' })
 }
 
 // ─── SEED ───

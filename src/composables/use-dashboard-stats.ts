@@ -36,16 +36,24 @@ const classBreakdown = ref<IClassBreakdown[]>([])
 const overallBreakdown = ref({ onTime: 0, late: 0, absent: 0 })
 const isLoading = ref(false)
 
-async function fetchDashboardStats() {
+async function fetchDashboardStats(filterClassId?: string | null) {
   isLoading.value = true
 
   try {
+    let attendanceQuery = supabase
+      .from('cp_attendance_logs')
+      .select('status, class_id, checkin_time')
+
+    if (filterClassId) {
+      attendanceQuery = attendanceQuery.eq('class_id', filterClassId)
+    }
+
     const [classResult, studentResult, deviceResult, attendanceResult, classesResult] =
       await Promise.all([
         supabase.from('cp_classes').select('id', { count: 'exact', head: true }),
         supabase.from('cp_students').select('id', { count: 'exact', head: true }),
         supabase.from('cp_devices').select('id', { count: 'exact', head: true }),
-        supabase.from('cp_attendance_logs').select('status, class_id, checkin_time'),
+        attendanceQuery,
         supabase.from('cp_classes').select('id, class_code, subject_name'),
       ])
 

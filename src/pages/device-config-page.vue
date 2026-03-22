@@ -21,7 +21,21 @@
   const editDeviceCode = ref('')
   const editDescription = ref<string | null>(null)
   const editDeviceId = ref<string | null>(null)
+  const editFirmwareVersion = ref('')
+  const editRoomName = ref('')
+  const editStatus = ref('')
+  const editLastSeen = ref('')
   const isSaving = ref(false)
+
+  // Mock config fields (for demo)
+  const configScanMode = ref('RFID')
+  const configBuzzerEnabled = ref(true)
+  const configLedBrightness = ref(80)
+  const configAutoLock = ref(true)
+  const configHeartbeatInterval = ref(30)
+  const configTempThreshold = ref(38)
+  const configWifiSsid = ref('ClassRoom-AP')
+  const configTimezone = ref('Asia/Ho_Chi_Minh')
   const sendingCommandDeviceId = ref<string | null>(null)
   const snackbar = ref({ show: false, text: '', color: 'success' })
   const searchQuery = ref('')
@@ -31,18 +45,47 @@
   const confirmDeviceId = ref<string | null>(null)
   const confirmDeviceCode = ref('')
   const confirmCommand = ref('')
+  const confirmInput = ref('')
+
+  const isConfirmInputValid = computed(
+    () => confirmInput.value.trim() === confirmDeviceCode.value,
+  )
+
+  const statusFilter = ref<string | null>(null)
+  const roomFilter = ref<string | null>(null)
+
+  const listRoomOption = computed(() => {
+    const rooms = new Set(
+      listDevice.value.map((d) => d.room?.name).filter(Boolean) as string[],
+    )
+    return [
+      { title: 'All Rooms', value: null },
+      ...[...rooms].sort().map((r) => ({ title: r, value: r })),
+    ]
+  })
 
   const filteredDevices = computed(() => {
-    if (!searchQuery.value.trim()) {
-      return listDevice.value
+    let result = listDevice.value
+
+    if (statusFilter.value) {
+      result = result.filter((d) => d.status === statusFilter.value)
     }
-    const q = searchQuery.value.toLowerCase()
-    return listDevice.value.filter(
-      (d) =>
-        d.deviceCode.toLowerCase().includes(q) ||
-        (d.room?.name ?? '').toLowerCase().includes(q) ||
-        (d.description ?? '').toLowerCase().includes(q),
-    )
+
+    if (roomFilter.value) {
+      result = result.filter((d) => d.room?.name === roomFilter.value)
+    }
+
+    if (searchQuery.value.trim()) {
+      const q = searchQuery.value.toLowerCase()
+      result = result.filter(
+        (d) =>
+          d.deviceCode.toLowerCase().includes(q) ||
+          (d.room?.name ?? '').toLowerCase().includes(q) ||
+          (d.description ?? '').toLowerCase().includes(q),
+      )
+    }
+
+    return result
   })
 
   const onlineCount = computed(
@@ -55,8 +98,12 @@
       return
     }
     editDeviceId.value = device.id
-    editDeviceCode.value = device.deviceCode // display only
+    editDeviceCode.value = device.deviceCode
     editDescription.value = device.description
+    editFirmwareVersion.value = device.firmwareVersion ?? 'N/A'
+    editRoomName.value = device.room?.name ?? 'Unassigned'
+    editStatus.value = device.status
+    editLastSeen.value = device.lastSeen ?? ''
     editDialogIsOpen.value = true
   }
 
@@ -74,6 +121,7 @@
     confirmDeviceId.value = deviceId
     confirmDeviceCode.value = device.deviceCode
     confirmCommand.value = command
+    confirmInput.value = ''
     confirmDialogIsOpen.value = true
   }
 
@@ -129,18 +177,48 @@
   }) {
     sendingCommandDeviceId.value = deviceId
     const { error } = await sendCommand(deviceId, command)
-    sendingCommandDeviceId.value = null
 
     if (error) {
+      sendingCommandDeviceId.value = null
       snackbar.value = { show: true, text: `Failed to send ${command}`, color: 'error' }
       return
     }
 
     snackbar.value = {
       show: true,
-      text: `${command} command sent. Waiting for device...`,
+      text: `${command} sent. Waiting for device response...`,
       color: 'info',
     }
+
+    // Keep loading until device status changes via realtime (max 15s)
+    const timeoutId = setTimeout(() => {
+      if (sendingCommandDeviceId.value === deviceId) {
+        sendingCommandDeviceId.value = null
+        snackbar.value = {
+          show: true,
+          text: 'Device did not respond in time',
+          color: 'warning',
+        }
+      }
+    }, 15000)
+
+    const checkStatus = setInterval(() => {
+      const device = listDevice.value.find((d) => d.id === deviceId)
+      if (!device) {
+        return
+      }
+      const expectedStatus = command === 'POWER_OFF' ? 'OFFLINE' : 'ONLINE'
+      if (device.status === expectedStatus) {
+        clearInterval(checkStatus)
+        clearTimeout(timeoutId)
+        sendingCommandDeviceId.value = null
+        snackbar.value = {
+          show: true,
+          text: `Device is now ${expectedStatus.toLowerCase()}`,
+          color: expectedStatus === 'ONLINE' ? 'success' : 'info',
+        }
+      }
+    }, 500)
   }
 
   let unsubscribe: (() => void) | null = null
@@ -178,6 +256,38 @@
             hide-details
             clearable
             style="max-width: 300px"
+          />
+        </v-col>
+      </v-row>
+
+      <!-- Filters -->
+      <v-row class="mb-4" dense>
+        <v-col cols="6" sm="4" md="3">
+          <v-select
+            v-model="statusFilter"
+            :items="[
+              { title: 'All Status', value: null },
+              { title: 'Online', value: 'ONLINE' },
+              { title: 'Offline', value: 'OFFLINE' },
+            ]"
+            item-title="title"
+            item-value="value"
+            variant="outlined"
+            density="comfortable"
+            hide-details
+            prepend-inner-icon="mdi-signal"
+          />
+        </v-col>
+        <v-col cols="6" sm="4" md="3">
+          <v-select
+            v-model="roomFilter"
+            :items="listRoomOption"
+            item-title="title"
+            item-value="value"
+            variant="outlined"
+            density="comfortable"
+            hide-details
+            prepend-inner-icon="mdi-door"
           />
         </v-col>
       </v-row>
@@ -370,6 +480,7 @@
                 size="small"
                 class="text-none font-weight-medium"
                 prepend-icon="mdi-pencil-outline"
+                :disabled="sendingCommandDeviceId === device.id"
                 @click="openEditDialog({ deviceId: device.id })"
               >
                 Edit
@@ -391,33 +502,192 @@
       </div>
 
       <!-- Edit dialog -->
-      <v-dialog v-model="editDialogIsOpen" max-width="480">
+      <v-dialog v-model="editDialogIsOpen" max-width="600" scrollable>
         <v-card>
-          <v-card-title class="dialog-title pa-5 pb-3"> Edit Device </v-card-title>
+          <v-card-title class="dialog-title pa-5 pb-3 d-flex align-center ga-3">
+            <v-avatar size="36" rounded="lg" color="primary" variant="tonal">
+              <v-icon size="18">mdi-chip</v-icon>
+            </v-avatar>
+            <div>
+              <div>Device Settings</div>
+              <div class="text-caption text-medium-emphasis font-weight-regular">
+                {{ editDeviceCode }}
+              </div>
+            </div>
+            <v-spacer />
+            <v-chip
+              :color="editStatus === 'ONLINE' ? 'success' : 'error'"
+              variant="tonal"
+              size="small"
+            >
+              {{ editStatus === 'ONLINE' ? 'Online' : 'Offline' }}
+            </v-chip>
+          </v-card-title>
           <v-divider />
-          <v-card-text class="pa-5">
-            <v-form>
-              <v-text-field
-                :model-value="editDeviceCode"
-                label="Device Code"
-                density="comfortable"
-                hide-details
-                readonly
-                disabled
-                class="mb-4"
-              />
-              <v-textarea
-                v-model="editDescription"
-                label="Description"
+
+          <v-card-text class="pa-5" style="max-height: 520px">
+            <!-- Device Info (read-only visual card) -->
+            <div class="edit-section-label">Device Info</div>
+            <div class="device-info-grid mb-5">
+              <div class="device-info-item">
+                <v-icon size="16" class="device-info-item__icon">mdi-tag-outline</v-icon>
+                <div>
+                  <div class="device-info-item__label">Device Code</div>
+                  <div class="device-info-item__value">{{ editDeviceCode }}</div>
+                </div>
+              </div>
+              <div class="device-info-item">
+                <v-icon size="16" class="device-info-item__icon"
+                  >mdi-cellphone-arrow-down</v-icon
+                >
+                <div>
+                  <div class="device-info-item__label">Firmware</div>
+                  <div class="device-info-item__value">
+                    v{{ editFirmwareVersion }}
+                  </div>
+                </div>
+              </div>
+              <div class="device-info-item">
+                <v-icon size="16" class="device-info-item__icon"
+                  >mdi-map-marker-outline</v-icon
+                >
+                <div>
+                  <div class="device-info-item__label">Room</div>
+                  <div class="device-info-item__value">{{ editRoomName }}</div>
+                </div>
+              </div>
+              <div class="device-info-item">
+                <v-icon size="16" class="device-info-item__icon">mdi-clock-outline</v-icon>
+                <div>
+                  <div class="device-info-item__label">Last Seen</div>
+                  <div class="device-info-item__value">
+                    {{ formatLastSeen(editLastSeen) }}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <v-divider class="mb-5" />
+
+            <!-- Editable fields -->
+            <div class="edit-section-label">General</div>
+            <v-textarea
+              v-model="editDescription"
+              label="Description"
+              variant="outlined"
+              density="comfortable"
+              rows="2"
+              auto-grow
+              hide-details
+              class="mb-5"
+            />
+
+            <v-divider class="mb-5" />
+
+            <!-- Scan Configuration (mock) -->
+            <div class="edit-section-label">Scan Configuration</div>
+            <div class="d-flex ga-4 mb-4">
+              <v-select
+                v-model="configScanMode"
+                :items="['RFID', 'Keypad', 'Biometric', 'QR Code']"
+                label="Scan Mode"
                 variant="outlined"
                 density="comfortable"
-                rows="3"
-                auto-grow
                 hide-details
-                rounded="lg"
+                class="flex-grow-1"
               />
-            </v-form>
+              <v-text-field
+                v-model.number="configHeartbeatInterval"
+                label="Heartbeat (sec)"
+                type="number"
+                variant="outlined"
+                density="comfortable"
+                hide-details
+                style="max-width: 140px"
+              />
+            </div>
+
+            <v-divider class="mb-5" />
+
+            <!-- Hardware Settings (mock) -->
+            <div class="edit-section-label">Hardware</div>
+            <div class="d-flex align-center justify-space-between mb-3">
+              <div>
+                <div class="text-body-2 font-weight-medium">Buzzer Sound</div>
+                <div class="text-caption text-medium-emphasis">
+                  Play sound on check-in events
+                </div>
+              </div>
+              <v-switch
+                v-model="configBuzzerEnabled"
+                color="primary"
+                hide-details
+                density="compact"
+              />
+            </div>
+            <div class="d-flex align-center justify-space-between mb-3">
+              <div>
+                <div class="text-body-2 font-weight-medium">Auto-Lock Gate</div>
+                <div class="text-caption text-medium-emphasis">
+                  Lock barrier after check-in timeout
+                </div>
+              </div>
+              <v-switch
+                v-model="configAutoLock"
+                color="primary"
+                hide-details
+                density="compact"
+              />
+            </div>
+            <div class="mb-4">
+              <div class="text-body-2 font-weight-medium mb-2">
+                LED Brightness: {{ configLedBrightness }}%
+              </div>
+              <v-slider
+                v-model="configLedBrightness"
+                :min="10"
+                :max="100"
+                :step="5"
+                color="primary"
+                hide-details
+                thumb-label
+              />
+            </div>
+
+            <v-divider class="mb-5" />
+
+            <!-- Environment (mock) -->
+            <div class="edit-section-label">Environment</div>
+            <div class="d-flex ga-4 mb-4">
+              <v-text-field
+                v-model.number="configTempThreshold"
+                label="Fan Threshold (°C)"
+                type="number"
+                variant="outlined"
+                density="comfortable"
+                hide-details
+                style="max-width: 160px"
+              />
+              <v-text-field
+                v-model="configWifiSsid"
+                label="WiFi SSID"
+                variant="outlined"
+                density="comfortable"
+                hide-details
+                class="flex-grow-1"
+              />
+            </div>
+            <v-select
+              v-model="configTimezone"
+              :items="['Asia/Ho_Chi_Minh', 'Asia/Bangkok', 'Asia/Singapore', 'UTC']"
+              label="Timezone"
+              variant="outlined"
+              density="comfortable"
+              hide-details
+              class="mb-2"
+            />
           </v-card-text>
+
           <v-divider />
           <v-card-actions class="pa-4 justify-end">
             <v-btn variant="text" class="text-none" @click="closeEditDialog">
@@ -437,23 +707,77 @@
       </v-dialog>
 
       <!-- Confirm Power Off dialog -->
-      <v-dialog v-model="confirmDialogIsOpen" max-width="400">
-        <v-card>
-          <v-card-text class="pa-5 text-center">
-            <v-avatar color="error" variant="tonal" size="56" class="mb-4">
-              <v-icon size="28">mdi-power</v-icon>
-            </v-avatar>
-            <h3 class="confirm-title mb-2">Power Off Device?</h3>
-            <p class="text-body-2 text-medium-emphasis">
-              Are you sure you want to power off
-              <strong>{{ confirmDeviceCode }}</strong
-              >? The device will stop accepting check-ins.
-            </p>
-          </v-card-text>
-          <v-card-actions class="pa-4 pt-0 justify-center ga-3">
-            <v-btn
+      <v-dialog v-model="confirmDialogIsOpen" max-width="440">
+        <v-card class="confirm-dialog-card">
+          <!-- Warning banner -->
+          <div class="confirm-warning-banner">
+            <v-icon size="20" color="error">mdi-alert-circle</v-icon>
+            <span>Destructive Action</span>
+          </div>
+
+          <v-card-text class="pa-5 pt-4">
+            <div class="d-flex align-center ga-3 mb-4">
+              <v-avatar color="error" variant="tonal" size="48">
+                <v-icon size="24">mdi-power</v-icon>
+              </v-avatar>
+              <div>
+                <h3 class="confirm-title">Power Off Device</h3>
+                <div class="text-caption text-medium-emphasis">
+                  {{ confirmDeviceCode }}
+                </div>
+              </div>
+            </div>
+
+            <v-alert type="warning" variant="tonal" density="compact" class="mb-4">
+              <div class="text-body-2">
+                This will immediately shut down the device. All active check-in
+                sessions will be interrupted and the barrier gate will lock.
+              </div>
+            </v-alert>
+
+            <div class="confirm-impact mb-4">
+              <div class="confirm-impact__title">Impact</div>
+              <div class="confirm-impact__list">
+                <div class="confirm-impact__item">
+                  <v-icon size="14" color="error">mdi-close-circle</v-icon>
+                  <span>Check-ins will stop immediately</span>
+                </div>
+                <div class="confirm-impact__item">
+                  <v-icon size="14" color="error">mdi-close-circle</v-icon>
+                  <span>Barrier gate will lock</span>
+                </div>
+                <div class="confirm-impact__item">
+                  <v-icon size="14" color="error">mdi-close-circle</v-icon>
+                  <span>Sensors and display will shut off</span>
+                </div>
+                <div class="confirm-impact__item">
+                  <v-icon size="14" color="warning">mdi-alert</v-icon>
+                  <span>Requires manual or remote restart</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="text-body-2 mb-2">
+              Type <strong class="confirm-code-highlight">{{ confirmDeviceCode }}</strong> to
+              confirm:
+            </div>
+            <v-text-field
+              v-model="confirmInput"
+              :placeholder="confirmDeviceCode"
               variant="outlined"
-              class="text-none font-weight-medium flex-grow-1"
+              density="comfortable"
+              hide-details
+              :color="isConfirmInputValid ? 'error' : undefined"
+              class="mb-1"
+              autocomplete="off"
+            />
+          </v-card-text>
+
+          <v-divider />
+          <v-card-actions class="pa-4 justify-end ga-3">
+            <v-btn
+              variant="text"
+              class="text-none font-weight-medium"
               @click="confirmDialogIsOpen = false"
             >
               Cancel
@@ -461,11 +785,12 @@
             <v-btn
               color="error"
               variant="flat"
-              class="text-none font-weight-medium flex-grow-1"
+              class="text-none font-weight-medium"
               prepend-icon="mdi-power"
+              :disabled="!isConfirmInputValid"
               @click="confirmAndSendCommand"
             >
-              Power Off
+              Confirm Power Off
             </v-btn>
           </v-card-actions>
         </v-card>
@@ -773,5 +1098,115 @@
     .device-card__actions {
       padding: 10px 16px 14px;
     }
+  }
+
+  /* ── Edit Dialog ── */
+
+  .edit-section-label {
+    font-family: var(--font-body);
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-ink-muted);
+    margin-bottom: 12px;
+  }
+
+  /* ── Confirm Dialog ── */
+
+  .confirm-warning-banner {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 20px;
+    background: rgba(192, 84, 79, 0.08);
+    border-bottom: 2px solid rgba(192, 84, 79, 0.25);
+    font-family: var(--font-body);
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-error);
+  }
+
+  .confirm-impact {
+    padding: 12px 14px;
+    border-radius: 8px;
+    border: 1px solid var(--color-border);
+    background: linear-gradient(135deg, rgba(44, 62, 80, 0.02), rgba(44, 62, 80, 0.04));
+  }
+
+  .confirm-impact__title {
+    font-family: var(--font-body);
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-ink-muted);
+    margin-bottom: 8px;
+  }
+
+  .confirm-impact__list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .confirm-impact__item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-body);
+    font-size: 0.8rem;
+    color: var(--color-ink);
+  }
+
+  .confirm-code-highlight {
+    font-family: monospace;
+    padding: 1px 6px;
+    border-radius: 4px;
+    background: rgba(192, 84, 79, 0.1);
+    color: var(--color-error);
+    font-size: 0.85rem;
+  }
+
+  .device-info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid var(--color-border);
+  }
+
+  .device-info-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 14px;
+    background: linear-gradient(135deg, rgba(44, 62, 80, 0.02), rgba(44, 62, 80, 0.04));
+  }
+
+  .device-info-item__icon {
+    color: var(--color-ink-muted);
+    flex-shrink: 0;
+  }
+
+  .device-info-item__label {
+    font-family: var(--font-body);
+    font-size: 0.6rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-ink-muted);
+    margin-bottom: 1px;
+  }
+
+  .device-info-item__value {
+    font-family: var(--font-body);
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--color-ink);
+    line-height: 1.3;
   }
 </style>

@@ -3,6 +3,7 @@ import { supabase, invokeEdgeFunction } from '@/lib/supabase'
 import { transformWithRelation } from '@/utils/transform'
 import { snakeToCamel } from '@/utils/transform'
 import type { IDeviceWithRoom, IDevice } from '@/types/database'
+import { useNotifications } from '@/composables/use-notifications'
 
 const listDevice = ref<IDeviceWithRoom[]>([])
 const isLoading = ref(false)
@@ -56,7 +57,14 @@ function patchDeviceInPlace(updatedFields: Record<string, unknown>) {
     return
   }
 
-  // Status changed — replace object to trigger reactivity + highlight
+  // Status changed — replace object to trigger reactivity + highlight + notify
+  const { notifyDeviceChange } = useNotifications()
+  notifyDeviceChange({
+    deviceCode: existing.deviceCode,
+    newStatus: camelFields.status!,
+    oldStatus: existing.status,
+  })
+
   listDevice.value[index] = { ...existing, ...camelFields, room: existing.room }
 
   recentlyChangedDeviceId.value = deviceId

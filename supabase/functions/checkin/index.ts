@@ -100,7 +100,7 @@ Deno.serve(async (req: Request) => {
       student_id: student.id,
       class_id: activeClass.id,
       device_id: device.id,
-      checkin_time: now.toISOString(),
+      checkin_time: vnNow.toISOString().replace('Z', '+07:00'),
       status,
       seat_number: student.seat_number,
     })

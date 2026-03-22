@@ -5,11 +5,12 @@ export const LIST_DAY = [
   'Thursday',
   'Friday',
   'Saturday',
+  'Sunday',
 ] as const
 
-export const LIST_DAY_SHORT = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'] as const
+export const LIST_DAY_SHORT = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'] as const
 
-export const DAY_COUNT = 6
+export const DAY_COUNT = 7
 
 export const LIST_TIME_SLOT = [
   '07:00',

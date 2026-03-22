@@ -170,7 +170,21 @@ def process_serial_line(line: str, ser: serial.Serial):
     elif command == "HEARTBEAT":
         update_heartbeat()
     elif command == "ACK":
-        print(f"  Device acknowledged: {':'.join(parts[1:])}")
+        ack_cmd = ':'.join(parts[1:])
+        print(f"  Device acknowledged: {ack_cmd}")
+        # Update device status based on ACK
+        if ack_cmd == "POWER_OFF":
+            try:
+                supabase.table("cp_devices").update({
+                    "status": "OFFLINE",
+                    "last_seen": datetime.now(timezone.utc).isoformat(),
+                }).eq("device_code", DEVICE_CODE).execute()
+                print(f"  Device status → OFFLINE")
+            except Exception:
+                pass
+        elif ack_cmd == "POWER_ON":
+            update_heartbeat()
+            print(f"  Device status → ONLINE")
     else:
         print(f"  Unknown command: {command}")
 
