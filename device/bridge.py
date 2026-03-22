@@ -93,8 +93,8 @@ def flush_offline_queue():
             break
 
 
-def handle_checkin(parts: list[str]):
-    """CHECKIN:<mssv>"""
+def handle_checkin(parts: list[str], ser: serial.Serial):
+    """CHECKIN:<mssv> — call EF and send result back to device."""
     if len(parts) < 2:
         print("  Invalid CHECKIN format")
         return
@@ -104,12 +104,15 @@ def handle_checkin(parts: list[str]):
 
     if success:
         print(f"  Checkin OK: {result}")
+        ser.write(f"RESULT:OK:{result}\n".encode())
     else:
         if "Error" in result:
             offline_queue.append({"mssv": mssv})
             print(f"  Queued checkin for {mssv} (offline)")
+            ser.write(f"RESULT:FAIL:OFFLINE\n".encode())
         else:
             print(f"  Checkin FAILED: {result}")
+            ser.write(f"RESULT:FAIL:{result}\n".encode())
 
 
 def handle_checkout(parts: list[str]):
@@ -127,7 +130,7 @@ def handle_checkout(parts: list[str]):
         print(f"  Checkout FAILED: {result}")
 
 
-def process_serial_line(line: str):
+def process_serial_line(line: str, ser: serial.Serial):
     """Parse and handle a single serial line."""
     line = line.strip()
     if not line:
@@ -138,7 +141,7 @@ def process_serial_line(line: str):
 
     command = parts[0].upper()
     if command == "CHECKIN":
-        handle_checkin(parts)
+        handle_checkin(parts, ser)
     elif command == "CHECKOUT":
         handle_checkout(parts)
     elif command == "HEARTBEAT":
@@ -224,7 +227,7 @@ def main():
         while True:
             if ser.in_waiting > 0:
                 line = ser.readline().decode("utf-8", errors="replace")
-                process_serial_line(line)
+                process_serial_line(line, ser)
 
             if offline_queue:
                 flush_offline_queue()

@@ -34,8 +34,8 @@ Dùng phong cách **Prezi / spatial storytelling**: mỗi phần lớn là một
 - GVHD: ThS. Đinh Công Đoan
 - Nhóm 10:
   - 22810009 Nguyễn Kim Hưng — Giao diện web, Cloud, Thiết kế hệ thống
-  - 22810010 Đào Đức Khải — Thiết bị, Firmware, Phần cứng
-  - 24810113 Phan Trương Đình Khánh — Kết nối serial, Kiểm thử, Tài liệu
+  - 22810010 Đào Đức Khải — Kết nối serial (Bridge), Kiểm thử, Tài liệu
+  - 24810113 Phan Trương Đình Khánh — Thiết kế mạch (Proteus), Firmware, Phần cứng
 
 ---
 
@@ -107,7 +107,7 @@ Ghi chú nhỏ góc dưới: "Dưới 1 giây từ quẹt thẻ → web cập nh
 
 Khối 1 (icon tay nhấn): **Giảng viên nhấn "Tắt"** — Trên web dashboard
 → Khối 2 (icon lưu): **Ghi lệnh** — Web lưu lệnh vào cloud, trạng thái "Đang chờ"
-→ Khối 3 (icon tìm kiếm): **Bridge kiểm tra** — Chương trình trung gian kiểm tra mỗi 2 giây, thấy lệnh mới
+→ Khối 3 (icon tìm kiếm): **Bridge kiểm tra** — Chương trình trung gian kiểm tra mỗi 3 giây, thấy lệnh mới
 → Khối 4 (icon gửi): **Chuyển serial** — Gửi lệnh qua dây đến thiết bị
 → Khối 5 (icon tắt nguồn): **Thiết bị tắt** — Ngừng quét, tắt đèn, gửi xác nhận ngược lại → web hiện "Đã tắt"
 
@@ -185,7 +185,7 @@ Khối trái: **Thiết bị tại phòng** (Proteus) — nối qua dây serial 
 Khối giữa: **Chương trình trung gian** (Python) — 4 việc:
 ① Nhận check-in → gửi lên cloud
 ② Nhận tín hiệu "còn sống" → báo cloud thiết bị đang hoạt động
-③ Kiểm tra cloud mỗi 2s → nếu có lệnh mới → chuyển cho thiết bị
+③ Kiểm tra cloud mỗi 3s → nếu có lệnh mới → chuyển cho thiết bị
 ④ Mất mạng → lưu tạm → có mạng lại thì gửi hết
 Khối phải: **Cloud** (Supabase) — nối qua internet (HTTPS)
 Hộp dưới (đường đứt nét): **Hàng đợi khi mất mạng**
@@ -243,7 +243,6 @@ Chỉ bridge mới ghi được điểm danh → ngay cả khi lộ mật khẩu
 
 - Đăng nhập bằng tài khoản Google (1 click)
 - Tất cả trang khác đều yêu cầu đăng nhập
-- Hỗ trợ chế độ sáng/tối
 
 ---
 
@@ -251,12 +250,13 @@ Chỉ bridge mới ghi được điểm danh → ngay cả khi lộ mật khẩu
 
 **Screenshot dashboard. Dùng callout đánh số từng vùng trên hình.**
 
-① 4 thẻ thống kê — số lớp, buổi học hôm nay, tổng sinh viên, số thiết bị
-② Biểu đồ đường — tỷ lệ đi học đều theo tuần
-③ Biểu đồ tròn — tỷ lệ đúng giờ / trễ / vắng
-④ Biểu đồ cột — so sánh giữa các lớp
-⑤ Danh sách hoạt động gần nhất
-⑥ Trạng thái thiết bị — đang hoạt động hay đã tắt
+① Thẻ lớp hiện tại — hiển thị lớp đang diễn ra hoặc lớp tiếp theo, kèm tổng check-in hôm nay
+② Thanh lịch học hôm nay — timeline hiển thị tất cả buổi học trong ngày
+③ 4 thẻ thống kê — số buổi học hôm nay, đã điểm danh, tỷ lệ chuyên cần (%), thiết bị online
+④ Biểu đồ đường — xu hướng chuyên cần theo tuần (đúng giờ / trễ / vắng)
+⑤ Biểu đồ tròn — tỷ lệ phần trăm đúng giờ / trễ / vắng
+⑥ Biểu đồ cột xếp chồng — so sánh chuyên cần giữa các lớp
+⑦ Danh sách thiết bị — trạng thái online/offline, phòng, thời gian kết nối cuối
 
 ---
 
@@ -264,23 +264,22 @@ Chỉ bridge mới ghi được điểm danh → ngay cả khi lộ mật khẩu
 
 **Screenshot trang class detail. Callout đánh số.**
 
-① Chọn buổi học
-② 4 thẻ: tổng SV, đúng giờ, trễ, vắng
-③ Bảng điểm danh — MSSV, họ tên, giờ đến, ghế, nhãn màu
-④ Sơ đồ ghế ngồi — lưới 3×5, mỗi ô tô màu (xanh = đúng giờ, vàng = trễ, xám = vắng)
-⑤ Tỷ lệ chuyên cần — thanh tiến trình, cảnh báo nếu dưới 80%
+① 4 thẻ thống kê — tổng SV, đúng giờ, trễ, vắng
+② Bảng điểm danh — MSSV, họ tên, giờ đến, ghế, nhãn màu (cập nhật thời gian thực)
+③ Tỷ lệ chuyên cần — phần trăm lớn, trễ tính 0.5 điểm, cảnh báo nếu dưới 80%
+④ Sơ đồ ghế ngồi — lưới 3×5, mỗi ô tô màu (xanh = đúng giờ, cam = trễ, xám = trống)
 
 ---
 
-### Slide 16 — Thời khóa biểu & Tra cứu phòng
+### Slide 16 — Thời khóa biểu
 
 **Screenshot trang schedule. Callout ghi chú.**
 
+- 4 thẻ thống kê: hôm nay, tuần này, tổng giờ dạy, số môn
 - Lưới thời gian 07:00–17:00, Thứ 2–Thứ 7
-- Chuyển xem Tuần / Ngày
-- Đường kẻ đánh dấu thời gian hiện tại
-- Nhấn vào ô → chi tiết: môn gì, phòng nào, bao nhiêu SV, thiết bị bật hay tắt
-- Tra cứu phòng: phòng nào đang trống, phòng nào đang có lớp
+- Chuyển xem Tuần / Ngày (chọn ngày cụ thể ở chế độ Ngày)
+- Nền vàng đánh dấu ngày và giờ hiện tại
+- Mỗi ô hiển thị: giờ, tên môn, mã lớp, phòng, sĩ số — tô màu theo môn
 
 ---
 
@@ -288,10 +287,12 @@ Chỉ bridge mới ghi được điểm danh → ngay cả khi lộ mật khẩu
 
 **Screenshot trang device. Callout ghi chú.**
 
-- Danh sách thẻ: mã thiết bị, phòng, trạng thái, firmware
-- Sửa thông tin thiết bị
-- Nút bật / tắt / khởi động lại → gửi lệnh cho thiết bị
-- Trạng thái tự cập nhật dựa trên tín hiệu "còn sống" (30 giây) — quá 60 giây → hiện "Đã tắt"
+- Thanh tổng hợp: tổng / online / offline
+- Lưới thẻ thiết bị: mã thiết bị, ID, phòng, thời gian kết nối, firmware, mô tả
+- Tìm kiếm / lọc theo mã, phòng, mô tả
+- Nút bật / tắt → gửi lệnh cho thiết bị (xác nhận trước khi tắt)
+- Sửa mô tả thiết bị
+- Trạng thái tự cập nhật thời gian thực — khi thay đổi, thẻ nhấp nháy vàng 2 giây
 
 ---
 
@@ -323,17 +324,16 @@ Ghi chú: "Dưới 1 giây từ quẹt thẻ → web cập nhật"
 
 **Bố cục: phần trên chia 2 cột tính năng, phần dưới là bảng CLO.**
 
-**Web (7 tính năng) | Thiết bị (7 tính năng)**
+**Web (6 tính năng) | Thiết bị (7 tính năng)**
 
 Web:
 
 1. Đăng nhập Google
-2. Dashboard với 3 loại biểu đồ
-3. Chi tiết điểm danh + sơ đồ ghế ngồi
+2. Dashboard: lớp hiện tại, lịch hôm nay, 4 thẻ thống kê, 3 biểu đồ, trạng thái thiết bị
+3. Danh sách lớp + chi tiết điểm danh + sơ đồ ghế ngồi
 4. Thời khóa biểu tuần/ngày
-5. Tra cứu phòng học đang có tiết gì
-6. Bật/tắt thiết bị từ xa
-7. Chế độ sáng/tối
+5. Bật/tắt thiết bị từ xa
+6. Cập nhật dữ liệu thời gian thực (Realtime)
 
 Thiết bị:
 

@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Class Presence — Diagrams</title>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #f5f2ec; font-family: Georgia, serif; }
+  .diagram-page {
+    width: 1200px;
+    min-height: 700px;
+    background: #fff;
+    margin: 0;
+    padding: 48px 64px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    page-break-after: always;
+  }
+  .diagram-page h2 {
+    font-size: 20px;
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 8px;
+    text-align: center;
+    letter-spacing: 0.02em;
+  }
+  .diagram-page .subtitle {
+    font-size: 13px;
+    color: #6b7c8d;
+    margin-bottom: 32px;
+    text-align: center;
+  }
+  .mermaid {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+  .mermaid svg {
+    max-width: 100%;
+    height: auto;
+  }
+</style>
+</head>
+<body>
+
+<!-- DIAGRAM 1: Architecture 4 layers -->
+<div class="diagram-page" id="architecture">
+  <h2>Slide 4 — Kiến trúc hệ thống</h2>
+  <p class="subtitle">4 tầng IoT: Cảm nhận → Mạng → Xử lý → Ứng dụng</p>
+  <div class="mermaid">
+flowchart TB
+    subgraph T4["🌐 Tầng 4: ỨNG DỤNG"]
+      WEB["Web cho giảng viên\nBiểu đồ · Sơ đồ ghế · Bật/tắt thiết bị"]
+    end
+    subgraph T3["☁️ Tầng 3: XỬ LÝ (Cloud)"]
+      CLOUD["Supabase\nLưu dữ liệu · Google Auth · Realtime"]
+    end
+    subgraph T2["🔗 Tầng 2: MẠNG"]
+      BRIDGE["Serial Bridge (Python)\nKết nối serial + Internet (HTTPS)"]
+    end
+    subgraph T1["📡 Tầng 1: CẢM NHẬN"]
+      DEVICE["Raspberry Pi 3\nRFID · LCD · Đèn · Loa · Motor cửa"]
+    end
+
+    T1 -- "Dữ liệu điểm danh ↑" --> T2
+    T2 -- "Dữ liệu điểm danh ↑" --> T3
+    T3 -- "Dữ liệu điểm danh ↑" --> T4
+    T4 -- "Lệnh điều khiển ↓" --> T3
+    T3 -- "Lệnh điều khiển ↓" --> T2
+    T2 -- "Lệnh điều khiển ↓" --> T1
+
+    style T4 fill:#dbeafe,stroke:#3b82f6,color:#1e3a5f
+    style T3 fill:#ede9fe,stroke:#7c3aed,color:#3b1f6e
+    style T2 fill:#fed7aa,stroke:#ea580c,color:#7c2d12
+    style T1 fill:#dcfce7,stroke:#16a34a,color:#14532d
+  </div>
+</div>
+
+<!-- DIAGRAM 2: Check-in flow -->
+<div class="diagram-page" id="checkin-flow">
+  <h2>Slide 5 — Luồng điểm danh</h2>
+  <p class="subtitle">Từ quẹt thẻ RFID đến web cập nhật — dưới 1 giây</p>
+  <div class="mermaid">
+flowchart LR
+    A["💳 Quẹt thẻ\nSinh viên đưa\nthẻ RFID vào đầu đọc"]
+    B["🔍 Kiểm tra\nThiết bị so sánh mã thẻ\nĐèn xanh · Loa bíp · Cửa mở"]
+    C["📡 Gửi serial\nGửi MSSV qua dây\nđến Bridge"]
+    D["☁️ Lên cloud\nBridge gửi lên Supabase\nCloud lưu lại"]
+    E["🔔 Realtime\nCloud thông báo\ntức thì đến web"]
+    F["🖥️ Web cập nhật\nBảng · Ghế đổi màu\nBiểu đồ thay đổi"]
+
+    A --> B --> C --> D --> E --> F
+
+    style A fill:#dcfce7,stroke:#16a34a
+    style B fill:#dcfce7,stroke:#16a34a
+    style C fill:#fef9c3,stroke:#ca8a04
+    style D fill:#dbeafe,stroke:#3b82f6
+    style E fill:#dbeafe,stroke:#3b82f6
+    style F fill:#dbeafe,stroke:#3b82f6
+  </div>
+</div>
+
+<!-- DIAGRAM 3: Control flow -->
+<div class="diagram-page" id="control-flow">
+  <h2>Slide 6 — Luồng điều khiển thiết bị</h2>
+  <p class="subtitle">Giảng viên bật/tắt thiết bị từ web → Bridge chuyển lệnh xuống</p>
+  <div class="mermaid">
+flowchart LR
+    A["👆 Nhấn 'Tắt'\nTrên web dashboard"]
+    B["💾 Ghi lệnh\nCloud lưu lệnh\ntrạng thái: Đang chờ"]
+    C["🔍 Bridge kiểm tra\nMỗi 3 giây\nthấy lệnh mới"]
+    D["📡 Chuyển serial\nGửi CMD:POWER_OFF\nqua dây"]
+    E["⚡ Thiết bị tắt\nNgừng quét · Tắt đèn\nGửi ACK → web: Đã tắt"]
+
+    A --> B --> C --> D --> E
+
+    style A fill:#dbeafe,stroke:#3b82f6
+    style B fill:#dbeafe,stroke:#3b82f6
+    style C fill:#fef9c3,stroke:#ca8a04
+    style D fill:#fed7aa,stroke:#ea580c
+    style E fill:#fee2e2,stroke:#dc2626
+  </div>
+</div>
+
+<!-- DIAGRAM 4: Hardware connection hub-spoke -->
+<div class="diagram-page" id="connections">
+  <h2>Slide 8 — Kết nối linh kiện</h2>
+  <p class="subtitle">Raspberry Pi 3 là trung tâm — đầu vào (xanh lá) và đầu ra (xanh dương)</p>
+  <div class="mermaid">
+flowchart TD
+    RPI["🖥️ Raspberry Pi 3\nBộ xử lý chính"]
+
+    SCAN["🔘 Nút SCAN\nGPIO4"]
+    COUNT["🔢 Nút COUNT\nGPIO17"]
+    RFID["💳 Đầu đọc RFID\nUART"]
+
+    LCD["📺 Màn hình LCD\nI2C"]
+    LED_G["🟢 Đèn xanh\nGPIO19"]
+    LED_R["🔴 Đèn đỏ\nGPIO18"]
+    BUZ["🔊 Loa báo\nGPIO6"]
+    MOTOR["🚪 Motor cửa\nI2C"]
+
+    SCAN -->|GPIO4| RPI
+    COUNT -->|GPIO17| RPI
+    RFID -->|UART| RPI
+    RPI -->|I2C| LCD
+    RPI -->|GPIO19| LED_G
+    RPI -->|GPIO18| LED_R
+    RPI -->|GPIO6| BUZ
+    RPI -->|I2C| MOTOR
+
+    style RPI fill:#2c3e50,color:#fff,stroke:#2c3e50
+    style SCAN fill:#dcfce7,stroke:#16a34a
+    style COUNT fill:#dcfce7,stroke:#16a34a
+    style RFID fill:#dcfce7,stroke:#16a34a
+    style LCD fill:#dbeafe,stroke:#3b82f6
+    style LED_G fill:#dbeafe,stroke:#3b82f6
+    style LED_R fill:#dbeafe,stroke:#3b82f6
+    style BUZ fill:#dbeafe,stroke:#3b82f6
+    style MOTOR fill:#dbeafe,stroke:#3b82f6
+  </div>
+</div>
+
+<!-- DIAGRAM 5: Device step by step -->
+<div class="diagram-page" id="device-steps">
+  <h2>Slide 9 — Hoạt động thiết bị từng bước</h2>
+  <p class="subtitle">Luồng quẹt thẻ: hợp lệ → đèn xanh + gửi cloud | không hợp lệ → đèn đỏ</p>
+  <div class="mermaid">
+flowchart TD
+    S1["🔘 Nhấn nút SCAN\nKích hoạt chế độ quét"]
+    S2["📺 Màn hình: SCAN CARD\nChờ sinh viên đưa thẻ"]
+    S3["💳 Đọc mã thẻ RFID\nĐầu đọc nhận mã"]
+    S4{"🔍 Kiểm tra mã thẻ\nSo sánh danh sách\nđã đăng ký"}
+
+    S4_OK["✅ Màn hình: CHECK DONE\n🟢 Đèn xanh sáng\n🔊 Loa kêu ngắn\n🚪 Cửa mở 3 giây\n📤 Gửi MSSV qua serial"]
+    S4_FAIL["❌ Màn hình: Invalid Card\n🔴 Đèn đỏ sáng\n🔊 Loa kêu dài\n❌ Không gửi lên cloud"]
+
+    COUNT["📊 Nút COUNT (bất kỳ lúc nào)\nMàn hình hiện số người đã check-in"]
+
+    S1 --> S2 --> S3 --> S4
+    S4 -- Hợp lệ --> S4_OK
+    S4 -- Không hợp lệ --> S4_FAIL
+
+    style S4_OK fill:#dcfce7,stroke:#16a34a
+    style S4_FAIL fill:#fee2e2,stroke:#dc2626
+    style COUNT fill:#fef9c3,stroke:#ca8a04
+    style S4 fill:#ede9fe,stroke:#7c3aed
+  </div>
+</div>
+
+<!-- DIAGRAM 6: Bridge -->
+<div class="diagram-page" id="bridge">
+  <h2>Slide 10 — Chương trình trung gian (Serial Bridge)</h2>
+  <p class="subtitle">Python bridge kết nối thiết bị vật lý với Supabase cloud</p>
+  <div class="mermaid">
+flowchart LR
+    DEV["📡 Thiết bị\ntại phòng học\n(Proteus)\n\nSerial 9600 baud"]
+
+    subgraph BRIDGE["🐍 Serial Bridge (Python)"]
+      B1["① Nhận CHECKIN → gửi cloud"]
+      B2["② Nhận HEARTBEAT → báo thiết bị online"]
+      B3["③ Poll lệnh mỗi 3s → chuyển serial"]
+      B4["④ Mất mạng → lưu queue → gửi lại"]
+    end
+
+    subgraph OFFLINE["📦 Offline Queue"]
+      Q["Hàng đợi tạm\nkhi mất mạng"]
+    end
+
+    CLOUD["☁️ Cloud\n(Supabase)\n\nHTTPS / REST"]
+
+    DEV <-->|Serial| BRIDGE
+    BRIDGE <-->|Internet| CLOUD
+    BRIDGE -.->|Lưu tạm| OFFLINE
+    OFFLINE -.->|Gửi lại khi có mạng| BRIDGE
+
+    style DEV fill:#dcfce7,stroke:#16a34a
+    style CLOUD fill:#dbeafe,stroke:#3b82f6
+    style BRIDGE fill:#fff7ed,stroke:#ea580c
+    style OFFLINE fill:#fef9c3,stroke:#ca8a04
+  </div>
+</div>
+
+<!-- DIAGRAM 7: ERD -->
+<div class="diagram-page" id="erd">
+  <h2>Slide 11 — Sơ đồ cơ sở dữ liệu</h2>
+  <p class="subtitle">7 bảng với tiền tố cp_ — RLS bật trên tất cả</p>
+  <div class="mermaid">
+erDiagram
+    cp_rooms {
+        uuid id PK
+        varchar name UK
+        int capacity
+    }
+    cp_classes {
+        uuid id PK
+        varchar class_code
+        varchar subject_name
+        timestamp start_time
+        timestamp end_time
+        uuid room_id FK
+    }
+    cp_students {
+        uuid id PK
+        varchar mssv UK
+        varchar full_name
+        int seat_number
+        uuid class_id FK
+    }
+    cp_devices {
+        uuid id PK
+        varchar device_code UK
+        varchar status
+        uuid room_id FK
+    }
+    cp_device_commands {
+        uuid id PK
+        uuid device_id FK
+        varchar command
+        varchar status
+    }
+    cp_attendance_logs {
+        uuid id PK
+        uuid student_id FK
+        uuid class_id FK
+        uuid device_id FK
+        timestamp checkin_time
+        varchar status
+    }
+    cp_attendance_sessions {
+        uuid id PK
+        uuid student_id FK
+        uuid class_id FK
+        timestamp checkin_time
+        timestamp checkout_time
+    }
+
+    cp_rooms ||--o{ cp_classes : "1:N"
+    cp_rooms ||--o| cp_devices : "1:1"
+    cp_classes ||--o{ cp_students : "1:N"
+    cp_devices ||--o{ cp_device_commands : "1:N"
+    cp_students ||--o{ cp_attendance_logs : "logs"
+    cp_classes ||--o{ cp_attendance_logs : "logs"
+    cp_students ||--o{ cp_attendance_sessions : "sessions"
+    cp_classes ||--o{ cp_attendance_sessions : "sessions"
+  </div>
+</div>
+
+<!-- DIAGRAM 8: Security -->
+<div class="diagram-page" id="security">
+  <h2>Slide 12 — Bảo mật dữ liệu (RLS)</h2>
+  <p class="subtitle">Chỉ Bridge mới ghi được điểm danh — giảng viên chỉ có thể xem</p>
+  <div class="mermaid">
+flowchart LR
+    GV["👨‍🏫 Giảng viên\n(qua web)"]
+    BR["🤖 Serial Bridge\n(service_role key)"]
+    DB[("🔒 Supabase\nDatabase\n(RLS enabled)")]
+
+    GV -- "✅ SELECT tất cả bảng\n✅ Gửi lệnh thiết bị\n❌ INSERT/UPDATE điểm danh" --> DB
+    BR -- "✅ INSERT điểm danh\n✅ UPDATE trạng thái thiết bị\n✅ EXECUTE lệnh" --> DB
+
+    NOTE["⚠️ Ngay cả khi lộ mật khẩu web\nkhông ai giả mạo được điểm danh\nvì chỉ service_role mới INSERT được"]
+
+    DB -.-> NOTE
+
+    style GV fill:#dbeafe,stroke:#3b82f6
+    style BR fill:#fef9c3,stroke:#ca8a04
+    style DB fill:#2c3e50,color:#fff,stroke:#2c3e50
+    style NOTE fill:#fee2e2,stroke:#dc2626
+  </div>
+</div>
+
+<!-- DIAGRAM 9: Sequence diagram -->
+<div class="diagram-page" id="sequence">
+  <h2>Slide 18 — Sơ đồ tuần tự: Quẹt thẻ → Web cập nhật</h2>
+  <p class="subtitle">Dưới 1 giây từ quẹt thẻ đến web cập nhật</p>
+  <div class="mermaid">
+sequenceDiagram
+    actor SV as Sinh viên
+    participant TB as Thiết bị
+    participant BR as Serial Bridge
+    participant CL as Cloud (Supabase)
+    participant WEB as Web GV
+
+    SV->>TB: Quẹt thẻ RFID
+    TB->>TB: Kiểm tra mã thẻ
+    alt Hợp lệ
+        TB->>TB: Đèn xanh + loa bíp + cửa mở
+        TB->>BR: CHECKIN:&lt;mssv&gt; (serial)
+        BR->>CL: POST /functions/v1/checkin
+        CL->>CL: Ghi attendance_log (ON_TIME/LATE)
+        CL-->>WEB: Realtime broadcast
+        WEB->>WEB: Cập nhật bảng + ghế + biểu đồ
+    else Không hợp lệ
+        TB->>TB: Đèn đỏ + loa kêu dài
+        Note over TB: Không gửi gì lên cloud
+    end
+  </div>
+</div>
+
+<script>
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: 'base',
+    themeVariables: {
+      primaryColor: '#dbeafe',
+      primaryTextColor: '#1e3a5f',
+      primaryBorderColor: '#3b82f6',
+      lineColor: '#6b7c8d',
+      secondaryColor: '#dcfce7',
+      tertiaryColor: '#fef9c3',
+      fontSize: '14px',
+      fontFamily: 'Georgia, serif'
+    },
+    flowchart: { curve: 'basis', padding: 20 },
+    er: { diagramPadding: 20 },
+    sequence: { diagramMarginX: 30, diagramMarginY: 20 }
+  });
+</script>
+</body>
+</html>

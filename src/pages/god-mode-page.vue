@@ -18,7 +18,10 @@
     counts?: TDbCounts
   }
 
-  const mssvInput = ref('123456789\n987654321\n24810113')
+  const mssvInput = ref('1111\n2222\n3333\n4444')
+  const clampedHour = Math.max(7, Math.min(new Date().getHours(), 15))
+  const demoStartTime = ref(`${String(clampedHour).padStart(2, '0')}:00`)
+  const demoEndTime = ref(`${String(clampedHour + 2).padStart(2, '0')}:00`)
   const isClearing = ref(false)
   const isSeeding = ref(false)
   const isLoadingCounts = ref(false)
@@ -119,6 +122,8 @@
     const { data, error } = await invokeEdgeFunction<TSeedResponse>('admin-seed', {
       action: 'seed',
       listMssv: parsedListMssv.value,
+      startTime: demoStartTime.value,
+      endTime: demoEndTime.value,
     })
 
     if (error || !data?.success) {
@@ -226,6 +231,26 @@
             hide-details
             class="mb-2"
           />
+          <div class="d-flex ga-4 mt-3">
+            <v-text-field
+              v-model="demoStartTime"
+              type="time"
+              label="IOT301 Start Time"
+              variant="outlined"
+              density="compact"
+              hide-details
+              style="max-width: 200px"
+            />
+            <v-text-field
+              v-model="demoEndTime"
+              type="time"
+              label="IOT301 End Time"
+              variant="outlined"
+              density="compact"
+              hide-details
+              style="max-width: 200px"
+            />
+          </div>
           <v-chip size="small" color="info" variant="tonal">
             Parsed: {{ parsedListMssv.length }} MSSVs
           </v-chip>

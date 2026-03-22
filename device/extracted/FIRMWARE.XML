@@ -1,0 +1,6 @@
+<?xml version='1.0' encoding='UTF-8' standalone='yes'?>
+<FIRMWARE FAMILY="Raspberry Pi" COMPILER="Visual Designer for Raspberry Pi" TYPE="RPI3">
+ <PROJECTS>
+  <STRING>RPI3</STRING>
+ </PROJECTS>
+</FIRMWARE>

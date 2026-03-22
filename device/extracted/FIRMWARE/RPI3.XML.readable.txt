@@ -1,0 +1,1107 @@
+<?xml version='1.0' encoding='UTF-8' standalone='yes' ?>
+<PROJECT IID="1" BUILDPATH="C:/Users/ad/AppData/Local/Temp/VSM Studio/6df0b60f59a04d3bb4c445f61e9fc7bc/RPI3" VERSION="844" TYPE="CHART" NAME="RPI3" CONFIGURATION="Debug">
+ <FILES ATTACH="1">
+  <FILE GROUP="Flowchart Files" NAME="Main.chart"/>
+  <FILE ATTACH="1" GROUP="Resource Files" NAME="RPI3/showlog.py"/>
+  <FILE ATTACH="1" GROUP="Resource Files" NAME="RPI3/transport.js"/>
+  <FILE ATTACH="1" GROUP="Firmware Files" NAME="RPI3/Debug/Debug.pyz" FIRMWARE="1"/>
+ </FILES>
+ <CONFIGURATION CRC="e4557f296c87ed5fe70d88babe57a0bf" TARGET="Debug" COMPILER="Visual Designer for Raspberry Pi" NAME="Debug">
+  <CONTROLLER FAMILY="Raspberry Pi" TYPE="RPI3"/>
+  <FILE TOOL="MKPYTHON" NAME="RPI3/Debug/Debug.pyz">
+   <FILE NAME="RPI3/main.py"/>
+  </FILE>
+ </CONFIGURATION>
+ <CONFIGURATION CRC="73ca70a4f4652c9473bce165d833b6f2" TARGET="Release" COMPILER="Visual Designer for Raspberry Pi" NAME="Release">
+  <CONTROLLER FAMILY="Raspberry Pi" TYPE="RPI3"/>
+ </CONFIGURATION>
+ <BAGGAGE>
+  <VARIABLES>
+   <VARIABLE TYPE="STRING" ID="{288a3b9a-3ad4-4afb-8428-ac1c0110d9b6}" NAME="input"/>
+   <VARIABLE TYPE="STRING" ID="{b9e2d86f-f275-48da-b631-477ef3598f4d}" NAME="lcd_data"/>
+   <VARIABLE TYPE="INTEGER" ID="{7ac82662-98a3-47ea-a30b-0e70381d1643}" NAME="count"/>
+   <VARIABLE TYPE="STRING" ID="{91d7d8d4-6be2-4d32-9d71-ce5c1d5c1f3b}" NAME="tag_1"/>
+   <VARIABLE TYPE="STRING" ID="{871e2a41-7a9c-4073-ba19-09c9bb7967b3}" NAME="tag_2"/>
+   <VARIABLE TYPE="STRING" ID="{2b846e94-1267-4a2f-8a1b-2ae8e26826c9}" NAME="tag_3"/>
+  </VARIABLES>
+  <SETTINGS PAGEHEIGHT="130" PAGEMARGIN="8" PAGEWIDTH="180"/>
+ </BAGGAGE>
+ <SHEET NAME="Main">
+  <BLOCK X="0" Y="-246" TYPE="EVENT" ID="{44a4f7d9-3535-4540-bfa8-eb052128867f}">
+   <CONTENT>
+    <EVENT NAME="SETUP"/>
+   </CONTENT>
+   <NODE SIDE="4" NAME="OUTPUT"/>
+  </BLOCK>
+  <BLOCK X="0" Y="-66" TYPE="END" ID="{f45b41da-9e19-4d6a-9abd-f38035d74e91}">
+   <CONTENT/>
+   <NODE SIDE="3" NAME="INPUT"/>
+  </BLOCK>
+  <BLOCK X="-282" Y="-324" TYPE="EVENT" ID="{3d665d8e-9857-4e66-a8f3-5127e0684335}">
+   <CONTENT>
+    <EVENT NAME="LOOP"/>
+   </CONTENT>
+   <NODE SIDE="4" NAME="OUTPUT"/>
+  </BLOCK>
+  <BLOCK X="-441" Y="326" TYPE="END" ID="{cbd6669c-bc52-4d8a-93be-7698ac08b496}">
+   <CONTENT/>
+   <NODE SIDE="3" NAME="INPUT"/>
+  </BLOCK>
+  <BLOCK X="407" Y="-22" TYPE="IO" ID="{fa799ae1-6624-4222-b409-d36ae31123d3}">
+   <CONTENT>
+    <CALL>
+     <PERIPHERAL ENABLED="1" BUILTIN="0" TYPE="Terminal" ID="{82d4efbb-2be0-4a89-aa15-6fcf772b0407}" NAME="VT1"/>
+     <METHOD DESC="Input String" NAME="input"/>
+     <INPUT NAME="Echo">
+      <CONSTANT TYPE="BOOLEAN" NAME="TRUE" VALUE="True"/>
+     </INPUT>
+     <OUTPUT NAME="Data">
+      <VARIABLE TYPE="STRING" ID="{b9e2d86f-f275-48da-b631-477ef3598f4d}" NAME="lcd_data"/>
+     </OUTPUT>
+    </CALL>
+   </CONTENT>
+   <NODE SIDE="3" NAME="INPUT1"/>
+   <NODE SIDE="1" NAME=""/>
+   <NODE SIDE="2" NAME=""/>
+   <NODE SIDE="4" NAME="OUTPUT"/>
+  </BLOCK>
+  <BLOCK X="407" Y="54" TYPE="DECISION" ID="{8db11c5e-fa02-4965-86d0-ac32a2deb991}">
+   <CONTENT>
+    <CONDITION>
+     <EXPRESSION>
+      <VARIABLE TYPE="STRING" ID="{b9e2d86f-f275-48da-b631-477ef3598f4d}" NAME="lcd_data"/>
+      <OP>=</OP>
+      <VARIABLE TYPE="STRING" ID="{91d7d8d4-6be2-4d32-9d71-ce5c1d5c1f3b}" NAME="tag_1"/>
+     </EXPRESSION>
+     <OP>||</OP>
+     <EXPRESSION>
+      <VARIABLE TYPE="STRING" ID="{b9e2d86f-f275-48da-b631-477ef3598f4d}" NAME="lcd_data"/>
+      <OP>=</OP>
+      <VARIABLE TYPE="STRING" ID="{871e2a41-7a9c-4073-ba19-09c9bb7967b3}" NAME="tag_2"/>
+     </EXPRESSION>
+     <OP>||</OP>
+     <EXPRESSION>
+      <VARIABLE TYPE="STRING" ID="{b9e2d86f-f275-48da-b631-477ef3598f4d}" NAME="lcd_data"/>
+      <OP>=</OP>
+      <VARIABLE TYPE="STRING" ID="{2b846e94-1267-4a2f-8a1b-2ae8e26826c9}" NAME="tag_3"/>
+     </EXPRESSION>
+    </CONDITION>
+   </CONTENT>
+   <NODE SIDE="3" NAME="INPUT1"/>
+   <NODE SIDE="1" NAME="NO"/>
+   <NODE SIDE="4" NAME="YES"/>
+   <NODE SIDE="2" NAME=""/>
+  </BLOCK>
+  <BLOCK X="-198" Y="294" TYPE="ASSIGN" ID="{2de37a84-483c-49b5-8b91-4b07abb67587}">
+   <CONTENT>
+    <ASSIGN>
+     <VARIABLE TYPE="INTEGER" ID="{7ac82662-98a3-47ea-a30b-0e70381d1643}" NAME="count"/>
+     <VALUE>
+      <VARIABLE TYPE="INTEGER" ID="{7ac82662-98a3-47ea-a30b-0e70381d1643}" NAME="count"/>
+      <OP>+</OP>
+      <NUMBER>1</NUMBER>
+     </VALUE>
+    </ASSIGN>
+   </CONTENT>
+   <NODE SIDE="3" NAME=""/>
+   <NODE SIDE="1" NAME="OUTPUT"/>
+   <NODE SIDE="2" NAME="INPUT1"/>
+   <NODE SIDE="4" NAME=""/>
+  </BLOCK>
+  <BLOCK X="0" Y="-202" TYPE="ASSIGN" ID="{019bdba8-7c70-49a3-9d16-510ca798dcd0}">
+   <CONTENT>
+    <ASSIGN>
+     <VARIABLE TYPE="STRING" ID="{91d7d8d4-6be2-4d32-9d71-ce5c1d5c1f3b}" NAME="tag_1"/>
+     <VALUE>
+      <STRING>123456789</STRING>
+     </VALUE>
+     <VARIABLE TYPE="STRING" ID="{871e2a41-7a9c-4073-ba19-09c9bb7967b3}" NAME="tag_2"/>
+     <VALUE>
+      <STRING>987654321</STRING>
+     </VALUE>
+     <VARIABLE TYPE="STRING" ID="{2b846e94-1267-4a2f-8a1b-2ae8e26826c9}" NAME="tag_3"/>
+     <VALUE>
+      <STRING>24810113</STRING>
+     </VALUE>
+    </ASSIGN>
+   </CONTENT>
+   <NODE SIDE="3" NAME="INPUT1"/>
+   <NODE SIDE="1" NAME=""/>
+   <NODE SIDE="2" NAME=""/>
+   <NODE SIDE="4" NAME="OUTPUT"/>
+  </BLOCK>
+  <BLOCK X="-282" Y="-274" TYPE="DECISION" ID="{efc2cc65-2fce-49f3-99ff-f94abd76ea3f}">
+   <CONTENT>
+    <CONDITION>
+     <SENSOR TYPE="BOOLEAN" ID="{51af512f-0ee9-41c7-a16f-eba5715e6248}" NAME="COUNT"/>
+    </CONDITION>
+   </CONTENT>
+   <NODE SIDE="3" NAME="INPUT1"/>
+   <NODE SIDE="1" NAME=""/>
+   <NODE SIDE="4" NAME="YES"/>
+   <NODE SIDE="2" NAME="NO"/>
+  </BLOCK>
+  <BLOCK X="-282" Y="168" TYPE="IO" ID="{daeb5574-5e02-43fa-979f-71bbaff8c664}">
+   <CONTENT>
+    <CALL>
+     <PERIPHERAL ENABLED="1" BUILTIN="0" TYPE="I2c controlled LDC" ID="{f9834fa6-2660-4c1c-b153-069411d17896}" NAME="LCD1"/>
+     <METHOD DESC="Prints data along UART" NAME="print"/>
+     <INPUT BYLIST="1">
+      <VARIABLE TYPE="INTEGER" ID="{7ac82662-98a3-47ea-a30b-0e70381d1643}" NAME="count"/>
+     </INPUT>
+    </CALL>
+   </CONTENT>
+   <NODE SIDE="3" NAME="INPUT1"/>
+   <NODE SIDE="1" NAME=""/>
+   <NODE SIDE="2" NAME=""/>
+   <NODE SIDE="4" NAME="OUTPUT"/>
+  </BLOCK>
+  <BLOCK X="407" Y="-274" TYPE="DECISION" ID="{f66850c8-5bf4-47de-ba68-36fdfc8361ff}">
+   <CONTENT>
+    <CONDITION>
+     <SENSOR TYPE="BOOLEAN" ID="{1ebe3425-12e9-4889-bc60-a4de8bee128e}" NAME="SCAN"/>
+    </CONDITION>
+   </CONTENT>
+   <NODE SIDE="3" NAME=""/>
+   <NODE SIDE="1" NAME="INPUT1"/>
+   <NODE SIDE="4" NAME="YES"/>
+   <NODE SIDE="2" NAME="NO"/>
+  </BLOCK>
+  <BLOCK X="407" Y="-168" TYPE="IO" ID="{462d64f0-92c1-4c1a-b635-16ae4440adbf}">
+   <CONTENT>
+    <CALL>
+     <PERIPHERAL ENABLED="1" BUILTIN="0" TYPE="I2c controlled LDC" ID="{f9834fa6-2660-4c1c-b153-069411d17896}" NAME="LCD1"/>
+     <METHOD DESC="Prints data along UART" NAME="print"/>
+     <INPUT BYLIST="1">
+      <STRING>SCAN CARD</STRING>
+     </INPUT>
+    </CALL>
+   </CONTENT>
+   <NODE SIDE="3" NAME="INPUT1"/>
+   <NODE SIDE="1" NAME=""/>
+   <NODE SIDE="2" NAME=""/>
+   <NODE SIDE="4" NAME="OUTPUT"/>
+  </BLOCK>
+  <BLOCK X="407" Y="178" TYPE="IO" ID="{c3388d11-de34-4699-9c9c-e8b7cbe8e0e6}">
+   <CONTENT>
+    <CALL>
+     <PERIPHERAL ENABLED="1" BUILTIN="0" TYPE="I2c controlled LDC" ID="{f9834fa6-2660-4c1c-b153-069411d17896}" NAME="LCD1"/>
+     <METHOD DESC="Prints data along UART" NAME="print"/>
+     <INPUT BYLIST="1">
+      <STRING>CHECK DONE</STRING>
+     </INPUT>
+    </CALL>
+   </CONTENT>
+   <NODE SIDE="3" NAME="INPUT1"/>
+   <NODE SIDE="1" NAME=""/>
+   <NODE SIDE="2" NAME=""/>
+   <NODE SIDE="4" NAME="OUTPUT"/>
+  </BLOCK>
+  <BLOCK X="54" Y="54" TYPE="IO" ID="{9fd1a2d8-72ab-4666-8c4b-ea4c920403d8}">
+   <CONTENT>
+    <CALL>
+     <PERIPHERAL ENABLED="1" BUILTIN="0" TYPE="I2c controlled LDC" ID="{f9834fa6-2660-4c1c-b153-069411d17896}" NAME="LCD1"/>
+     <METHOD DESC="Prints data along UART" NAME="print"/>
+     <INPUT BYLIST="1">
+      <STRING>invalide card</STRING>
+     </INPUT>
+    </CALL>
+   </CONTENT>
+   <NODE SIDE="3" NAME=""/>
+   <NODE SIDE="1" NAME="OUTPUT"/>
+   <NODE SIDE="2" NAME="INPUT1"/>
+   <NODE SIDE="4" NAME=""/>
+  </BLOCK>
+  <BLOCK X="407" Y="-222" TYPE="IO" ID="{8ba5ee12-7764-4c44-a970-a1d76e70b07f}">
+   <CONTENT>
+    <CALL>
+     <PERIPHERAL TYPE="I2c controlled LDC" ID="{f9834fa6-2660-4c1c-b153-069411d17896}" NAME="LCD1"/>
+     <METHOD DESC="Set the address of the hat." NAME="clear"/>
+    </CALL>
+   </CONTENT>
+   <NODE SIDE="3" NAME="INPUT1"/>
+   <NODE SIDE="1" NAME=""/>
+   <NODE SIDE="2" NAME=""/>
+   <NODE SIDE="4" NAME="OUTPUT"/>
+  </BLOCK>
+  <BLOCK X="-282" Y="-30" TYPE="IO" ID="{66471a41-7fec-4fe0-83a8-615657319d28}">
+   <CONTENT>
+    <CALL>
+     <PERIPHERAL TYPE="I2c controlled LDC" ID="{f9834fa6-2660-4c1c-b153-069411d17896}" NAME="LCD1"/>
+     <METHOD DESC="Set the address of the hat." NAME="clear"/>
+    </CALL>
+   </CONTENT>
+   <NODE SIDE="3" NAME="INPUT1"/>
+   <NODE SIDE="1" NAME=""/>
+   <NODE SIDE="2" NAME=""/>
+   <NODE SIDE="4" NAME="OUTPUT"/>
+  </BLOCK>
+  <BLOCK X="-282" Y="-302" TYPE="JUNCTION" ID="{5bfcf266-332b-4d0e-b3e2-181cefeeca7b}">
+   <CONTENT/>
+   <NODE SIDE="0" NAME="INPUT1"/>
+   <NODE SIDE="0" NAME="OUTPUT"/>
+   <NODE SIDE="0" NAME="INPUT2"/>
+   <NODE SIDE="0" NAME="INPUT3"/>
+  </BLOCK>
+  <BLOCK X="-282" Y="294" TYPE="JUNCTION" ID="{a8f51c02-d5ac-4010-b265-6b1e56e56cc0}">
+   <CONTENT/>
+   <NODE SIDE="0" NAME="INPUT1"/>
+   <NODE SIDE="0" NAME="OUTPUT"/>
+   <NODE SIDE="0" NAME="INPUT2"/>
+   <NODE SIDE="0" NAME=""/>
+  </BLOCK>
+  <BLOCK X="-282" Y="-144" TYPE="IO" ID="{07c618ad-55de-4884-ba7d-87e44c279f0c}">
+   <CONTENT>
+    <CALL>
+     <PERIPHERAL ENABLED="1" BUILTIN="0" TYPE="I2c controlled LDC" ID="{f9834fa6-2660-4c1c-b153-069411d17896}" NAME="LCD1"/>
+     <METHOD DESC="Prints data along UART" NAME="print"/>
+     <INPUT BYLIST="1">
+      <STRING>CHECK ATTEDENT</STRING>
+     </INPUT>
+    </CALL>
+   </CONTENT>
+   <NODE SIDE="3" NAME="INPUT1"/>
+   <NODE SIDE="1" NAME=""/>
+   <NODE SIDE="2" NAME=""/>
+   <NODE SIDE="4" NAME="OUTPUT"/>
+  </BLOCK>
+  <BLOCK X="-282" Y="-204" TYPE="IO" ID="{12ddf5bf-20ab-4df4-91f6-fef134726d70}">
+   <CONTENT>
+    <CALL>
+     <PERIPHERAL TYPE="I2c controlled LDC" ID="{f9834fa6-2660-4c1c-b153-069411d17896}" NAME="LCD1"/>
+     <METHOD DESC="Set the address of the hat." NAME="clear"/>
+    </CALL>
+   </CONTENT>
+   <NODE SIDE="3" NAME="INPUT1"/>
+   <NODE SIDE="1" NAME=""/>
+   <NODE SIDE="2" NAME=""/>
+   <NODE SIDE="4" NAME="OUTPUT"/>
+  </BLOCK>
+  <BLOCK X="-282" Y="-84" TYPE="DELAY" ID="{221eee8f-f8c7-4eac-a1c4-30cf7e016731}">
+   <CONTENT>
+    <VALUE UNITS="ms">
+     <NUMBER>1000</NUMBER>
+    </VALUE>
+   </CONTENT>
+   <NODE SIDE="3" NAME="INPUT1"/>
+   <NODE SIDE="4" NAME="OUTPUT"/>
+   <NODE SIDE="1" NAME=""/>
+   <NODE SIDE="2" NAME=""/>
+  </BLOCK>
+  <BLOCK X="0" Y="-144" TYPE="IO" ID="{d9abffea-d455-48ab-b9ea-583fae11287e}">
+   <CONTENT>
+    <CALL>
+     <PERIPHERAL ENABLED="1" BUILTIN="0" TYPE="I2c controlled LDC" ID="{f9834fa6-2660-4c1c-b153-069411d17896}" NAME="LCD1"/>
+     <METHOD DESC="Prints data along UART" NAME="print"/>
+     <INPUT BYLIST="1">
+      <STRING>RFID SIMULATION</STRING>
+     </INPUT>
+    </CALL>
+   </CONTENT>
+   <NODE SIDE="3" NAME="INPUT1"/>
+   <NODE SIDE="1" NAME=""/>
+   <NODE SIDE="2" NAME=""/>
+   <NODE SIDE="4" NAME="OUTPUT"/>
+  </BLOCK>
+  <BLOCK X="0" Y="-98" TYPE="DELAY" ID="{f6d390ac-68f2-4032-89b9-6dd3bbdc407d}">
+   <CONTENT>
+    <VALUE UNITS="s">
+     <NUMBER>5</NUMBER>
+    </VALUE>
+   </CONTENT>
+   <NODE SIDE="3" NAME="INPUT1"/>
+   <NODE SIDE="4" NAME="OUTPUT"/>
+   <NODE SIDE="1" NAME=""/>
+   <NODE SIDE="2" NAME=""/>
+  </BLOCK>
+  <BLOCK X="-420" Y="-162" TYPE="IO" ID="{28107297-590f-4cbc-993b-f84a080f2101}">
+   <CONTENT>
+    <CALL>
+     <PERIPHERAL TYPE="I2c controlled LDC" ID="{f9834fa6-2660-4c1c-b153-069411d17896}" NAME="LCD1"/>
+     <METHOD DESC="Set the address of the hat." NAME="clear"/>
+    </CALL>
+   </CONTENT>
+   <NODE SIDE="3" NAME="OUTPUT"/>
+   <NODE SIDE="1" NAME=""/>
+   <NODE SIDE="2" NAME=""/>
+   <NODE SIDE="4" NAME="INPUT1"/>
+  </BLOCK>
+  <BLOCK X="407" Y="-122" TYPE="DELAY" ID="{788c2448-8fad-458b-95bf-36ac1be6db22}">
+   <CONTENT>
+    <VALUE UNITS="ms">
+     <NUMBER>1000</NUMBER>
+    </VALUE>
+   </CONTENT>
+   <NODE SIDE="3" NAME="INPUT1"/>
+   <NODE SIDE="4" NAME="OUTPUT"/>
+   <NODE SIDE="1" NAME=""/>
+   <NODE SIDE="2" NAME=""/>
+  </BLOCK>
+  <BLOCK X="407" Y="-82" TYPE="IO" ID="{e44e0315-312d-4def-8aae-fbb287dc3387}">
+   <CONTENT>
+    <CALL>
+     <PERIPHERAL ENABLED="1" BUILTIN="0" TYPE="I2c controlled LDC" ID="{f9834fa6-2660-4c1c-b153-069411d17896}" NAME="LCD1"/>
+     <METHOD DESC="Set the address of the hat." NAME="clear"/>
+    </CALL>
+   </CONTENT>
+   <NODE SIDE="3" NAME="INPUT1"/>
+   <NODE SIDE="1" NAME=""/>
+   <NODE SIDE="2" NAME=""/>
+   <NODE SIDE="4" NAME="OUTPUT"/>
+  </BLOCK>
+  <BLOCK X="407" Y="124" TYPE="IO" ID="{c7294680-a7ea-4190-99d9-f46b418e5b30}">
+   <CONTENT>
+    <CALL>
+     <PERIPHERAL ENABLED="1" BUILTIN="0" TYPE="RPi LED" ID="{c6f378bd-78f5-43c6-90c5-680df22a9269}" NAME="LED1"/>
+     <METHOD DESC="Turn the LED on." NAME="on"/>
+    </CALL>
+   </CONTENT>
+   <NODE SIDE="3" NAME="INPUT1"/>
+   <NODE SIDE="1" NAME=""/>
+   <NODE SIDE="2" NAME=""/>
+   <NODE SIDE="4" NAME="OUTPUT"/>
+  </BLOCK>
+  <BLOCK X="407" Y="224" TYPE="DELAY" ID="{e5162ea7-7432-4220-becb-ffed5f014d11}">
+   <CONTENT>
+    <VALUE UNITS="s">
+     <NUMBER>3</NUMBER>
+    </VALUE>
+   </CONTENT>
+   <NODE SIDE="3" NAME="INPUT1"/>
+   <NODE SIDE="4" NAME="OUTPUT"/>
+   <NODE SIDE="1" NAME=""/>
+   <NODE SIDE="2" NAME=""/>
+  </BLOCK>
+  <BLOCK X="407" Y="264" TYPE="IO" ID="{5ae1a503-3605-4283-a06e-162c34ef6021}">
+   <CONTENT>
+    <CALL>
+     <PERIPHERAL ENABLED="1" BUILTIN="0" TYPE="RPi LED" ID="{c6f378bd-78f5-43c6-90c5-680df22a9269}" NAME="LED1"/>
+     <METHOD DESC="Turn the LED off." NAME="off"/>
+    </CALL>
+   </CONTENT>
+   <NODE SIDE="3" NAME="INPUT1"/>
+   <NODE SIDE="1" NAME=""/>
+   <NODE SIDE="2" NAME=""/>
+   <NODE SIDE="4" NAME="OUTPUT"/>
+  </BLOCK>
+  <BLOCK X="330" Y="294" TYPE="IO" ID="{d19e0166-b671-4210-b56c-dba0b1cc0a1b}">
+   <CONTENT>
+    <CALL>
+     <PERIPHERAL ENABLED="1" BUILTIN="0" TYPE="I2c controlled LDC" ID="{f9834fa6-2660-4c1c-b153-069411d17896}" NAME="LCD1"/>
+     <METHOD DESC="Set the address of the hat." NAME="clear"/>
+    </CALL>
+   </CONTENT>
+   <NODE SIDE="3" NAME=""/>
+   <NODE SIDE="1" NAME="OUTPUT"/>
+   <NODE SIDE="2" NAME="INPUT1"/>
+   <NODE SIDE="4" NAME=""/>
+  </BLOCK>
+  <BLOCK X="-282" Y="96" TYPE="IO" ID="{c1d43641-802a-47e8-97a7-48bf049795ba}">
+   <CONTENT>
+    <CALL>
+     <PERIPHERAL ENABLED="1" BUILTIN="0" TYPE="I2c controlled LDC" ID="{f9834fa6-2660-4c1c-b153-069411d17896}" NAME="LCD1"/>
+     <METHOD DESC="Prints data along UART" NAME="print"/>
+     <INPUT BYLIST="1">
+      <STRING>TOTAL IS: </STRING>
+     </INPUT>
+    </CALL>
+   </CONTENT>
+   <NODE SIDE="3" NAME="INPUT1"/>
+   <NODE SIDE="1" NAME=""/>
+   <NODE SIDE="2" NAME=""/>
+   <NODE SIDE="4" NAME="OUTPUT"/>
+  </BLOCK>
+  <BLOCK X="-102" Y="54" TYPE="IO" ID="{9bffa643-d709-4751-ba97-83170d169762}">
+   <CONTENT>
+    <CALL>
+     <PERIPHERAL ENABLED="1" BUILTIN="0" TYPE="RPi Buzzer" ID="{212f9f29-d43d-4e1c-ac94-1236e8ac0511}" NAME="BUZ1"/>
+     <METHOD DESC="Turn Buzzer on." NAME="on"/>
+    </CALL>
+   </CONTENT>
+   <NODE SIDE="3" NAME=""/>
+   <NODE SIDE="1" NAME="OUTPUT"/>
+   <NODE SIDE="2" NAME="INPUT1"/>
+   <NODE SIDE="4" NAME=""/>
+  </BLOCK>
+  <BLOCK X="-420" Y="24" TYPE="IO" ID="{8c7a8029-45e3-4ae9-8706-719079ac43e6}">
+   <CONTENT>
+    <CALL>
+     <PERIPHERAL ENABLED="1" BUILTIN="0" TYPE="RPi LED" ID="{3d134eb7-0213-42dc-84db-c9a7b15c24c4}" NAME="LED2"/>
+     <METHOD DESC="Turn the LED on." NAME="on"/>
+    </CALL>
+   </CONTENT>
+   <NODE SIDE="3" NAME="OUTPUT"/>
+   <NODE SIDE="1" NAME=""/>
+   <NODE SIDE="2" NAME=""/>
+   <NODE SIDE="4" NAME="INPUT1"/>
+  </BLOCK>
+  <BLOCK X="-420" Y="-16" TYPE="DELAY" ID="{0d578c6b-7e6e-4112-b84f-14b66fc14c6d}">
+   <CONTENT>
+    <VALUE UNITS="s">
+     <NUMBER>5</NUMBER>
+    </VALUE>
+   </CONTENT>
+   <NODE SIDE="3" NAME="OUTPUT"/>
+   <NODE SIDE="4" NAME="INPUT1"/>
+   <NODE SIDE="1" NAME=""/>
+   <NODE SIDE="2" NAME=""/>
+  </BLOCK>
+  <BLOCK X="-420" Y="-56" TYPE="IO" ID="{3d4928dd-4879-4058-8b35-496c3fe824c0}">
+   <CONTENT>
+    <CALL>
+     <PERIPHERAL ENABLED="1" BUILTIN="0" TYPE="RPi LED" ID="{3d134eb7-0213-42dc-84db-c9a7b15c24c4}" NAME="LED2"/>
+     <METHOD DESC="Turn the LED off." NAME="off"/>
+    </CALL>
+   </CONTENT>
+   <NODE SIDE="3" NAME="OUTPUT"/>
+   <NODE SIDE="1" NAME=""/>
+   <NODE SIDE="2" NAME=""/>
+   <NODE SIDE="4" NAME="INPUT1"/>
+  </BLOCK>
+  <BLOCK X="-420" Y="-104" TYPE="IO" ID="{ebaa6196-4125-4c29-a9b2-dfc619050bfb}">
+   <CONTENT>
+    <CALL>
+     <PERIPHERAL ENABLED="1" BUILTIN="0" TYPE="RPi Buzzer" ID="{212f9f29-d43d-4e1c-ac94-1236e8ac0511}" NAME="BUZ1"/>
+     <METHOD DESC="Turn Buzzer off." NAME="off"/>
+    </CALL>
+   </CONTENT>
+   <NODE SIDE="3" NAME="OUTPUT"/>
+   <NODE SIDE="1" NAME=""/>
+   <NODE SIDE="2" NAME=""/>
+   <NODE SIDE="4" NAME="INPUT1"/>
+  </BLOCK>
+  <BLOCK X="198" Y="294" TYPE="IO" ID="{2068c205-41f8-4f87-af48-95539201d619}">
+   <CONTENT>
+    <CALL>
+     <PERIPHERAL ENABLED="1" BUILTIN="0" TYPE="DC and Stepper Motor" ID="{06ded3a3-c590-4122-80fe-99f63d64a99a}" NAME="U2"/>
+     <METHOD DESC="Control over DC motors." NAME="setDcMotor"/>
+     <INPUT NAME="Motor Number">
+      <NUMBER>1</NUMBER>
+     </INPUT>
+     <INPUT NAME="Direction">
+      <CONSTANT NAME="FORWARD" VALUE="2"/>
+     </INPUT>
+     <INPUT NAME="Speed">
+      <NUMBER>200</NUMBER>
+     </INPUT>
+    </CALL>
+   </CONTENT>
+   <NODE SIDE="3" NAME=""/>
+   <NODE SIDE="1" NAME="OUTPUT"/>
+   <NODE SIDE="2" NAME="INPUT1"/>
+   <NODE SIDE="4" NAME=""/>
+  </BLOCK>
+  <BLOCK X="-66" Y="294" TYPE="IO" ID="{d679eb3c-0c5b-4fca-8812-2bc6061ebf53}">
+   <CONTENT>
+    <CALL>
+     <PERIPHERAL ENABLED="1" BUILTIN="0" TYPE="DC and Stepper Motor" ID="{06ded3a3-c590-4122-80fe-99f63d64a99a}" NAME="U2"/>
+     <METHOD DESC="Control over DC motors." NAME="setDcMotor"/>
+     <INPUT NAME="Motor Number">
+      <NUMBER>1</NUMBER>
+     </INPUT>
+     <INPUT NAME="Direction">
+      <CONSTANT NAME="BACKWARD" VALUE="0"/>
+     </INPUT>
+     <INPUT NAME="Speed">
+      <NUMBER>0</NUMBER>
+     </INPUT>
+    </CALL>
+   </CONTENT>
+   <NODE SIDE="3" NAME=""/>
+   <NODE SIDE="1" NAME="OUTPUT"/>
+   <NODE SIDE="2" NAME="INPUT1"/>
+   <NODE SIDE="4" NAME=""/>
+  </BLOCK>
+  <BLOCK X="66" Y="294" TYPE="DELAY" ID="{1e714b04-ff3d-4fd9-a1de-883dc8a5f13c}">
+   <CONTENT>
+    <VALUE UNITS="s">
+     <NUMBER>3</NUMBER>
+    </VALUE>
+   </CONTENT>
+   <NODE SIDE="3" NAME=""/>
+   <NODE SIDE="4" NAME=""/>
+   <NODE SIDE="1" NAME="OUTPUT"/>
+   <NODE SIDE="2" NAME="INPUT1"/>
+  </BLOCK>
+  <BLOCK X="210" Y="54" TYPE="IO" ID="{b15d7e55-5f05-4d27-9aed-e045a64a3f3a}">
+   <CONTENT>
+    <CALL>
+     <PERIPHERAL ENABLED="1" BUILTIN="0" TYPE="DC and Stepper Motor" ID="{06ded3a3-c590-4122-80fe-99f63d64a99a}" NAME="U2"/>
+     <METHOD DESC="Control over DC motors." NAME="setDcMotor"/>
+     <INPUT NAME="Motor Number">
+      <NUMBER>2</NUMBER>
+     </INPUT>
+     <INPUT NAME="Direction">
+      <CONSTANT NAME="FORWARD" VALUE="2"/>
+     </INPUT>
+     <INPUT NAME="Speed">
+      <NUMBER>200</NUMBER>
+     </INPUT>
+    </CALL>
+   </CONTENT>
+   <NODE SIDE="3" NAME=""/>
+   <NODE SIDE="1" NAME="OUTPUT"/>
+   <NODE SIDE="2" NAME="INPUT1"/>
+   <NODE SIDE="4" NAME=""/>
+  </BLOCK>
+  <BLOCK X="-420" Y="-240" TYPE="IO" ID="{edb3bf0b-3c76-4895-ad32-2aac0a4d8481}">
+   <CONTENT>
+    <CALL>
+     <PERIPHERAL ENABLED="1" BUILTIN="0" TYPE="DC and Stepper Motor" ID="{06ded3a3-c590-4122-80fe-99f63d64a99a}" NAME="U2"/>
+     <METHOD DESC="Control over DC motors." NAME="setDcMotor"/>
+     <INPUT NAME="Motor Number">
+      <NUMBER>2</NUMBER>
+     </INPUT>
+     <INPUT NAME="Direction">
+      <CONSTANT NAME="BACKWARD" VALUE="0"/>
+     </INPUT>
+     <INPUT NAME="Speed">
+      <NUMBER>0</NUMBER>
+     </INPUT>
+    </CALL>
+   </CONTENT>
+   <NODE SIDE="3" NAME="OUTPUT"/>
+   <NODE SIDE="1" NAME=""/>
+   <NODE SIDE="2" NAME=""/>
+   <NODE SIDE="4" NAME="INPUT1"/>
+  </BLOCK>
+  <CONNECTION TARGET="{019bdba8-7c70-49a3-9d16-510ca798dcd0}" SOURCENODE="OUTPUT" TYPE="CONNECTION" ID="{43f74417-40e1-4109-b0fe-d2cbe052f29e}" SOURCE="{44a4f7d9-3535-4540-bfa8-eb052128867f}" TARGETNODE="INPUT1"/>
+  <CONNECTION TARGET="{5bfcf266-332b-4d0e-b3e2-181cefeeca7b}" SOURCENODE="OUTPUT" TYPE="CONNECTION" ID="{8df67650-7603-4e93-8f41-55e2467ca975}" SOURCE="{3d665d8e-9857-4e66-a8f3-5127e0684335}" TARGETNODE="INPUT1"/>
+  <CONNECTION TARGET="{8db11c5e-fa02-4965-86d0-ac32a2deb991}" SOURCENODE="OUTPUT" TYPE="CONNECTION" ID="{723c00a3-b9da-4ca8-81de-e10a0b36fe16}" SOURCE="{fa799ae1-6624-4222-b409-d36ae31123d3}" TARGETNODE="INPUT1"/>
+  <CONNECTION TARGET="{c7294680-a7ea-4190-99d9-f46b418e5b30}" SOURCENODE="YES" TYPE="CONNECTION" ID="{d3cd95b9-500f-4fd1-88d0-824f5fdad6b0}" SOURCE="{8db11c5e-fa02-4965-86d0-ac32a2deb991}" TARGETNODE="INPUT1"/>
+  <CONNECTION TARGET="{12ddf5bf-20ab-4df4-91f6-fef134726d70}" SOURCENODE="YES" TYPE="CONNECTION" ID="{b2ed44a3-f540-4799-8bf8-94ff0187f2e7}" SOURCE="{efc2cc65-2fce-49f3-99ff-f94abd76ea3f}" TARGETNODE="INPUT1"/>
+  <CONNECTION TARGET="{f66850c8-5bf4-47de-ba68-36fdfc8361ff}" SOURCENODE="NO" TYPE="CONNECTION" ID="{34a19184-1831-44dc-b68e-cf8062501a89}" SOURCE="{efc2cc65-2fce-49f3-99ff-f94abd76ea3f}" TARGETNODE="INPUT1"/>
+  <CONNECTION TARGET="{8ba5ee12-7764-4c44-a970-a1d76e70b07f}" SOURCENODE="YES" TYPE="CONNECTION" ID="{2047d436-8e4b-403d-8f57-fd71a0dc9ec5}" SOURCE="{f66850c8-5bf4-47de-ba68-36fdfc8361ff}" TARGETNODE="INPUT1"/>
+  <CONNECTION TARGET="{d9abffea-d455-48ab-b9ea-583fae11287e}" SOURCENODE="OUTPUT" TYPE="CONNECTION" ID="{393e70fc-f988-4a4d-9971-951dee4d4dab}" SOURCE="{019bdba8-7c70-49a3-9d16-510ca798dcd0}" TARGETNODE="INPUT1"/>
+  <CONNECTION TARGET="{e5162ea7-7432-4220-becb-ffed5f014d11}" SOURCENODE="OUTPUT" TYPE="CONNECTION" ID="{c9aa66ae-3108-4ea7-9a3d-4b73bfed65be}" SOURCE="{c3388d11-de34-4699-9c9c-e8b7cbe8e0e6}" TARGETNODE="INPUT1"/>
+  <CONNECTION TARGET="{462d64f0-92c1-4c1a-b635-16ae4440adbf}" SOURCENODE="OUTPUT" TYPE="CONNECTION" ID="{99cfd225-5581-4f23-8704-199f4249c49e}" SOURCE="{8ba5ee12-7764-4c44-a970-a1d76e70b07f}" TARGETNODE="INPUT1"/>
+  <CONNECTION TARGET="{c1d43641-802a-47e8-97a7-48bf049795ba}" SOURCENODE="OUTPUT" TYPE="CONNECTION" ID="{40e582a9-9bdb-4c39-a58e-fc909af9e554}" SOURCE="{66471a41-7fec-4fe0-83a8-615657319d28}" TARGETNODE="INPUT1"/>
+  <CONNECTION TARGET="{efc2cc65-2fce-49f3-99ff-f94abd76ea3f}" SOURCENODE="OUTPUT" TYPE="CONNECTION" ID="{6c4c56da-7b45-4294-b1a9-881a6029f53e}" SOURCE="{5bfcf266-332b-4d0e-b3e2-181cefeeca7b}" TARGETNODE="INPUT1"/>
+  <CONNECTION TARGET="{5bfcf266-332b-4d0e-b3e2-181cefeeca7b}" SOURCENODE="NO" TYPE="CONNECTION" ID="{745b64f3-a11d-462f-ad08-1958089a28da}" SOURCE="{f66850c8-5bf4-47de-ba68-36fdfc8361ff}" TARGETNODE="INPUT2">
+   <POINT X="487" Y="-274"/>
+   <POINT X="487" Y="-302"/>
+  </CONNECTION>
+  <CONNECTION TARGET="{788c2448-8fad-458b-95bf-36ac1be6db22}" SOURCENODE="OUTPUT" TYPE="CONNECTION" ID="{059ac29a-fc14-4573-ba09-a363e9a8c887}" SOURCE="{462d64f0-92c1-4c1a-b635-16ae4440adbf}" TARGETNODE="INPUT1"/>
+  <CONNECTION TARGET="{cbd6669c-bc52-4d8a-93be-7698ac08b496}" SOURCENODE="OUTPUT" TYPE="CONNECTION" ID="{b3fab3bb-b7db-41f5-ae12-885102f142e6}" SOURCE="{a8f51c02-d5ac-4010-b265-6b1e56e56cc0}" TARGETNODE="INPUT">
+   <POINT X="-441" Y="294"/>
+  </CONNECTION>
+  <CONNECTION TARGET="{b15d7e55-5f05-4d27-9aed-e045a64a3f3a}" SOURCENODE="NO" TYPE="CONNECTION" ID="{ee6318d7-77fe-4b5b-a63c-7631f0f5d571}" SOURCE="{8db11c5e-fa02-4965-86d0-ac32a2deb991}" TARGETNODE="INPUT1"/>
+  <CONNECTION TARGET="{221eee8f-f8c7-4eac-a1c4-30cf7e016731}" SOURCENODE="OUTPUT" TYPE="CONNECTION" ID="{38c3f8ca-19c6-4a76-a334-c0d80817d9a5}" SOURCE="{07c618ad-55de-4884-ba7d-87e44c279f0c}" TARGETNODE="INPUT1"/>
+  <CONNECTION TARGET="{07c618ad-55de-4884-ba7d-87e44c279f0c}" SOURCENODE="OUTPUT" TYPE="CONNECTION" ID="{48b4e648-10f9-4e68-a44a-563b26025bcc}" SOURCE="{12ddf5bf-20ab-4df4-91f6-fef134726d70}" TARGETNODE="INPUT1"/>
+  <CONNECTION TARGET="{66471a41-7fec-4fe0-83a8-615657319d28}" SOURCENODE="OUTPUT" TYPE="CONNECTION" ID="{6674bc38-200f-41a7-b0f3-457557614251}" SOURCE="{221eee8f-f8c7-4eac-a1c4-30cf7e016731}" TARGETNODE="INPUT1"/>
+  <CONNECTION TARGET="{f6d390ac-68f2-4032-89b9-6dd3bbdc407d}" SOURCENODE="OUTPUT" TYPE="CONNECTION" ID="{f43c7e67-c1ed-4058-aa4a-5a57c0c540c5}" SOURCE="{d9abffea-d455-48ab-b9ea-583fae11287e}" TARGETNODE="INPUT1"/>
+  <CONNECTION TARGET="{f45b41da-9e19-4d6a-9abd-f38035d74e91}" SOURCENODE="OUTPUT" TYPE="CONNECTION" ID="{1689ce0e-3112-4487-9237-05875d56dea8}" SOURCE="{f6d390ac-68f2-4032-89b9-6dd3bbdc407d}" TARGETNODE="INPUT"/>
+  <CONNECTION TARGET="{edb3bf0b-3c76-4895-ad32-2aac0a4d8481}" SOURCENODE="OUTPUT" TYPE="CONNECTION" ID="{6315bfa4-4b04-44b0-8335-4061123e538f}" SOURCE="{28107297-590f-4cbc-993b-f84a080f2101}" TARGETNODE="INPUT1"/>
+  <CONNECTION TARGET="{e44e0315-312d-4def-8aae-fbb287dc3387}" SOURCENODE="OUTPUT" TYPE="CONNECTION" ID="{48313155-86ba-4f43-af15-a00f8ff28bbe}" SOURCE="{788c2448-8fad-458b-95bf-36ac1be6db22}" TARGETNODE="INPUT1"/>
+  <CONNECTION TARGET="{fa799ae1-6624-4222-b409-d36ae31123d3}" SOURCENODE="OUTPUT" TYPE="CONNECTION" ID="{37a193e3-4408-4a00-bc42-2cac20b7ad5f}" SOURCE="{e44e0315-312d-4def-8aae-fbb287dc3387}" TARGETNODE="INPUT1"/>
+  <CONNECTION TARGET="{c3388d11-de34-4699-9c9c-e8b7cbe8e0e6}" SOURCENODE="OUTPUT" TYPE="CONNECTION" ID="{7b0acfc8-a8f8-4ef9-89fe-2394d00548f4}" SOURCE="{c7294680-a7ea-4190-99d9-f46b418e5b30}" TARGETNODE="INPUT1"/>
+  <CONNECTION TARGET="{5ae1a503-3605-4283-a06e-162c34ef6021}" SOURCENODE="OUTPUT" TYPE="CONNECTION" ID="{ebcc4523-f6b2-42cb-8954-54191d3557fd}" SOURCE="{e5162ea7-7432-4220-becb-ffed5f014d11}" TARGETNODE="INPUT1"/>
+  <CONNECTION TARGET="{2068c205-41f8-4f87-af48-95539201d619}" SOURCENODE="OUTPUT" TYPE="CONNECTION" ID="{dd6439a3-85f4-4992-9117-6f0de564d01f}" SOURCE="{d19e0166-b671-4210-b56c-dba0b1cc0a1b}" TARGETNODE="INPUT1"/>
+  <CONNECTION TARGET="{a8f51c02-d5ac-4010-b265-6b1e56e56cc0}" SOURCENODE="OUTPUT" TYPE="CONNECTION" ID="{ea4dc475-cff3-4ff4-905e-52a21286f00b}" SOURCE="{2de37a84-483c-49b5-8b91-4b07abb67587}" TARGETNODE="INPUT2"/>
+  <CONNECTION TARGET="{daeb5574-5e02-43fa-979f-71bbaff8c664}" SOURCENODE="OUTPUT" TYPE="CONNECTION" ID="{e38046eb-51e5-48c1-b1b8-639201466b52}" SOURCE="{c1d43641-802a-47e8-97a7-48bf049795ba}" TARGETNODE="INPUT1"/>
+  <CONNECTION TARGET="{a8f51c02-d5ac-4010-b265-6b1e56e56cc0}" SOURCENODE="OUTPUT" TYPE="CONNECTION" ID="{b8dca386-b8a1-4e60-a104-96d6558a3034}" SOURCE="{daeb5574-5e02-43fa-979f-71bbaff8c664}" TARGETNODE="INPUT1"/>
+  <CONNECTION TARGET="{0d578c6b-7e6e-4112-b84f-14b66fc14c6d}" SOURCENODE="OUTPUT" TYPE="CONNECTION" ID="{db1b99bd-1b12-4361-9d6b-bf58355376ac}" SOURCE="{8c7a8029-45e3-4ae9-8706-719079ac43e6}" TARGETNODE="INPUT1"/>
+  <CONNECTION TARGET="{3d4928dd-4879-4058-8b35-496c3fe824c0}" SOURCENODE="OUTPUT" TYPE="CONNECTION" ID="{06320004-243a-4207-9791-be9f54f10a36}" SOURCE="{0d578c6b-7e6e-4112-b84f-14b66fc14c6d}" TARGETNODE="INPUT1"/>
+  <CONNECTION TARGET="{ebaa6196-4125-4c29-a9b2-dfc619050bfb}" SOURCENODE="OUTPUT" TYPE="CONNECTION" ID="{68fef590-e55d-46bc-a23d-b7568b0782a2}" SOURCE="{3d4928dd-4879-4058-8b35-496c3fe824c0}" TARGETNODE="INPUT1"/>
+  <CONNECTION TARGET="{28107297-590f-4cbc-993b-f84a080f2101}" SOURCENODE="OUTPUT" TYPE="CONNECTION" ID="{f25c774e-48d4-400e-9826-b0de8d590bec}" SOURCE="{ebaa6196-4125-4c29-a9b2-dfc619050bfb}" TARGETNODE="INPUT1"/>
+  <CONNECTION TARGET="{d19e0166-b671-4210-b56c-dba0b1cc0a1b}" SOURCENODE="OUTPUT" TYPE="CONNECTION" ID="{d4a6e5d2-baf0-4bad-8e9a-ec66ebca03df}" SOURCE="{5ae1a503-3605-4283-a06e-162c34ef6021}" TARGETNODE="INPUT1">
+   <POINT X="407" Y="294"/>
+  </CONNECTION>
+  <CONNECTION TARGET="{1e714b04-ff3d-4fd9-a1de-883dc8a5f13c}" SOURCENODE="OUTPUT" TYPE="CONNECTION" ID="{1b52ed91-1ca2-4165-9c6b-723ba0b2c2f0}" SOURCE="{2068c205-41f8-4f87-af48-95539201d619}" TARGETNODE="INPUT1"/>
+  <CONNECTION TARGET="{d679eb3c-0c5b-4fca-8812-2bc6061ebf53}" SOURCENODE="OUTPUT" TYPE="CONNECTION" ID="{0e811996-aaf3-4dd5-bee9-e26af9b2560f}" SOURCE="{1e714b04-ff3d-4fd9-a1de-883dc8a5f13c}" TARGETNODE="INPUT1"/>
+  <CONNECTION TARGET="{2de37a84-483c-49b5-8b91-4b07abb67587}" SOURCENODE="OUTPUT" TYPE="CONNECTION" ID="{69524e06-c8ca-4854-9ac7-f7792c28655c}" SOURCE="{d679eb3c-0c5b-4fca-8812-2bc6061ebf53}" TARGETNODE="INPUT1"/>
+  <CONNECTION TARGET="{9fd1a2d8-72ab-4666-8c4b-ea4c920403d8}" SOURCENODE="OUTPUT" TYPE="CONNECTION" ID="{e62f268b-172e-4c61-8633-fb3c63a054c8}" SOURCE="{b15d7e55-5f05-4d27-9aed-e045a64a3f3a}" TARGETNODE="INPUT1"/>
+  <CONNECTION TARGET="{9bffa643-d709-4751-ba97-83170d169762}" SOURCENODE="OUTPUT" TYPE="CONNECTION" ID="{969bb85f-8711-4a75-8874-c9f878e7d15b}" SOURCE="{9fd1a2d8-72ab-4666-8c4b-ea4c920403d8}" TARGETNODE="INPUT1"/>
+  <CONNECTION TARGET="{8c7a8029-45e3-4ae9-8706-719079ac43e6}" SOURCENODE="OUTPUT" TYPE="CONNECTION" ID="{9c9fe1f3-ae49-43aa-8664-93d18fcbd4dc}" SOURCE="{9bffa643-d709-4751-ba97-83170d169762}" TARGETNODE="INPUT1">
+   <POINT X="-420" Y="54"/>
+  </CONNECTION>
+  <CONNECTION TARGET="{5bfcf266-332b-4d0e-b3e2-181cefeeca7b}" SOURCENODE="OUTPUT" TYPE="CONNECTION" ID="{33e5adf0-ecf2-41bd-bf34-954ecc404a9f}" SOURCE="{edb3bf0b-3c76-4895-ad32-2aac0a4d8481}" TARGETNODE="INPUT3">
+   <POINT X="-420" Y="-302"/>
+  </CONNECTION>
+ </SHEET>
+ <HARDWARE CONTROLLER="RPI3">
+  <PERIPHERAL DESC="Raspberry Pi" VALID="1" ENABLED="1" BUILTIN="1" TYPE="CPU" ID="{b4b7744f-2e9e-4ccc-bb12-c9e69ab63dd9}" NAME="cpu" FILE="Raspberry Pi 3" EID="00000001" OPTIONAL="1">
+   <INTERFACE EXTERNAL="cpu" OBJECT="CPU"/>
+   <DRIVER HEADER="cpu">
+    <ENUMERATION NAME="PINMODE">
+     <CONSTANT NAME="INPUT" VALUE="cpu.INPUT"/>
+     <CONSTANT NAME="OUTPUT" VALUE="cpu.OUTPUT"/>
+    </ENUMERATION>
+    <ENUMERATION NAME="PULLUP">
+     <CONSTANT NAME="OFF" VALUE="cpu.PUD_OFF"/>
+     <CONSTANT NAME="DOWN" VALUE="cpu.PUD_DOWN"/>
+     <CONSTANT NAME="UP" VALUE="cpu.PUD_UP"/>
+    </ENUMERATION>
+    <ENUMERATION NAME="INTID">
+     <CONSTANT NAME="INT0" VALUE="0"/>
+     <CONSTANT NAME="INT1" VALUE="1"/>
+    </ENUMERATION>
+    <ENUMERATION NAME="INTMODE">
+     <CONSTANT NAME="LOW" VALUE="cpu.LOW"/>
+     <CONSTANT NAME="CHANGE" VALUE="cpu.CHANGE"/>
+     <CONSTANT NAME="FALLING" VALUE="cpu.FALLING"/>
+     <CONSTANT NAME="RISING" VALUE="cpu.RISING"/>
+    </ENUMERATION>
+    <METHOD DESC="Set pin to input or output" NAME="pinMode">
+     <PARAMETER DESC="Raspberry Pi digital I/O number" TYPE="INTEGER" NAME="pin"/>
+     <PARAMETER DESC="Input or output mode" TYPE="PINMODE" NAME="mode"/>
+    </METHOD>
+    <METHOD DESC="Set pin pwm frequency" NAME="pwmMode">
+     <PARAMETER DESC="Raspberry Pi digital I/O number" TYPE="INTEGER" NAME="pin"/>
+     <PARAMETER DESC="Frequency of signal" TYPE="INTEGER" NAME="frequency"/>
+    </METHOD>
+    <METHOD DESC="Set pin pullup to off, up or down" NAME="pullUpDnControl">
+     <PARAMETER DESC="Raspberry Pi digital I/O number" TYPE="INTEGER" NAME="pin"/>
+     <PARAMETER DESC="Off, up or down mode" TYPE="PULLUP" NAME="mode"/>
+    </METHOD>
+    <METHOD DESC="Set state of digital output pin" NAME="digitalWrite">
+     <PARAMETER DESC="Raspberry Pi digital I/O number" TYPE="INTEGER" NAME="pin"/>
+     <PARAMETER DESC="Pin state" TYPE="BOOLEAN" NAME="state"/>
+    </METHOD>
+    <METHOD DESC="Read state of digital pin" NAME="digitalRead">
+     <PARAMETER DESC="Raspberry Pi digital I/O number" TYPE="INTEGER" NAME="pin"/>
+     <RETURN DESC="Pin state" DEFAULT="state" TYPE="BOOLEAN" NAME="state"/>
+    </METHOD>
+    <METHOD DESC="Set state of pwm output pin" NAME="pwmWrite">
+     <PARAMETER DESC="Raspberry Pi I/O number" TYPE="INTEGER" NAME="pin"/>
+     <PARAMETER DESC="Percentage on" TYPE="INTEGER" NAME="percentage"/>
+    </METHOD>
+    <METHOD DESC="Play a sound file from resorces" NAME="playSound">
+     <PARAMETER DESC="The name of the file" DEFAULT="" TYPE="FileName"/>
+    </METHOD>
+    <METHOD DESC="Execute system command" NAME="sys">
+     <PARAMETER DESC="Command and arguments list" DEFAULT="" TYPE="LIST"/>
+    </METHOD>
+    <METHOD DESC="Read number of milliseconds since last reset" NAME="millis">
+     <RETURN DESC="Millseconds" DEFAULT="millis" TYPE="INTEGER" NAME="millis"/>
+    </METHOD>
+    <METHOD DESC="Write information to the simulation log" NAME="debug">
+     <PARAMETER DESC="List of strings or numbers to write" DEFAULT="" TYPE="LIST"/>
+    </METHOD>
+   </DRIVER>
+  </PERIPHERAL>
+  <PERIPHERAL DESC="File Storage" VALID="1" ENABLED="1" BUILTIN="1" TYPE="STORAGE" ID="{e89a3b3d-569c-42f0-9d47-d5f32861e955}" NAME="storage" FILE="Raspberry Pi 3" EID="00000001" OPTIONAL="1">
+   <INTERFACE EXTERNAL="FS" OBJECT="FileStore">
+    <SETUP NAME="begin"/>
+    <STORAGE ELEMENT="U1" UID="00000001" NAME="MANIFEST" EID="00000001" VALUE="C:/Users/ad/AppData/Local/Temp/VSM Studio/6df0b60f59a04d3bb4c445f61e9fc7bc/RPI3/Debug/RESOURCE.DAT"/>
+   </INTERFACE>
+   <DRIVER HEADER="FileStore">
+    <ENUMERATION NAME="MODE">
+     <CONSTANT NAME="READ" VALUE="'r'"/>
+     <CONSTANT NAME="WRITE" VALUE="'w'"/>
+     <CONSTANT NAME="APPEND" VALUE="'a'"/>
+    </ENUMERATION>
+    <FUNCTION DESC="Return true if a file exists">
+     <PARAMETER DESC="Path to file" TYPE="STRING" NAME="name"/>
+     <RETURN TYPE="BOOLEAN"/>
+    </FUNCTION>
+    <METHOD DESC="Open a file" NAME="open">
+     <PARAMETER DESC="Path to file" TYPE="STRING" NAME="name"/>
+     <PARAMETER DESC="Path to file" DEFAULT="READ" TYPE="MODE" NAME="mode"/>
+     <RETURN DEFAULT="file" TYPE="HANDLE" NAME="file"/>
+    </METHOD>
+    <METHOD DESC="Close a file" NAME="close">
+     <PARAMETER DESC="File handle" TYPE="HANDLE" NAME="file"/>
+    </METHOD>
+    <METHOD DESC="Delete a file" NAME="remove">
+     <PARAMETER DESC="Path to file" TYPE="STRING" NAME="name"/>
+    </METHOD>
+    <METHOD DESC="Change current directory" NAME="chdir">
+     <PARAMETER DESC="New current directory" DEFAULT="&quot;/vsm&quot;" TYPE="STRING" NAME="name"/>
+    </METHOD>
+    <METHOD DESC="Create a new directory" NAME="mkdir">
+     <PARAMETER DESC="Name of new directory" TYPE="STRING" NAME="name"/>
+    </METHOD>
+    <METHOD DESC="Remove a directory" NAME="rmdir">
+     <PARAMETER DESC="Name of directory to remove" TYPE="STRING" NAME="name"/>
+    </METHOD>
+    <METHOD DESC="Flush data in file" NAME="flush">
+     <PARAMETER DESC="File handle" TYPE="HANDLE" NAME="file"/>
+    </METHOD>
+    <METHOD DESC="Read delimited data" NAME="read">
+     <PARAMETER DESC="File handle" TYPE="HANDLE" NAME="file"/>
+     <PARAMETER DESC="List of variables to read." BYREF="1" TYPE="LIST"/>
+    </METHOD>
+    <METHOD DESC="Read a line from the file." NAME="readln">
+     <PARAMETER DESC="File handle" TYPE="HANDLE" NAME="file"/>
+     <RETURN DESC="String to contain the line." DEFAULT="Line" TYPE="STRING" NAME="line"/>
+    </METHOD>
+    <METHOD DESC="Write comma delimited data" NAME="write">
+     <PARAMETER DESC="File handle" TYPE="HANDLE" NAME="file"/>
+     <PARAMETER DESC="List of strings or numbers to write" DEFAULT="" TYPE="LIST"/>
+    </METHOD>
+    <METHOD DESC="Write comma delimited data with terminating newline." NAME="writeln">
+     <PARAMETER DESC="File handle" TYPE="HANDLE" NAME="file"/>
+     <PARAMETER DESC="List of strings or numbers to write" DEFAULT="" TYPE="LIST"/>
+    </METHOD>
+    <METHOD DESC="Print data without newline." NAME="print">
+     <PARAMETER DESC="File handle" TYPE="HANDLE" NAME="file"/>
+     <PARAMETER DESC="List of strings or numbers to print" DEFAULT="" TYPE="LIST"/>
+    </METHOD>
+    <METHOD DESC="Print data with terminating newline." NAME="println">
+     <PARAMETER DESC="File handle" TYPE="HANDLE" NAME="file"/>
+     <PARAMETER DESC="List of strings or numbers to print" DEFAULT="" TYPE="LIST"/>
+    </METHOD>
+   </DRIVER>
+  </PERIPHERAL>
+  <PERIPHERAL DESC="VFP Server" VALID="1" ENABLED="1" BUILTIN="1" TYPE="SERVER" ID="{63bc1e9b-fe1f-4ee8-8ab9-8439684d0e64}" NAME="server" FILE="Raspberry Pi 3" EID="00000001" OPTIONAL="1">
+   <INTERFACE EXTERNAL="VFP" OBJECT="VfpServer">
+    <SETUP NAME="begin">
+     <PROPERTY ELEMENT="U1" TYPE="INTEGER" UID="00000001" NAME="PORT" EID="00000001"/>
+    </SETUP>
+    <!--<LOOP NAME="poll"/>-->
+    <SERVER ELEMENT="U1" TYPE="VFP" UID="00000001" TRANSPORT="ETHERNET"/>
+   </INTERFACE>
+   <DRIVER HEADER="VFP">
+    <REQUIRE HEADER="Controls"/>
+    <REQUIRE HEADER="server"/>
+    <REQUIRE HEADER="zeroconf"/>
+    <RESOURCE FILE="Vfp/showlog.py"/>
+    <INTERRUPT DESC="Page Reload" HOOK="attachReloadHandler"/>
+    <INTERRUPT DESC="Control Event" HOOK="attachRequestHandler"/>
+    <METHOD DESC="Set the document title" NAME="setTitle">
+     <PARAMETER TYPE="STRING" NAME="title"/>
+    </METHOD>
+    <FUNCTION DESC="Return true if an event is pending for a particular object">
+     <PARAMETER TYPE="STRING" NAME="object"/>
+     <RETURN TYPE="BOOLEAN"/>
+    </FUNCTION>
+    <!--                  
+         <METHOD NAME="set" DESC="Set the state of a virtual control">
+            <PARAMETER NAME="object" TYPE="STRING" />
+            <PARAMETER NAME="key" TYPE="STRING" />
+            <PARAMETER NAME="LIST" TYPE="VARIANT" DESC="Property values"/>
+         </METHOD>
+         
+         <METHOD NAME="call" DESC="Call a method of a virtual control">
+            <PARAMETER NAME="object" TYPE="STRING" />
+            <PARAMETER NAME="method" TYPE="STRING" />
+            <PARAMETER TYPE="LIST" DESC="List of arguments."/>
+         </METHOD>
+         -->
+    <!-- Will be called automatically by LOOP construct -->
+    <METHOD DESC="Wait a specified number of milliseconds and poll for requests" NAME="waitForRequests">
+     <PARAMETER DESC="Delay in milliseconds" DEFAULT="1000" TYPE="INTEGER" NAME="timeout"/>
+    </METHOD>
+    <!-- Needs to be called if the application will use time values -->
+    <METHOD DESC="Wait until the linux side has obtained the time from the internet." NAME="waitForTimeServer"/>
+    <!-- Write to the debug console -->
+    <METHOD DESC="Write information to the remote debugging (telnet) console." NAME="debug">
+     <PARAMETER DESC="Items to output." TYPE="LIST"/>
+    </METHOD>
+    <RESOURCE FILE="Vfp/transport.js"/>
+    <RESOURCE DESC="Html Files" TYPE="htm"/>
+    <RESOURCE DESC="Panel Files" TYPE="svg"/>
+    <RESOURCE DESC="Bitmap Files" TYPE="png"/>
+    <RESOURCE DESC="Javascript Files" TYPE="js"/>
+   </DRIVER>
+  </PERIPHERAL>
+  <PERIPHERAL DESC="Timer" VALID="1" ENABLED="0" BUILTIN="1" TYPE="TIMER" ID="{c51281a0-0c9a-45b6-ac83-b3dc7a62eb9a}" NAME="timer" FILE="Raspberry Pi 3" EID="00000001" OPTIONAL="1">
+   <INTERFACE EXTERNAL="timer" OBJECT="Timer">
+    <LOOP NAME="poll"/>
+   </INTERFACE>
+   <DRIVER HEADER="timer">
+    <METHOD DESC="Initialize the timer with a specified period" NAME="initialize">
+     <PARAMETER DESC="Period in milliseconds" DEFAULT="1000" TYPE="INTEGER" NAME="period"/>
+    </METHOD>
+    <METHOD DESC="Set a new period in milliseconds" NAME="setPeriod">
+     <PARAMETER DESC="Period in milliseconds" TYPE="INTEGER" NAME="period"/>
+    </METHOD>
+    <METHOD DESC="Start the timer" NAME="start"/>
+    <METHOD DESC="Stop the timer" NAME="stop"/>
+    <METHOD DESC="Restart the timer at count of zero" NAME="restart"/>
+    <METHOD DESC="Resume counting" NAME="resume"/>
+    <METHOD DESC="Read the timer value in milliseconds" NAME="read">
+     <RETURN DESC="Counter value" DEFAULT="count" TYPE="INTEGER" NAME="state"/>
+    </METHOD>
+    <INTERRUPT DESC="Timer Match" HOOK="attachInterrupt" PERIODIC="1"/>
+   </DRIVER>
+  </PERIPHERAL>
+  <PERIPHERAL DESC="I2C Port" VALID="1" ENABLED="0" BUILTIN="1" TYPE="I2C" ID="{9fefbc4d-9511-4ec6-8cb1-349f237c4a02}" NAME="i2c" FILE="Raspberry Pi 3" EID="00000001" OPTIONAL="1">
+   <INTERFACE EXTERNAL="I2C" OBJECT="I2c"/>
+   <DRIVER HEADER="Ports">
+    <!-- Port 0 = pins 27,28. Port 1 = Pins 3,5 -->
+    <METHOD DESC="Send 8 bit data" NAME="transmit">
+     <PARAMETER DESC="I2C address" TYPE="INTEGER" NAME="Address"/>
+     <PARAMETER DESC="Command to send" TYPE="INTEGER" NAME="Command"/>
+     <PARAMETER DESC="Data to transmit" TYPE="LIST"/>
+    </METHOD>
+    <METHOD DESC="Send 8 bit data" NAME="receive">
+     <PARAMETER DESC="I2C address" TYPE="INTEGER" NAME="Address"/>
+     <PARAMETER DESC="Command to send" TYPE="INTEGER" NAME="Comand"/>
+     <PARAMETER BYREF="1" TYPE="LIST" NAME="Data"/>
+    </METHOD>
+   </DRIVER>
+  </PERIPHERAL>
+  <PERIPHERAL DESC="SPI Port" VALID="1" ENABLED="0" BUILTIN="1" TYPE="SPI" ID="{90d729d9-5c26-44ab-b046-d61298782fa9}" NAME="spi" FILE="Raspberry Pi 3" EID="00000001" OPTIONAL="1">
+   <INTERFACE EXTERNAL="SPI" OBJECT="SPI"/>
+   <DRIVER HEADER="Ports">
+    <!-- SPI Driver -->
+    <ENUMERATION NAME="CLOCK">
+     <CONSTANT NAME="CLOCK1MHZ" VALUE="1000000L"/>
+     <CONSTANT NAME="CLOCK4MHZ" VALUE="4000000L"/>
+     <CONSTANT NAME="CLOCK8MHZ" VALUE="8000000L"/>
+    </ENUMERATION>
+    <METHOD DESC="Configure the SPI Hardware" NAME="setup">
+     <PARAMETER DESC="SPI Clock Speed" DEFAULT="7629" TYPE="INTEGER" NAME="clock"/>
+     <PARAMETER DESC="Set the device to talk to." DEFAULT="0" TYPE="INTEGER" NAME="device"/>
+    </METHOD>
+    <METHOD DESC="Send and receive data" NAME="transfer">
+     <PARAMETER DESC="List of variables to send and receive" BYREF="1" TYPE="LIST"/>
+    </METHOD>
+    <METHOD DESC="Send command data, received data is ignored" NAME="send">
+     <PARAMETER DESC="Data to transmit" TYPE="LIST"/>
+    </METHOD>
+    <METHOD DESC="Ignore send command data, Receive data" NAME="receive">
+     <PARAMETER DESC="Length of data to receive" TYPE="INTEGER" NAME="length"/>
+     <RETURN DESC="Data to receive" TYPE="LIST" NAME="data"/>
+    </METHOD>
+   </DRIVER>
+  </PERIPHERAL>
+  <PERIPHERAL DESC="UART Port" VALID="1" ENABLED="0" BUILTIN="1" TYPE="UART" ID="{0b428c24-3d9a-49ca-8977-7ec0e8fe43c3}" NAME="uart" FILE="Raspberry Pi 3" EID="00000001" OPTIONAL="1">
+   <INTERFACE EXTERNAL="UART" OBJECT="UART"/>
+   <DRIVER HEADER="Ports">
+    <ENUMERATION NAME="BASE">
+     <CONSTANT NAME="DECIMAL" VALUE="10"/>
+     <CONSTANT NAME="BINARY" VALUE="2"/>
+     <CONSTANT NAME="OCTAL" VALUE="8"/>
+     <CONSTANT NAME="HEX" VALUE="16"/>
+    </ENUMERATION>
+    <METHOD DESC="Sets up the UART" NAME="setup">
+     <PARAMETER DESC="UART speed" TYPE="INTEGER" NAME="speed"/>
+    </METHOD>
+    <METHOD DESC="Input String" NAME="input">
+     <PARAMETER DESC="Enable Echo" DEFAULT="TRUE" TYPE="BOOLEAN" NAME="Echo"/>
+     <RETURN DEFAULT="input" TYPE="STRING" NAME="Data"/>
+    </METHOD>
+    <METHOD DESC="Prints data along UART" NAME="print">
+     <PARAMETER DESC="String to print" TYPE="LIST"/>
+    </METHOD>
+    <METHOD DESC="Prints data along UART" NAME="println">
+     <PARAMETER DESC="String to print" TYPE="LIST"/>
+    </METHOD>
+    <METHOD DESC="Send a single character" NAME="send">
+     <PARAMETER DESC="Character to send" TYPE="STRING" NAME="Data"/>
+    </METHOD>
+    <METHOD DESC="Receive a single character" NAME="recv">
+     <RETURN TYPE="STRING" NAME="Data"/>
+    </METHOD>
+    <METHOD DESC="Set the base to use for integer values." NAME="setBase">
+     <PARAMETER DESC="Number base" TYPE="BASE" NAME="base"/>
+    </METHOD>
+    <METHOD DESC="Set the number of places to use for floating point values." NAME="setPlaces">
+     <PARAMETER DESC="Number of decimal places" DEFAULT="2" TYPE="INTEGER" NAME="places"/>
+    </METHOD>
+   </DRIVER>
+  </PERIPHERAL>
+  <PERIPHERAL DESC="Twitter Bot" VALID="1" ENABLED="0" BUILTIN="1" TYPE="TWITTER" ID="{0b38e476-a128-48ac-8e53-493fa1a78735}" NAME="twitter" FILE="Raspberry Pi 3" EID="00000001" OPTIONAL="1">
+   <INTERFACE EXTERNAL="TWITTER" OBJECT="Twitter"/>
+   <DRIVER HEADER="InternetCommunication">
+    <METHOD DESC="SetUp the Twitter Bot" NAME="setup">
+     <PARAMETER DESC="Consumer API key" TYPE="STRING" NAME="CustomerKey"/>
+     <PARAMETER DESC="Consumer API secret key" TYPE="STRING" NAME="CustomerSecret"/>
+     <PARAMETER DESC="Access token" TYPE="STRING" NAME="Token"/>
+     <PARAMETER DESC="Access token secret" TYPE="STRING" NAME="SecretToken"/>
+    </METHOD>
+    <METHOD DESC="Simple Text Tweet" NAME="tweet">
+     <PARAMETER DESC="Message to Tweet" TYPE="STRING" NAME="Message"/>
+    </METHOD>
+    <METHOD DESC="Tweeting Image and Text" NAME="tweetImage">
+     <PARAMETER DESC="Message to Tweet" TYPE="STRING" NAME="Message"/>
+     <PARAMETER DESC="Image to Tweet" TYPE="STRING" NAME="Image"/>
+    </METHOD>
+    <METHOD DESC="Tweeting Video and Text" NAME="tweetVideo">
+     <PARAMETER DESC="Message to Tweet" TYPE="STRING" NAME="Message"/>
+     <PARAMETER DESC="Video to Tweet" TYPE="STRING" NAME="Video"/>
+    </METHOD>
+    <METHOD DESC="Look for Tweet" NAME="searchFor">
+     <PARAMETER DESC="Message to look for" TYPE="STRING" NAME="Query"/>
+     <RETURN DEFAULT="FullMessage" TYPE="STRING" NAME="Message"/>
+     <RETURN DEFAULT="UserName" TYPE="STRING" NAME="User"/>
+     <RETURN DEFAULT="TweetTime" TYPE="TIME" NAME="Date"/>
+    </METHOD>
+    <METHOD DESC="Look for Tweet with image" NAME="searchImage">
+     <PARAMETER DESC="Message to look for" TYPE="STRING" NAME="Query"/>
+     <PARAMETER DESC="Name to allocate image" TYPE="STRING" NAME="FileName"/>
+     <RETURN DEFAULT="FullMessage" TYPE="STRING" NAME="Message"/>
+     <RETURN DEFAULT="UserName" TYPE="STRING" NAME="User"/>
+     <RETURN DEFAULT="TweetTime" TYPE="TIME" NAME="Date"/>
+     <RETURN DEFAULT="ImageReceived" TYPE="STRING" NAME="ImageName"/>
+    </METHOD>
+   </DRIVER>
+  </PERIPHERAL>
+  <PERIPHERAL DESC="SMT Email" VALID="1" ENABLED="0" BUILTIN="1" TYPE="EMAIL" ID="{a8eb00d4-abfd-4453-bb2d-2058028f67e9}" NAME="email" FILE="Raspberry Pi 3" EID="00000001" OPTIONAL="1">
+   <INTERFACE EXTERNAL="EMAIL" OBJECT="Email"/>
+   <DRIVER HEADER="InternetCommunication">
+    <METHOD DESC="Log in for email" NAME="emailLogIn">
+     <PARAMETER DESC="you@gmail.com        Email Address sending from" TYPE="STRING" NAME="Email"/>
+     <PARAMETER DESC="Password123          Password to email account" TYPE="STRING" NAME="Password"/>
+     <PARAMETER DESC="smtp.gmail.com:465   Email server" TYPE="STRING" NAME="Server"/>
+    </METHOD>
+    <METHOD DESC="Send 8 bit data" NAME="emailStructure">
+     <PARAMETER DESC="Email Subject" TYPE="STRING" NAME="Subject"/>
+     <PARAMETER DESC="Content to put into email" TYPE="STRING" NAME="EmailContent"/>
+     <PARAMETER DESC="Recipients email address" TYPE="LIST" NAME="RecipientEmail"/>
+    </METHOD>
+    <METHOD DESC="Send 8 bit data" NAME="emailAttachment">
+     <PARAMETER DESC="Files to attach" TYPE="LIST" NAME="FileName"/>
+    </METHOD>
+    <METHOD DESC="Creates and sends the email" NAME="sendEmail"/>
+   </DRIVER>
+  </PERIPHERAL>
+  <PERIPHERAL DESC="Terminal Module" VALID="1" ENABLED="1" BUILTIN="0" TYPE="Terminal" ID="{82d4efbb-2be0-4a89-aa15-6fcf772b0407}" NAME="VT1" FILE="RaspberryPiTerminal" EID="00000002" OPTIONAL="0">
+   <INTERFACE OBJECT="SerialTerminal">
+    <PROPERTY ELEMENT="VT1" TYPE="INTEGER" UID="00000002" NAME="BAUDRATE" EID="00000002" VALUE="9600"/>
+   </INTERFACE>
+   <DRIVER HEADER="Ports">
+    <ENUMERATION NAME="BASE">
+     <CONSTANT NAME="DECIMAL" VALUE="10"/>
+     <CONSTANT NAME="BINARY" VALUE="2"/>
+     <CONSTANT NAME="OCTAL" VALUE="8"/>
+     <CONSTANT NAME="HEX" VALUE="16"/>
+    </ENUMERATION>
+    <METHOD DESC="Input String" NAME="input">
+     <PARAMETER DESC="Enable Echo" DEFAULT="TRUE" TYPE="BOOLEAN" NAME="Echo"/>
+     <RETURN DEFAULT="input" TYPE="STRING" NAME="Data"/>
+    </METHOD>
+    <METHOD DESC="Print data without newline." NAME="print">
+     <PARAMETER DESC="List of strings or numbers to print" DEFAULT="" TYPE="LIST"/>
+    </METHOD>
+    <METHOD DESC="Print data with terminating newline." NAME="println">
+     <PARAMETER DESC="List of strings or numbers to print" DEFAULT="" TYPE="LIST"/>
+    </METHOD>
+    <METHOD DESC="Set the base to use for integer values." NAME="setBase">
+     <PARAMETER DESC="Number base" TYPE="BASE" NAME="base"/>
+    </METHOD>
+    <METHOD DESC="Set the number of places to use for floating point values." NAME="setPlaces">
+     <PARAMETER DESC="Number of decimal places" DEFAULT="2" TYPE="INTEGER" NAME="places"/>
+    </METHOD>
+   </DRIVER>
+  </PERIPHERAL>
+  <PERIPHERAL DESC="I2c LDC Display" VALID="1" ENABLED="1" BUILTIN="0" TYPE="I2c controlled LDC" ID="{f9834fa6-2660-4c1c-b153-069411d17896}" NAME="LCD1" FILE="I2CLDC" EID="00000003" OPTIONAL="0">
+   <INTERFACE OBJECT="I2CLDC"/>
+   <DRIVER HEADER="Displays">
+    <ENUMERATION NAME="BASE">
+     <CONSTANT NAME="DECIMAL" VALUE="10"/>
+     <CONSTANT NAME="BINARY" VALUE="2"/>
+     <CONSTANT NAME="OCTAL" VALUE="8"/>
+     <CONSTANT NAME="HEX" VALUE="16"/>
+    </ENUMERATION>
+    <METHOD DESC="Prints data along UART" NAME="print">
+     <PARAMETER DESC="String to print" TYPE="LIST"/>
+    </METHOD>
+    <!--<METHOD NAME="println" DESC="Prints data along UART">
+         <PARAMETER TYPE="LIST"  DESC="String to print"/>
+      </METHOD> -->
+    <METHOD DESC="Set the base to use for integer values." NAME="setBase">
+     <PARAMETER DESC="Number base" TYPE="BASE" NAME="base"/>
+    </METHOD>
+    <METHOD DESC="Set the number of places to use for floating point values." NAME="setPlaces">
+     <PARAMETER DESC="Number of decimal places" DEFAULT="2" TYPE="INTEGER" NAME="places"/>
+    </METHOD>
+    <METHOD DESC="Set the address of the hat." NAME="clear"/>
+   </DRIVER>
+  </PERIPHERAL>
+  <PERIPHERAL DESC="Momentary Action Push Button" VALID="1" ENABLED="1" BUILTIN="0" TYPE="RPi Button" ID="{51af512f-0ee9-41c7-a16f-eba5715e6248}" NAME="COUNT" FILE="RaspberryPi Button Breakout Board" EID="00000006" OPTIONAL="0">
+   <INTERFACE OBJECT="Button">
+    <PIN TYPE="DIGITAL" NAME="IO">
+     <TERMINAL ELEMENT="GPIO4" UID="00000004" EID="00000004"/>
+    </PIN>
+   </INTERFACE>
+   <DRIVER HEADER="Generic">
+    <FUNCTION DESC="Button State">
+     <RETURN TYPE="BOOLEAN"/>
+    </FUNCTION>
+   </DRIVER>
+  </PERIPHERAL>
+  <PERIPHERAL DESC="Momentary Action Push Button" VALID="1" ENABLED="1" BUILTIN="0" TYPE="RPi Button" ID="{1ebe3425-12e9-4889-bc60-a4de8bee128e}" NAME="SCAN" FILE="RaspberryPi Button Breakout Board" EID="0000000c" OPTIONAL="0">
+   <INTERFACE OBJECT="Button">
+    <PIN TYPE="DIGITAL" NAME="IO">
+     <TERMINAL ELEMENT="GPIO17" UID="0000000A" EID="0000000a"/>
+    </PIN>
+   </INTERFACE>
+   <DRIVER HEADER="Generic">
+    <FUNCTION DESC="Button State">
+     <RETURN TYPE="BOOLEAN"/>
+    </FUNCTION>
+   </DRIVER>
+  </PERIPHERAL>
+  <PERIPHERAL DESC="Buzzer Breakout Board" VALID="1" ENABLED="1" BUILTIN="0" TYPE="RPi Buzzer" ID="{212f9f29-d43d-4e1c-ac94-1236e8ac0511}" NAME="BUZ1" FILE="RaspberryPi Buzzer Breakout Board" EID="00000007" OPTIONAL="0">
+   <INTERFACE OBJECT="Buzzer">
+    <PIN TYPE="DIGITAL" NAME="IO">
+     <TERMINAL ELEMENT="GPIO6" UID="00000008" EID="00000008"/>
+    </PIN>
+   </INTERFACE>
+   <DRIVER HEADER="Generic">
+    <METHOD DESC="Turn Buzzer on." NAME="on"/>
+    <METHOD DESC="Turn Buzzer off." NAME="off"/>
+    <METHOD DESC="Turn Buzzer on or off." NAME="set">
+     <PARAMETER DESC="State of Buzzer" DEFAULT="TRUE" TYPE="BOOLEAN" NAME="state"/>
+    </METHOD>
+   </DRIVER>
+  </PERIPHERAL>
+  <PERIPHERAL DESC="LED (Green)" VALID="1" ENABLED="1" BUILTIN="0" TYPE="RPi LED" ID="{c6f378bd-78f5-43c6-90c5-680df22a9269}" NAME="LED1" FILE="RaspberryPi LED Green Breakout Board" EID="00000009" OPTIONAL="0">
+   <INTERFACE OBJECT="LED">
+    <PIN TYPE="DIGITAL" NAME="IO">
+     <TERMINAL ELEMENT="GPIO19" UID="0000000E" EID="0000000e"/>
+    </PIN>
+   </INTERFACE>
+   <DRIVER HEADER="Generic">
+    <FUNCTION DESC="Current LED State">
+     <RETURN TYPE="BOOLEAN"/>
+    </FUNCTION>
+    <METHOD DESC="Turn the LED on." NAME="on"/>
+    <METHOD DESC="Turn the LED off." NAME="off"/>
+    <METHOD DESC="Turn the LED on or off." NAME="set">
+     <PARAMETER DESC="State of the LED" DEFAULT="TRUE" TYPE="BOOLEAN" NAME="state"/>
+    </METHOD>
+    <METHOD DESC="Toggle the LED state." NAME="toggle"/>
+   </DRIVER>
+  </PERIPHERAL>
+  <PERIPHERAL DESC="LED (Red)" VALID="1" ENABLED="1" BUILTIN="0" TYPE="RPi LED" ID="{3d134eb7-0213-42dc-84db-c9a7b15c24c4}" NAME="LED2" FILE="RaspberryPi LED Red Breakout Board" EID="0000000f" OPTIONAL="0">
+   <INTERFACE OBJECT="LED">
+    <PIN TYPE="DIGITAL" NAME="IO">
+     <TERMINAL ELEMENT="GPIO18" UID="00000011" EID="00000011"/>
+    </PIN>
+   </INTERFACE>
+   <DRIVER HEADER="Generic">
+    <FUNCTION DESC="Current LED State">
+     <RETURN TYPE="BOOLEAN"/>
+    </FUNCTION>
+    <METHOD DESC="Turn the LED on." NAME="on"/>
+    <METHOD DESC="Turn the LED off." NAME="off"/>
+    <METHOD DESC="Turn the LED on or off." NAME="set">
+     <PARAMETER DESC="State of the LED" DEFAULT="TRUE" TYPE="BOOLEAN" NAME="state"/>
+    </METHOD>
+    <METHOD DESC="Toggle the LED state." NAME="toggle"/>
+   </DRIVER>
+  </PERIPHERAL>
+  <PERIPHERAL DESC="DC Motor HAT" VALID="1" ENABLED="1" BUILTIN="0" TYPE="DC and Stepper Motor" ID="{06ded3a3-c590-4122-80fe-99f63d64a99a}" NAME="U2" FILE="Adafruit DC and Stepper Motor HAT (DC setup)" EID="00000017" OPTIONAL="0">
+   <INTERFACE OBJECT="Adafruit_DC_AND_Stepper_HAT">
+    <CONFIG>
+     <!-- JUMPERS DETERMINE I2C ADDRESS -->
+     <PROPERTY ELEMENT="JP1" TYPE="JUMPERBOOL" ALIAS="JP1" UID="00000012" NAME="STATE" EID="00000012" VALUE="0"/>
+     <PROPERTY ELEMENT="JP2" TYPE="JUMPERBOOL" ALIAS="JP2" UID="00000013" NAME="STATE" EID="00000013" VALUE="0"/>
+     <PROPERTY ELEMENT="JP3" TYPE="JUMPERBOOL" ALIAS="JP3" UID="00000014" NAME="STATE" EID="00000014" VALUE="0"/>
+     <PROPERTY ELEMENT="JP4" TYPE="JUMPERBOOL" ALIAS="JP4" UID="00000015" NAME="STATE" EID="00000015" VALUE="0"/>
+     <PROPERTY ELEMENT="JP5" TYPE="JUMPERBOOL" ALIAS="JP5" UID="00000016" NAME="STATE" EID="00000016" VALUE="0"/>
+    </CONFIG>
+   </INTERFACE>
+   <DRIVER HEADER="AdafruitHATs">
+    <ENUMERATION NAME="DIRECTION">
+     <CONSTANT NAME="BACKWARD" VALUE="0"/>
+     <CONSTANT NAME="RELEASE" VALUE="1"/>
+     <CONSTANT NAME="FORWARD" VALUE="2"/>
+    </ENUMERATION>
+    <!--METHOD NAME="setAddress"  DESC="Set the address of the hat.">
+         <PARAMETER NAME="Address" TYPE="INTEGER" DEFAULT="0x60" DESC="Sets the address, Starts at 0x60."/>
+       </METHOD-->
+    <METHOD DESC="Control over DC motors." NAME="setDcMotor">
+     <PARAMETER DESC="Port Number of the motor." DEFAULT="1" TYPE="INTEGER" NAME="Motor Number"/>
+     <PARAMETER DESC="Direction of the motor." DEFAULT="FORWARD" TYPE="DIRECTION" NAME="Direction"/>
+     <PARAMETER DESC="Speed is between 0 and 1." DEFAULT="0.5" TYPE="FLOAT" NAME="Speed"/>
+    </METHOD>
+   </DRIVER>
+  </PERIPHERAL>
+ </HARDWARE>
+</PROJECT>

@@ -8,6 +8,8 @@ const CORS_HEADERS = {
 type TSeedRequest = {
   action: 'clear' | 'seed' | 'counts'
   listMssv?: string[]
+  startTime?: string
+  endTime?: string
 }
 
 type TCountResult = {
@@ -64,7 +66,7 @@ Deno.serve(async (req: Request) => {
     case 'clear':
       return await handleClear(supabase)
     case 'seed':
-      return await handleSeed(supabase, body.listMssv ?? [])
+      return await handleSeed(supabase, body.listMssv ?? [], body.startTime, body.endTime)
     default:
       return jsonResponse(
         { success: false, message: `Unknown action: ${body.action}` },
@@ -136,7 +138,7 @@ async function handleClear(supabase: ReturnType<typeof createClient>) {
 
 // ─── SEED ───
 
-async function handleSeed(supabase: ReturnType<typeof createClient>, listMssv: string[]) {
+async function handleSeed(supabase: ReturnType<typeof createClient>, listMssv: string[], startTime?: string, endTime?: string) {
   // 1. Insert rooms
   const { data: listRoom, error: roomError } = await supabase
     .from('cp_rooms')
@@ -206,10 +208,16 @@ async function handleSeed(supabase: ReturnType<typeof createClient>, listMssv: s
 
   // 3. Insert classes — demo class has dynamic time (current hour window)
   const now = new Date()
-  // Clamp demo class to 07:00-17:00 timetable range
-  const clampedHour = Math.max(7, Math.min(now.getHours(), 15))
-  const demoStart = `${String(clampedHour).padStart(2, '0')}:00`
-  const demoEnd = `${String(clampedHour + 2).padStart(2, '0')}:00`
+  let demoStart: string
+  let demoEnd: string
+  if (startTime && endTime) {
+    demoStart = startTime
+    demoEnd = endTime
+  } else {
+    const clampedHour = Math.max(7, Math.min(now.getHours(), 15))
+    demoStart = `${String(clampedHour).padStart(2, '0')}:00`
+    demoEnd = `${String(clampedHour + 2).padStart(2, '0')}:00`
+  }
 
   const { data: listClass, error: classError } = await supabase
     .from('cp_classes')

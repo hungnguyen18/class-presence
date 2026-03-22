@@ -1,0 +1,72 @@
+[
+  {
+    "filename": "SCRIPTS/PWRRAILS.DAT",
+    "file_size": 17,
+    "compress_size": 19,
+    "compress_type": 8,
+    "CRC": 3162632175
+  },
+  {
+    "filename": "ROOT.CDB",
+    "file_size": 5560,
+    "compress_size": 1974,
+    "compress_type": 8,
+    "CRC": 2125664806
+  },
+  {
+    "filename": "ROOT.DSN",
+    "file_size": 113284,
+    "compress_size": 19279,
+    "compress_type": 8,
+    "CRC": 2007585725
+  },
+  {
+    "filename": "GRAPHS.DAT",
+    "file_size": 25,
+    "compress_size": 24,
+    "compress_type": 8,
+    "CRC": 2735529921
+  },
+  {
+    "filename": "FIRMWARE/RPI3.XML",
+    "file_size": 54097,
+    "compress_size": 9924,
+    "compress_type": 8,
+    "CRC": 740919265
+  },
+  {
+    "filename": "FIRMWARE/RPI3/showlog.py",
+    "file_size": 710,
+    "compress_size": 351,
+    "compress_type": 8,
+    "CRC": 1231410120
+  },
+  {
+    "filename": "FIRMWARE/RPI3/transport.js",
+    "file_size": 5888,
+    "compress_size": 1976,
+    "compress_type": 8,
+    "CRC": 2368954204
+  },
+  {
+    "filename": "FIRMWARE/RPI3/Debug/Debug.pyz",
+    "file_size": 267950,
+    "compress_size": 235216,
+    "compress_type": 8,
+    "CRC": 2255253287
+  },
+  {
+    "filename": "FIRMWARE.XML",
+    "file_size": 206,
+    "compress_size": 165,
+    "compress_type": 8,
+    "CRC": 1256507188
+  },
+  {
+    "filename": "PROJECT.XML",
+    "file_size": 294,
+    "compress_size": 229,
+    "compress_type": 8,
+    "CRC": 2371141971
+  }
+]
